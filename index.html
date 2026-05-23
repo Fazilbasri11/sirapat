@@ -15,6 +15,7 @@
   --cream: #fdf8f0; --cream-dark: #f5ede0; --text-dark: #1a0a0d;
   --text-mid: #5a3040; --text-muted: #8a6070; --white: #ffffff;
   --shadow: 0 4px 24px rgba(90,10,24,0.13); --shadow-lg: 0 12px 48px rgba(90,10,24,0.18);
+  --green: #2e7d32; --green-bg: rgba(76,175,80,0.1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
@@ -42,6 +43,22 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .hero h1 em { font-style: italic; color: var(--gold-light); }
 .hero p { font-size: 14px; color: rgba(255,255,255,0.65); max-width: 520px; line-height: 1.7; }
 
+/* ── NOMOR SURAT STATUS ── */
+.nomor-status-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(201,147,42,0.08); border: 1px solid rgba(201,147,42,0.2);
+  border-radius: 10px; padding: 10px 16px; margin-bottom: 1.25rem;
+  font-size: 13px;
+}
+.nomor-status-label { color: var(--text-muted); font-weight: 500; }
+.nomor-status-val { font-family: monospace; font-weight: 700; color: var(--maroon); font-size: 14px; flex: 1; }
+.nomor-refresh-btn { padding: 5px 12px; border-radius: 6px; border: 1.5px solid rgba(201,147,42,0.3); background: transparent; font-size: 12px; color: var(--gold); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+.nomor-refresh-btn:hover { background: rgba(201,147,42,0.1); }
+.nomor-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+.nomor-status-dot.ok { background: #4caf50; }
+.nomor-status-dot.loading { background: var(--gold); animation: pulse 1s infinite; }
+.nomor-status-dot.err { background: #e53935; }
+
 .form-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
 .form-card { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden; }
 .form-card-header { background: var(--cream-dark); border-bottom: 1px solid rgba(122,16,32,0.1); padding: 1.25rem 1.75rem; display: flex; align-items: center; gap: 10px; }
@@ -56,41 +73,20 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--maroon); box-shadow: 0 0 0 3px rgba(122,16,32,0.08); background: var(--white); }
 .field textarea { resize: vertical; min-height: 72px; }
 
-/* ── TEMPLATE PATH BOX ── */
-.tpl-box {
-  background: linear-gradient(135deg, rgba(61,7,16,0.03) 0%, rgba(201,147,42,0.05) 100%);
-  border: 1.5px solid rgba(201,147,42,0.2);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
-}
-.tpl-box-title {
-  font-size: 12px; font-weight: 700; color: var(--maroon);
-  letter-spacing: 0.06em; text-transform: uppercase;
-  margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;
-}
+.tpl-box { background: linear-gradient(135deg, rgba(61,7,16,0.03) 0%, rgba(201,147,42,0.05) 100%); border: 1.5px solid rgba(201,147,42,0.2); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+.tpl-box-title { font-size: 12px; font-weight: 700; color: var(--maroon); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
 .tpl-box-title span { background: var(--maroon); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
-
-/* mode tabs */
 .tpl-mode-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
 .tpl-mode-tab { padding: 7px 16px; border-radius: 8px; border: 1.5px solid #e8ddd5; background: var(--white); font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
 .tpl-mode-tab:hover { border-color: var(--maroon); color: var(--maroon); }
 .tpl-mode-tab.active { background: var(--maroon); border-color: var(--maroon); color: var(--white); font-weight: 600; }
-
 .tpl-mode-panel { display: none; }
 .tpl-mode-panel.active { display: block; }
-
-/* auto mode */
-.auto-info {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 12px 16px; background: rgba(76,175,80,0.07);
-  border: 1.5px solid rgba(76,175,80,0.2); border-radius: 10px; margin-bottom: 12px;
-}
+.auto-info { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: rgba(76,175,80,0.07); border: 1.5px solid rgba(76,175,80,0.2); border-radius: 10px; margin-bottom: 12px; }
 .auto-info-icon { font-size: 20px; flex-shrink: 0; }
 .auto-info-text { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
 .auto-info-text strong { color: var(--maroon); }
 .auto-info-text code { background: rgba(122,16,32,0.08); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; color: var(--maroon); }
-
 .tpl-status-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0e8e0; }
 .tpl-status-row:last-child { border-bottom: none; }
 .tpl-status-label { font-size: 12px; font-weight: 600; color: var(--text-mid); min-width: 120px; }
@@ -101,29 +97,23 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .tpl-badge.loading { background: rgba(201,147,42,0.15); color: #8a6010; animation: pulse 1s infinite; }
 .tpl-badge.err { background: rgba(229,57,53,0.1); color: #c62828; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-
-/* manual mode */
 .tpl-url-row { display: grid; grid-template-columns: 110px 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .tpl-url-row input { font-family: 'Inter', sans-serif; font-size: 12px; padding: 8px 12px; border: 1.5px solid #e8ddd5; border-radius: 7px; background: var(--white); outline: none; transition: border-color 0.15s; }
 .tpl-url-row input:focus { border-color: var(--gold); }
 .tpl-test-btn { padding: 8px 14px; border-radius: 7px; border: 1.5px solid #e8ddd5; background: var(--white); font-size: 12px; font-weight: 500; color: var(--text-mid); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; white-space: nowrap; }
 .tpl-test-btn:hover { border-color: var(--maroon); color: var(--maroon); }
-
 .tpl-hint { font-size: 11px; color: var(--text-muted); line-height: 1.7; margin-top: 10px; padding: 10px 14px; background: rgba(122,16,32,0.03); border-radius: 8px; }
 .tpl-hint code { background: rgba(122,16,32,0.08); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; color: var(--maroon); }
-
-/* placeholder chips */
 .ph-section { margin-top: 1rem; }
 .ph-section-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
 .placeholder-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
 .ph-chip { font-size: 11px; font-family: monospace; background: rgba(122,16,32,0.06); color: var(--maroon); padding: 3px 9px; border-radius: 4px; border: 1px solid rgba(122,16,32,0.12); }
+.ph-chip.new { background: rgba(201,147,42,0.12); color: #7a5010; border-color: rgba(201,147,42,0.3); }
 .ph-loop { background: rgba(201,147,42,0.1); color: #7a5010; border-color: rgba(201,147,42,0.25); }
-
 .agenda-tabs { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
 .agenda-chip { padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e8ddd5; background: #fdfaf7; font-size: 12px; font-weight: 500; color: var(--text-mid); cursor: pointer; transition: all 0.15s; }
 .agenda-chip:hover { border-color: var(--maroon); color: var(--maroon); }
 .agenda-chip.active { background: var(--maroon); border-color: var(--maroon); color: var(--white); }
-
 .peserta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .peserta-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid #e8ddd5; border-radius: 8px; background: #fdfaf7; cursor: pointer; transition: all 0.15s; user-select: none; }
 .peserta-item:hover { border-color: var(--maroon-light); }
@@ -134,19 +124,18 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .peserta-info { flex: 1; min-width: 0; }
 .peserta-nama { font-size: 13px; font-weight: 500; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .peserta-jabatan { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
 .section-divider { display: flex; align-items: center; gap: 12px; margin: 1.5rem 0 1.25rem; }
 .section-divider span { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
 .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: #e8ddd5; }
 
-/* progress steps */
-.progress-bar { display: flex; align-items: center; gap: 0; padding: 0 1.75rem 1rem; display: none; }
+.progress-bar { display: none; align-items: center; gap: 0; padding: 0 1.75rem 1rem; }
 .prog-step { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); padding: 6px 12px; border-radius: 20px; transition: all 0.3s; }
 .prog-step.active { background: rgba(201,147,42,0.15); color: #8a6010; font-weight: 600; }
 .prog-step.done { background: rgba(76,175,80,0.1); color: #2e7d32; font-weight: 600; }
 .prog-step.err { background: rgba(229,57,53,0.1); color: #c62828; }
 .prog-arrow { color: #ccc; font-size: 12px; flex-shrink: 0; }
 
+/* ── GENERATE AREA ── */
 .generate-area { padding: 1.5rem 1.75rem; background: var(--cream-dark); border-top: 1px solid rgba(122,16,32,0.1); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .doc-preview { display: flex; gap: 8px; flex-wrap: wrap; }
 .doc-badge { display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; }
@@ -154,7 +143,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .doc-badge.absen { background: rgba(201,147,42,0.12); color: #8a6010; }
 .doc-badge.risalah { background: rgba(26,10,13,0.06); color: var(--text-mid); }
 .doc-badge::before { content: '📄'; font-size: 14px; }
-
+.gen-btns { display: flex; gap: 10px; align-items: center; }
 .btn-generate { display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-light) 100%); color: var(--white); border: none; border-radius: 10px; padding: 13px 28px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(122,16,32,0.35); }
 .btn-generate:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(122,16,32,0.45); }
 .btn-generate:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
@@ -162,26 +151,26 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--maroon-deep); color: var(--white); padding: 14px 20px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 999; max-width: 360px; }
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast.success { border-left: 4px solid #4caf50; }
-.toast.error { border-left: 4px solid #e53935; }
-.toast.info { border-left: 4px solid var(--gold); }
+/* ── SIMPAN KE AWAN BUTTON ── */
+.btn-awan { display: none; align-items: center; gap: 8px; background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%); color: var(--white); border: none; border-radius: 10px; padding: 13px 22px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(21,101,192,0.35); }
+.btn-awan:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(21,101,192,0.45); }
+.btn-awan.visible { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+/* ── ARSIP PAGE ── */
 .page-header { background: linear-gradient(160deg, var(--maroon-deep) 0%, var(--maroon) 100%); padding: 2.5rem 2rem 2rem; }
 .page-header-inner { max-width: 900px; margin: 0 auto; }
 .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--white); margin-bottom: 4px; }
 .page-header p { font-size: 13px; color: rgba(255,255,255,0.6); }
 .content-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
-
 .search-bar { display: flex; gap: 10px; margin-bottom: 1.5rem; }
 .search-bar input { flex: 1; font-family: 'Inter', sans-serif; font-size: 14px; padding: 11px 16px; border: 1.5px solid #e8ddd5; border-radius: 10px; background: var(--white); outline: none; }
 .search-bar input:focus { border-color: var(--maroon); }
 .search-bar select { font-family: 'Inter', sans-serif; font-size: 13px; padding: 11px 14px; border: 1.5px solid #e8ddd5; border-radius: 10px; background: var(--white); outline: none; color: var(--text-dark); cursor: pointer; }
-
 .arsip-list { display: flex; flex-direction: column; gap: 10px; }
 .arsip-item { background: var(--white); border-radius: 12px; padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(90,10,24,0.07); border: 1px solid rgba(122,16,32,0.06); transition: all 0.15s; cursor: pointer; }
 .arsip-item:hover { border-color: rgba(122,16,32,0.2); box-shadow: 0 4px 16px rgba(90,10,24,0.12); transform: translateY(-1px); }
+.arsip-item.highlight { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,147,42,0.15); }
 .arsip-date-box { width: 52px; height: 52px; border-radius: 10px; background: var(--maroon); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
 .arsip-date-box .day { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--white); line-height: 1; }
 .arsip-date-box .month { font-size: 10px; color: var(--gold-light); letter-spacing: 0.06em; text-transform: uppercase; }
@@ -195,6 +184,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
 .empty-state h3 { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
 
+/* ── PESERTA MANAGE ── */
 .peserta-manage-list { display: flex; flex-direction: column; gap: 8px; }
 .peserta-row { background: var(--white); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 4px rgba(90,10,24,0.06); border: 1px solid rgba(122,16,32,0.06); }
 .peserta-num { width: 28px; height: 28px; border-radius: 50%; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--maroon); flex-shrink: 0; }
@@ -208,6 +198,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .btn-primary { background: var(--maroon); color: var(--white); border: none; border-radius: 8px; padding: 10px 24px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
 .btn-primary:hover { background: var(--maroon-dark); }
 
+/* ── DASHBOARD ── */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
 .stat-card { background: var(--white); border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(90,10,24,0.07); border: 1px solid rgba(122,16,32,0.06); }
 .stat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
@@ -220,6 +211,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .bar { width: 100%; background: linear-gradient(180deg, var(--maroon-light) 0%, var(--maroon) 100%); border-radius: 4px 4px 0 0; min-height: 4px; }
 .bar-label { font-size: 10px; color: var(--text-muted); }
 
+/* ── KALENDER ── */
 .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
 .cal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--maroon); }
 .cal-nav { display: flex; gap: 6px; }
@@ -233,18 +225,65 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 .cal-day.has-event::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
 .cal-day.other-month { color: #ccc; pointer-events: none; }
 
+/* ── PENGATURAN ── */
 .setting-group { margin-bottom: 2rem; }
 .setting-group h3 { font-size: 13px; font-weight: 600; color: var(--text-mid); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid #e8ddd5; }
 
+/* ── MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal { background: var(--white); border-radius: 16px; width: 100%; max-width: 520px; box-shadow: var(--shadow-lg); transform: translateY(20px); transition: transform 0.2s; }
+.modal { background: var(--white); border-radius: 16px; width: 100%; max-width: 560px; box-shadow: var(--shadow-lg); transform: translateY(20px); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
 .modal-overlay.open .modal { transform: translateY(0); }
-.modal-header { background: var(--maroon); padding: 1.2rem 1.5rem; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; }
+.modal-header { background: var(--maroon); padding: 1.2rem 1.5rem; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; }
 .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--white); }
 .modal-close { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 20px; cursor: pointer; }
 .modal-body { padding: 1.5rem; }
 .modal-body p { font-size: 14px; color: var(--text-mid); margin-bottom: 8px; }
+
+/* ── UPLOAD AREA ── */
+.upload-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e8ddd5; }
+.upload-section-title { font-size: 13px; font-weight: 600; color: var(--maroon); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.upload-zone { border: 2px dashed #d0c0c5; border-radius: 12px; padding: 2rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; background: #fdfaf7; }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--maroon); background: rgba(122,16,32,0.03); }
+.upload-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.upload-zone-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.upload-zone-text strong { color: var(--maroon); }
+.upload-zone input[type=file] { display: none; }
+
+.uploaded-files { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.uploaded-file-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; background: rgba(122,16,32,0.03); border: 1px solid rgba(122,16,32,0.1); }
+.file-icon { font-size: 18px; flex-shrink: 0; }
+.file-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { font-size: 11px; color: var(--text-muted); }
+.file-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.file-status.pending { background: rgba(201,147,42,0.12); color: #8a6010; }
+.file-status.uploading { background: rgba(21,101,192,0.1); color: #1565c0; animation: pulse 1s infinite; }
+.file-status.done { background: rgba(76,175,80,0.12); color: #2e7d32; }
+.file-status.err { background: rgba(229,57,53,0.08); color: #c62828; }
+.file-link { font-size: 11px; color: #1565c0; text-decoration: none; }
+.file-link:hover { text-decoration: underline; }
+.file-remove { background: none; border: none; color: #ccc; cursor: pointer; font-size: 14px; padding: 2px; transition: color 0.15s; }
+.file-remove:hover { color: #e53935; }
+
+.upload-actions { margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; }
+.btn-upload-all { background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+.btn-upload-all:hover { opacity: 0.9; }
+.btn-upload-all:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* GAS status banner */
+.gas-banner { background: linear-gradient(135deg, rgba(21,101,192,0.08) 0%, rgba(21,101,192,0.04) 100%); border: 1px solid rgba(21,101,192,0.2); border-radius: 10px; padding: 12px 16px; margin-bottom: 1.25rem; font-size: 12px; color: #1565c0; display: flex; align-items: flex-start; gap: 10px; }
+.gas-banner .gas-icon { font-size: 16px; flex-shrink: 0; }
+.gas-banner code { background: rgba(21,101,192,0.1); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+.gas-url-input { display: flex; gap: 8px; margin-top: 8px; }
+.gas-url-input input { flex: 1; font-family: 'Inter', sans-serif; font-size: 12px; padding: 7px 12px; border: 1.5px solid rgba(21,101,192,0.3); border-radius: 7px; background: white; outline: none; color: var(--text-dark); }
+.gas-url-input input:focus { border-color: #1565c0; }
+.gas-url-input button { padding: 7px 16px; border-radius: 7px; border: none; background: #1565c0; color: white; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--maroon-deep); color: var(--white); padding: 14px 20px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 999; max-width: 360px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left: 4px solid #4caf50; }
+.toast.error { border-left: 4px solid #e53935; }
+.toast.info { border-left: 4px solid var(--gold); }
 
 @media (max-width: 640px) {
   .form-row, .form-row-2, .peserta-grid { grid-template-columns: 1fr; }
@@ -253,7 +292,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
   .form-section, .content-section { padding: 1rem; }
   .hero { padding: 2rem 1rem 1.5rem; }
   .hero h1 { font-size: 1.8rem; }
-  .progress-bar { flex-wrap: wrap; }
+  .gen-btns { flex-wrap: wrap; }
 }
 </style>
 </head>
@@ -283,44 +322,51 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
     <div class="hero-inner">
       <div class="hero-badge">Sistem Rapat Digital</div>
       <h1>Generate Dokumen<br><em>Rapat KIP</em></h1>
-      <p>Template Word diambil dari repo GitHub yang sama, data diinject, 3 dokumen resmi siap diunduh sebagai ZIP.</p>
+      <p>Template Word diambil dari repo GitHub, data diinject, 3 dokumen resmi siap diunduh sebagai ZIP.</p>
     </div>
   </div>
 
   <div class="form-section">
     <div class="form-card">
 
-      <!-- TEMPLATE SOURCE -->
+      <!-- GAS URL CONFIG -->
       <div class="form-card-header">
+        <div class="step-dot" style="background:#1565c0">⚡</div>
+        <h2>Koneksi Google Apps Script</h2>
+      </div>
+      <div class="form-body" style="padding-bottom:0.5rem">
+        <div class="gas-banner">
+          <div class="gas-icon">☁</div>
+          <div>
+            Tempel URL deployment Google Apps Script kamu di sini. Digunakan untuk membaca nomor surat terakhir dari Sheets dan upload file ke Drive.<br>
+            <em style="font-size:11px;color:#1976d2">Belum punya? Lihat file <code>gas_backend.js</code> yang disertakan — deploy di <code>script.google.com</code></em>
+            <div class="gas-url-input">
+              <input type="text" id="gas-url-input" placeholder="https://script.google.com/macros/s/.../exec">
+              <button onclick="simpanGasUrl()">Simpan & Test</button>
+            </div>
+            <div id="gas-status" style="margin-top:6px;font-size:11px;color:#888"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEMPLATE SOURCE -->
+      <div class="form-card-header" style="border-top:1px solid rgba(122,16,32,0.08)">
         <div class="step-dot" style="background:var(--gold);color:var(--maroon-deep)">☁</div>
         <h2>Sumber Template Word</h2>
       </div>
       <div class="form-body" style="padding-bottom:0.5rem">
         <div class="tpl-box">
-          <div class="tpl-box-title">
-            Pilih mode pengambilan template
-            <span>WAJIB DIISI</span>
-          </div>
-
-          <!-- MODE TABS -->
+          <div class="tpl-box-title">Pilih mode pengambilan template <span>WAJIB DIISI</span></div>
           <div class="tpl-mode-tabs">
             <button class="tpl-mode-tab active" onclick="setTplMode('auto',this)">📁 Otomatis (Repo Sama)</button>
             <button class="tpl-mode-tab" onclick="setTplMode('manual',this)">🔗 URL Manual</button>
           </div>
-
-          <!-- AUTO MODE -->
           <div class="tpl-mode-panel active" id="tpl-panel-auto">
             <div class="auto-info">
               <div class="auto-info-icon">✅</div>
               <div class="auto-info-text">
                 Mode ini otomatis fetch template dari <strong>folder <code>templates/</code> di repo yang sama</strong>.<br>
-                Pastikan struktur repo kamu seperti ini:<br><br>
-                <code>📁 repo-kamu/</code><br>
-                <code>&nbsp;&nbsp;├── index.html</code> ← file SiRapat ini<br>
-                <code>&nbsp;&nbsp;└── templates/</code><br>
-                <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── UND_template.docx</code><br>
-                <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── ABSEN_template.docx</code><br>
-                <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── RISALAH_template.docx</code>
+                <code>📁 repo/</code> → <code>index.html</code> + <code>templates/UND_template.docx</code> + <code>ABSEN_template.docx</code> + <code>RISALAH_template.docx</code>
               </div>
             </div>
             <div class="tpl-status-row">
@@ -342,8 +388,6 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
               <button class="tpl-test-btn" style="width:100%;padding:10px;border-radius:8px" onclick="testSemuaAuto()">🔍 Test Semua Template Sekarang</button>
             </div>
           </div>
-
-          <!-- MANUAL MODE -->
           <div class="tpl-mode-panel" id="tpl-panel-manual">
             <div class="tpl-url-row">
               <span style="font-size:12px;font-weight:600;color:var(--text-mid)">📄 Undangan</span>
@@ -369,37 +413,34 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
                 <button class="tpl-test-btn" onclick="testManualUrl('ris')">Test</button>
               </div>
             </div>
-            <div class="tpl-hint">
-              ⚠ Gunakan URL <strong>github.io</strong> (bukan raw.githubusercontent.com).<br>
-              Format: <code>https://namakamu.github.io/nama-repo/templates/UND_template.docx</code><br>
-              Repo harus <strong>Public</strong> dan GitHub Pages sudah diaktifkan.
-            </div>
+            <div class="tpl-hint">⚠ Gunakan URL <strong>github.io</strong> (bukan raw.githubusercontent.com). Repo harus <strong>Public</strong> dan GitHub Pages sudah diaktifkan.</div>
           </div>
 
-          <!-- PLACEHOLDER REFERENCE -->
+          <!-- Placeholder chips — now includes [[tgl_generet]] -->
           <div class="ph-section">
-            <div class="ph-section-label">Placeholder untuk template Word kamu:</div>
+            <div class="ph-section-label">Placeholder untuk template Word:</div>
             <div class="placeholder-chips">
-              <span class="ph-chip">{{nomorSurat}}</span>
-              <span class="ph-chip">{{hari}}</span>
-              <span class="ph-chip">{{tanggal}}</span>
-              <span class="ph-chip">{{tanggalHari}}</span>
-              <span class="ph-chip">{{jam}}</span>
-              <span class="ph-chip">{{tempat}}</span>
-              <span class="ph-chip">{{agenda}}</span>
-              <span class="ph-chip">{{ketua}}</span>
-              <span class="ph-chip">{{sekretaris}}</span>
-              <span class="ph-chip">{{kota}}</span>
-              <span class="ph-chip">{{kotaTanggal}}</span>
-              <span class="ph-chip">{{tahun}}</span>
-              <span class="ph-chip">{{jumlahPeserta}}</span>
+              <span class="ph-chip">[[nomorSurat]]</span>
+              <span class="ph-chip">[[hari]]</span>
+              <span class="ph-chip">[[tanggal]]</span>
+              <span class="ph-chip">[[tanggalHari]]</span>
+              <span class="ph-chip">[[jam]]</span>
+              <span class="ph-chip">[[tempat]]</span>
+              <span class="ph-chip">[[agenda]]</span>
+              <span class="ph-chip">[[ketua]]</span>
+              <span class="ph-chip">[[sekretaris]]</span>
+              <span class="ph-chip">[[kota]]</span>
+              <span class="ph-chip">[[kotaTanggal]]</span>
+              <span class="ph-chip">[[tahun]]</span>
+              <span class="ph-chip">[[jumlahPeserta]]</span>
+              <span class="ph-chip new" title="Tanggal dokumen di-generate (hari ini)">[[tgl_generet]] ✦baru</span>
             </div>
-            <div class="ph-section-label" style="margin-top:8px">Loop tabel peserta (di baris tabel Word):</div>
+            <div class="ph-section-label" style="margin-top:8px">Loop tabel peserta:</div>
             <div class="placeholder-chips">
               <span class="ph-chip ph-loop">{#peserta}</span>
-              <span class="ph-chip">{{no}}</span>
-              <span class="ph-chip">{{nama}}</span>
-              <span class="ph-chip">{{jabatan}}</span>
+              <span class="ph-chip">[[no]]</span>
+              <span class="ph-chip">[[nama]]</span>
+              <span class="ph-chip">[[jabatan]]</span>
               <span class="ph-chip ph-loop">{/peserta}</span>
             </div>
           </div>
@@ -412,6 +453,15 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
         <h2>Waktu & Tempat Rapat</h2>
       </div>
       <div class="form-body">
+
+        <!-- Nomor Surat Status -->
+        <div class="nomor-status-bar">
+          <div class="nomor-status-dot" id="nomor-dot"></div>
+          <span class="nomor-status-label">Nomor surat berikutnya:</span>
+          <span class="nomor-status-val" id="nomor-preview">— (belum terhubung ke Sheets)</span>
+          <button class="nomor-refresh-btn" onclick="fetchNomorDariSheets()">↻ Refresh</button>
+        </div>
+
         <div class="form-row">
           <div class="field">
             <label>Tanggal Rapat</label>
@@ -460,11 +510,17 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
           <span class="doc-badge absen">Daftar Hadir</span>
           <span class="doc-badge risalah">Risalah/Notulen</span>
         </div>
-        <button class="btn-generate" onclick="generateDokumen()" id="btn-gen">
-          <div class="spinner" id="spinner"></div>
-          <span class="gold-star">✦</span>
-          <span id="btn-gen-text">Generate 3 Dokumen</span>
-        </button>
+        <div class="gen-btns">
+          <!-- Simpan ke Awan — muncul setelah generate sukses -->
+          <button class="btn-awan" id="btn-awan" onclick="simpanKeAwan()">
+            ☁ Simpan ke Awan
+          </button>
+          <button class="btn-generate" onclick="generateDokumen()" id="btn-gen">
+            <div class="spinner" id="spinner"></div>
+            <span class="gold-star">✦</span>
+            <span id="btn-gen-text">Generate 3 Dokumen</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -474,7 +530,7 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 <div id="page-arsip" class="page">
   <div class="page-header"><div class="page-header-inner">
     <h1>Arsip Rapat</h1>
-    <p>Seluruh rapat yang pernah di-generate</p>
+    <p>Seluruh rapat yang pernah di-generate. Klik item untuk melihat detail & upload dokumen.</p>
   </div></div>
   <div class="content-section">
     <div class="search-bar">
@@ -563,13 +619,18 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
         <h3>Nomor Surat</h3>
         <div class="form-row-2">
           <div class="field"><label>Format Nomor Surat</label><input type="text" id="set-nomor-fmt"></div>
-          <div class="field"><label>Nomor Urut Terakhir</label><input type="number" id="set-nomor-last" min="0"></div>
+          <div class="field"><label>Nomor Urut Terakhir (override lokal)</label><input type="number" id="set-nomor-last" min="0"></div>
         </div>
         <p style="font-size:12px;color:var(--text-muted);margin-top:6px">Placeholder: <code style="background:rgba(122,16,32,0.07);padding:1px 6px;border-radius:4px;font-family:monospace">[NO]</code> <code style="background:rgba(122,16,32,0.07);padding:1px 6px;border-radius:4px;font-family:monospace">[BULAN]</code> <code style="background:rgba(122,16,32,0.07);padding:1px 6px;border-radius:4px;font-family:monospace">[TAHUN]</code></p>
       </div>
       <div class="setting-group">
+        <h3>Google Apps Script URL</h3>
+        <div class="form-row-2">
+          <div class="field" style="grid-column:1/-1"><label>URL Deployment</label><input type="text" id="set-gas-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        </div>
+      </div>
+      <div class="setting-group">
         <h3>URL Template (disimpan permanen)</h3>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Kosongkan jika pakai mode Otomatis (folder templates/ di repo sama).</p>
         <div class="form-row-2">
           <div class="field"><label>URL Template Undangan</label><input type="text" id="set-url-und" placeholder="./templates/UND_template.docx atau URL penuh"></div>
           <div class="field"><label>URL Template Absen</label><input type="text" id="set-url-abs" placeholder="./templates/ABSEN_template.docx"></div>
@@ -584,6 +645,8 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MODAL DETAIL ARSIP + UPLOAD -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-header">
@@ -595,7 +658,9 @@ nav { background: var(--maroon-deep); display: flex; align-items: center; justif
 </div>
 
 <script>
-// ── DATA ──
+// ══════════════════════════════════════════════════════════════
+//  DATA & STATE
+// ══════════════════════════════════════════════════════════════
 const DEFAULT_PESERTA = [
   { nama: 'ISKANDAR, S.Sos.',            jabatan: 'Ketua' },
   { nama: 'DARKASYI ABDUL HAMID, S.Pd.', jabatan: 'Anggota' },
@@ -618,21 +683,93 @@ let settings    = JSON.parse(localStorage.getItem('sirapat_settings') || 'null')
   instansi: 'KIP Kabupaten Pidie Jaya', kota: 'Meureudu',
   ketua: 'Iskandar', sekretaris: 'Iswandi',
   nomorFmt: '[NO]/PK.01-Und/1118/[BULAN]/[TAHUN]', nomorLast: 0,
-  urlUnd: '', urlAbs: '', urlRis: ''
+  gasUrl: '', urlUnd: '', urlAbs: '', urlRis: ''
 };
 
-// AUTO path defaults
 const AUTO_PATHS = {
   und: './templates/UND_template.docx',
   abs: './templates/ABSEN_template.docx',
   ris: './templates/RISALAH_template.docx'
 };
 
-let tplMode = 'auto'; // 'auto' | 'manual'
+let tplMode = 'auto';
 let calYear, calMonth;
 const today = new Date();
 
-// ── NAV ──
+// State untuk "Simpan ke Awan"
+let lastGeneratedId = null;   // arsip id dari generate terakhir
+let uploadFiles     = {};     // { arsipId: [{file, name, size, status, url}] }
+
+// ══════════════════════════════════════════════════════════════
+//  GAS URL
+// ══════════════════════════════════════════════════════════════
+function getGasUrl() {
+  return document.getElementById('gas-url-input')?.value?.trim() || settings.gasUrl || '';
+}
+
+async function simpanGasUrl() {
+  const url = document.getElementById('gas-url-input').value.trim();
+  if (!url) { showToast('Masukkan URL Apps Script terlebih dahulu!', 'error'); return; }
+  settings.gasUrl = url;
+  localStorage.setItem('sirapat_settings', JSON.stringify(settings));
+  document.getElementById('gas-status').textContent = '⏳ Menguji koneksi...';
+  await fetchNomorDariSheets();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NOMOR SURAT — baca dari Google Sheets via GAS
+// ══════════════════════════════════════════════════════════════
+async function fetchNomorDariSheets() {
+  const gasUrl = getGasUrl();
+  const dot    = document.getElementById('nomor-dot');
+  const prev   = document.getElementById('nomor-preview');
+  const status = document.getElementById('gas-status');
+
+  if (!gasUrl) {
+    dot.className = 'nomor-status-dot';
+    prev.textContent = '— (isi URL Apps Script di atas)';
+    return;
+  }
+
+  dot.className = 'nomor-status-dot loading';
+  prev.textContent = 'Membaca dari Sheets...';
+  if (status) status.textContent = '⏳ Terhubung ke Sheets...';
+
+  try {
+    const resp = await fetch(`${gasUrl}?action=getLastNomor`);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+
+    settings.nomorLast = data.lastNomor;
+    localStorage.setItem('sirapat_settings', JSON.stringify(settings));
+
+    const nextNo     = data.nextNomor;
+    const tgl        = new Date(document.getElementById('inp-tanggal').value + 'T00:00:00');
+    const nomorStr   = buildNomorSurat(nextNo, tgl);
+
+    dot.className    = 'nomor-status-dot ok';
+    prev.textContent = nomorStr + ` (urut ke-${nextNo} dari Sheets)`;
+    if (status) status.textContent = `✅ Terhubung! Nomor terakhir di Sheets: ${data.lastNomor}`;
+    showToast(`Nomor surat terbaca: ${data.lastNomor}`, 'success');
+  } catch (e) {
+    dot.className    = 'nomor-status-dot err';
+    prev.textContent = '❌ Gagal baca Sheets — pakai nomor lokal';
+    if (status) status.textContent = '❌ Error: ' + e.message;
+    showToast('Gagal baca Sheets: ' + e.message, 'error');
+  }
+}
+
+function buildNomorSurat(no, tgl) {
+  const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return settings.nomorFmt
+    .replace('[NO]', String(no).padStart(3,'0'))
+    .replace('[BULAN]', tgl instanceof Date ? tgl.getMonth()+1 : no)
+    .replace('[TAHUN]', tgl instanceof Date ? tgl.getFullYear() : new Date().getFullYear());
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════════════════════════
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -645,7 +782,9 @@ function showPage(id, btn) {
   if (id === 'pengaturan') loadPengaturan();
 }
 
-// ── TEMPLATE MODE ──
+// ══════════════════════════════════════════════════════════════
+//  TEMPLATE MODE
+// ══════════════════════════════════════════════════════════════
 function setTplMode(mode, btn) {
   tplMode = mode;
   document.querySelectorAll('.tpl-mode-tab').forEach(b => b.classList.remove('active'));
@@ -660,7 +799,9 @@ function getTemplateUrl(key) {
   return el ? el.value.trim() : '';
 }
 
-// ── TEST URLs ──
+// ══════════════════════════════════════════════════════════════
+//  TEST URLs
+// ══════════════════════════════════════════════════════════════
 async function testUrl(url) {
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -680,9 +821,7 @@ async function testAutoUrl(key) {
   }
 }
 
-async function testSemuaAuto() {
-  await Promise.all(['und','abs','ris'].map(k => testAutoUrl(k)));
-}
+async function testSemuaAuto() { await Promise.all(['und','abs','ris'].map(k => testAutoUrl(k))); }
 
 async function testManualUrl(key) {
   const badge = document.getElementById('badge-' + key);
@@ -699,7 +838,9 @@ async function testManualUrl(key) {
   }
 }
 
-// ── PESERTA GEN ──
+// ══════════════════════════════════════════════════════════════
+//  PESERTA GEN
+// ══════════════════════════════════════════════════════════════
 function renderPesertaGen() {
   document.getElementById('peserta-gen-grid').innerHTML = pesertaList.map((p,i) => `
     <div class="peserta-item checked" id="pgen-${i}" onclick="togglePeserta(${i})">
@@ -722,48 +863,40 @@ function pilihAgenda(el, text) {
   if (!text) { ta.disabled = false; ta.focus(); }
 }
 
-// ── PROGRESS ──
+// ══════════════════════════════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════════════════════════════
 function setPS(id, state) {
   const el = document.getElementById(id);
   if (el) { el.className = 'prog-step' + (state ? ' '+state : ''); }
 }
 
-// ── INJECT via docxtemplater ──
+// ══════════════════════════════════════════════════════════════
+//  INJECT via docxtemplater — delimiter [[ ]]
+// ══════════════════════════════════════════════════════════════
 async function fetchAndInject(url, data) {
   const resp = await fetch(url);
-
-  if (!resp.ok) {
-    throw new Error(
-      `Gagal mengambil template "${url}" (HTTP ${resp.status}).`
-    );
-  }
+  if (!resp.ok) throw new Error(`Gagal mengambil template "${url}" (HTTP ${resp.status}).`);
 
   const buf = await resp.arrayBuffer();
   const zip = new PizZip(buf);
-
   const doc = new window.docxtemplater(zip, {
     paragraphLoop: true,
     linebreaks: true,
-
-    delimiters: {
-      start: "[[",
-      end: "]]"
-    },
-
+    delimiters: { start: '[[', end: ']]' },
     nullGetter: () => ''
   });
-
   doc.render(data);
-
   return doc.getZip().generate({
     type: 'blob',
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     compression: 'DEFLATE'
   });
 }
 
-// ── GENERATE ──
+// ══════════════════════════════════════════════════════════════
+//  GENERATE DOKUMEN — fitur #1 & #2 terintegrasi
+// ══════════════════════════════════════════════════════════════
 async function generateDokumen() {
   const tanggalVal = document.getElementById('inp-tanggal').value;
   const jamVal     = document.getElementById('inp-jam').value;
@@ -776,30 +909,44 @@ async function generateDokumen() {
   const urlUnd = getTemplateUrl('und');
   const urlAbs = getTemplateUrl('abs');
   const urlRis = getTemplateUrl('ris');
-
-  if (!urlUnd || !urlAbs || !urlRis) {
-    showToast('URL template belum lengkap!', 'error'); return;
-  }
+  if (!urlUnd || !urlAbs || !urlRis) { showToast('URL template belum lengkap!', 'error'); return; }
 
   const pesertaHadir = getCheckedPeserta();
   if (!pesertaHadir.length) { showToast('Pilih minimal 1 peserta!', 'error'); return; }
 
-  const tgl = new Date(tanggalVal + 'T00:00:00');
-  const HARI  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  // Sembunyikan tombol awan sampai sukses
+  document.getElementById('btn-awan').classList.remove('visible');
+  lastGeneratedId = null;
+
+  const tgl    = new Date(tanggalVal + 'T00:00:00');
+  const HARI   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const BULAN  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   const hariStr  = HARI[tgl.getDay()];
   const tglFull  = `${tgl.getDate()} ${BULAN[tgl.getMonth()]} ${tgl.getFullYear()}`;
   const tahunStr = String(tgl.getFullYear());
   const jamFmt   = jamVal + ' WIB s/d Selesai';
 
-  settings.nomorLast = (settings.nomorLast || 0) + 1;
-  const nomorSurat = settings.nomorFmt
-    .replace('[NO]', String(settings.nomorLast).padStart(3,'0'))
-    .replace('[BULAN]', tgl.getMonth()+1)
-    .replace('[TAHUN]', tahunStr);
+  // ── FITUR #2: Ambil nomor dari Sheets, fallback ke lokal ──
+  let nextNomor = settings.nomorLast + 1;
+  const gasUrl  = getGasUrl();
+  if (gasUrl) {
+    try {
+      const resp = await fetch(`${gasUrl}?action=getLastNomor`);
+      const data = await resp.json();
+      if (!data.error) nextNomor = data.nextNomor;
+    } catch(e) { /* fallback ke lokal */ }
+  }
+
+  settings.nomorLast = nextNomor;
+  const nomorSurat = buildNomorSurat(nextNomor, tgl);
+
+  // ── FITUR #1: tgl_generet = tanggal hari ini (bukan tanggal rapat) ──
+  const now        = new Date();
+  const tglGeneret = `${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}`;
 
   const data = {
-    nomorSurat, hari: hariStr,
+    nomorSurat,
+    hari: hariStr,
     tanggal: tglFull,
     tanggalHari: `${hariStr}, ${tglFull}`,
     jam: jamFmt, jamPolos: jamVal,
@@ -809,6 +956,7 @@ async function generateDokumen() {
     tahun: tahunStr, bulan: BULAN[tgl.getMonth()],
     instansi: settings.instansi,
     jumlahPeserta: String(pesertaHadir.length),
+    tgl_generet: tglGeneret,           // ← FITUR #1
     peserta: pesertaHadir.map((p,i) => ({ no: String(i+1), nama: p.nama, jabatan: p.jabatan, ttd: '' }))
   };
 
@@ -829,11 +977,9 @@ async function generateDokumen() {
         fetchAndInject(urlAbs, data),
         fetchAndInject(urlRis, data),
       ]);
-    } catch(e) {
-      setPS('ps-fetch','err'); throw e;
-    }
+    } catch(e) { setPS('ps-fetch','err'); throw e; }
     setPS('ps-fetch','done');
-    setPS('ps-inject','done'); // inject sudah dilakukan dalam fetchAndInject
+    setPS('ps-inject','done');
 
     setPS('ps-zip','active'); tx.textContent = 'Membuat ZIP...';
     const prefix = `Rapat_${tanggalVal.replace(/-/g,'')}`;
@@ -851,10 +997,38 @@ async function generateDokumen() {
     URL.revokeObjectURL(a.href);
     setPS('ps-done','done');
 
-    localStorage.setItem('sirapat_settings', JSON.stringify(settings));
-    arsipList.unshift({ id: Date.now(), tanggal: tanggalVal, hari: hariStr, jam: jamVal, tempat, agenda, peserta: pesertaHadir.map(p=>p.nama), nomorSurat });
+    // Simpan ke arsip lokal
+    const arsipId = Date.now();
+    arsipList.unshift({
+      id: arsipId, tanggal: tanggalVal, hari: hariStr, jam: jamVal,
+      tempat, agenda, nomorSurat, tglGeneret,
+      peserta: pesertaHadir.map(p=>p.nama)
+    });
     localStorage.setItem('sirapat_arsip', JSON.stringify(arsipList));
+    settings.nomorLast = nextNomor;
+    localStorage.setItem('sirapat_settings', JSON.stringify(settings));
+
+    // Simpan nomor ke Sheets jika GAS tersedia
+    if (gasUrl) {
+      fetch(gasUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'simpanNomor',
+          nomorUrut: nextNomor, nomorSurat,
+          tanggal: tglFull, agenda,
+          pesertaCount: pesertaHadir.length
+        })
+      }).catch(() => {});
+    }
+
+    // ── FITUR #3: tampilkan tombol "Simpan ke Awan" ──
+    lastGeneratedId = arsipId;
+    document.getElementById('btn-awan').classList.add('visible');
+
     showToast('✓ 3 dokumen berhasil diinject & diunduh!', 'success');
+    // Update nomor preview
+    document.getElementById('nomor-preview').textContent =
+      buildNomorSurat(nextNomor + 1, tgl) + ` (urut berikutnya: ${nextNomor+1})`;
 
   } catch(err) {
     console.error(err);
@@ -864,7 +1038,28 @@ async function generateDokumen() {
   }
 }
 
-// ── ARSIP ──
+// ══════════════════════════════════════════════════════════════
+//  FITUR #3: Simpan ke Awan → pindah ke Arsip + buka detail
+// ══════════════════════════════════════════════════════════════
+function simpanKeAwan() {
+  if (!lastGeneratedId) return;
+  // Navigasi ke halaman arsip
+  const arsipBtn = document.querySelectorAll('.nav-btn')[1];
+  showPage('arsip', arsipBtn);
+  // Tunda sedikit lalu buka modal detail + scroll ke item
+  setTimeout(() => {
+    const el = document.getElementById(`arsip-item-${lastGeneratedId}`);
+    if (el) {
+      el.classList.add('highlight');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    showArsipDetail(lastGeneratedId);
+  }, 200);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ARSIP
+// ══════════════════════════════════════════════════════════════
 function renderArsip() {
   const q   = (document.getElementById('search-inp').value||'').toLowerCase();
   const bln = document.getElementById('filter-bulan').value;
@@ -885,11 +1080,17 @@ function renderArsip() {
   const SH = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
   el.innerHTML = list.map(r => {
     const d = new Date(r.tanggal);
-    return `<div class="arsip-item" onclick="showArsipDetail(${r.id})">
+    const hasFiles = (uploadFiles[r.id]||[]).filter(f=>f.status==='done').length;
+    return `<div class="arsip-item" id="arsip-item-${r.id}" onclick="showArsipDetail(${r.id})">
       <div class="arsip-date-box"><div class="day">${d.getDate()}</div><div class="month">${SH[d.getMonth()]}</div></div>
       <div class="arsip-info">
         <div class="arsip-title">${r.agenda.substring(0,60)}${r.agenda.length>60?'...':''}</div>
-        <div class="arsip-meta"><span>📅 ${r.hari}, ${d.getFullYear()}</span><span>🕐 ${r.jam} WIB</span><span>👥 ${r.peserta.length} peserta</span></div>
+        <div class="arsip-meta">
+          <span>📅 ${r.hari}, ${d.getFullYear()}</span>
+          <span>🕐 ${r.jam} WIB</span>
+          <span>👥 ${r.peserta.length} peserta</span>
+          ${hasFiles ? `<span style="color:#1565c0">☁ ${hasFiles} file tersimpan</span>` : ''}
+        </div>
       </div>
       <div class="arsip-actions" onclick="event.stopPropagation()">
         <button class="btn-sm" onclick="hapusArsip(${r.id})">Hapus</button>
@@ -898,24 +1099,242 @@ function renderArsip() {
   }).join('');
 }
 
+// ══════════════════════════════════════════════════════════════
+//  FITUR #4: Modal Detail + Upload ke Drive
+// ══════════════════════════════════════════════════════════════
 function showArsipDetail(id) {
   const r = arsipList.find(x => x.id === id); if (!r) return;
   const d = new Date(r.tanggal);
+  const BULAN_FULL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const folderName = `${String(d.getDate()).padStart(2,'0')} ${BULAN_FULL[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Existing uploaded files for this rapat
+  const files = uploadFiles[id] || [];
+  const doneFiles = files.filter(f => f.status === 'done');
+
   document.getElementById('modal-title').textContent = 'Detail Rapat';
   document.getElementById('modal-body').innerHTML = `
     <p><strong>Tanggal:</strong> ${r.hari}, ${d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</p>
-    <p><strong>Pukul:</strong> ${r.jam} WIB</p><p><strong>Tempat:</strong> ${r.tempat}</p>
-    <p><strong>Agenda:</strong> ${r.agenda}</p><p><strong>Nomor Surat:</strong> ${r.nomorSurat||'-'}</p>
+    <p><strong>Pukul:</strong> ${r.jam} WIB</p>
+    <p><strong>Tempat:</strong> ${r.tempat}</p>
+    <p><strong>Agenda:</strong> ${r.agenda}</p>
+    <p><strong>Nomor Surat:</strong> ${r.nomorSurat||'-'}</p>
+    <p><strong>Di-generate pada:</strong> ${r.tglGeneret || '-'}</p>
     <p style="margin-top:12px"><strong>Peserta (${r.peserta.length}):</strong></p>
-    ${r.peserta.map((n,i)=>`<p style="font-size:13px;padding-left:12px">${i+1}. ${n}</p>`).join('')}`;
+    ${r.peserta.map((n,i)=>`<p style="font-size:13px;padding-left:12px">${i+1}. ${n}</p>`).join('')}
+
+    <!-- ── UPLOAD SECTION ── -->
+    <div class="upload-section">
+      <div class="upload-section-title">
+        ☁ Upload Dokumen ke Google Drive
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted)">Folder: <strong>${folderName}</strong></span>
+      </div>
+
+      ${!getGasUrl() ? `
+        <div style="background:rgba(229,57,53,0.07);border:1px solid rgba(229,57,53,0.2);border-radius:8px;padding:12px 16px;font-size:12px;color:#c62828;margin-bottom:12px">
+          ⚠ URL Apps Script belum diisi. Isi terlebih dahulu di bagian atas halaman Generate.
+        </div>` : ''}
+
+      <!-- Drop zone -->
+      <div class="upload-zone" id="dropzone-${id}"
+           ondrop="handleDrop(event,${id})"
+           ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           onclick="document.getElementById('file-input-${id}').click()">
+        <div class="upload-zone-icon">📂</div>
+        <div class="upload-zone-text">
+          <strong>Drag & drop file di sini</strong><br>
+          atau klik untuk pilih file<br>
+          <span style="font-size:11px">.docx, .pdf, .zip, gambar — maks. 10MB per file</span>
+        </div>
+        <input type="file" id="file-input-${id}" multiple onchange="handleFileInput(event,${id})">
+      </div>
+
+      <!-- File list -->
+      <div class="uploaded-files" id="file-list-${id}"></div>
+
+      ${files.length ? `
+        <div class="upload-actions">
+          <button class="btn-upload-all" id="upload-btn-${id}" onclick="uploadSemuaFile(${id},'${folderName}')">
+            ☁ Upload ke Drive
+          </button>
+        </div>` : ''}
+
+      ${doneFiles.length ? `
+        <div style="margin-top:12px;padding:10px 14px;background:var(--green-bg);border-radius:8px;font-size:12px;color:var(--green)">
+          ✅ ${doneFiles.length} file berhasil disimpan ke Drive folder <strong>${folderName}</strong>
+        </div>` : ''}
+    </div>
+  `;
+
+  renderFileList(id);
   document.getElementById('modal-overlay').classList.add('open');
+}
+
+function renderFileList(id) {
+  const files = uploadFiles[id] || [];
+  const el = document.getElementById(`file-list-${id}`);
+  if (!el) return;
+  if (!files.length) { el.innerHTML = ''; return; }
+
+  el.innerHTML = files.map((f,i) => `
+    <div class="uploaded-file-item" id="file-item-${id}-${i}">
+      <div class="file-icon">${getFileIcon(f.name)}</div>
+      <div class="file-name">${f.name}</div>
+      <div class="file-size">${formatSize(f.size)}</div>
+      ${f.status === 'done' && f.url
+        ? `<a class="file-link" href="${f.url}" target="_blank">Buka ↗</a>`
+        : `<span class="file-status ${f.status}">${statusLabel(f.status)}</span>`
+      }
+      ${f.status !== 'uploading'
+        ? `<button class="file-remove" onclick="hapusFileEntry(${id},${i})" title="Hapus dari daftar">✕</button>`
+        : ''}
+    </div>`).join('');
+
+  // Pastikan tombol upload muncul
+  const btnArea = document.querySelector(`#file-list-${id} + .upload-actions`);
+  if (!btnArea && files.length) {
+    const actions = document.createElement('div');
+    actions.className = 'upload-actions';
+    actions.innerHTML = `<button class="btn-upload-all" id="upload-btn-${id}" onclick="uploadSemuaFile(${id},'${getFolderNameById(id)}')">☁ Upload ke Drive</button>`;
+    el.after(actions);
+  }
+}
+
+function getFolderNameById(id) {
+  const r = arsipList.find(x => x.id === id);
+  if (!r) return 'Rapat';
+  const d = new Date(r.tanggal);
+  const BN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return `${String(d.getDate()).padStart(2,'0')} ${BN[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return '📕';
+  if (['doc','docx'].includes(ext)) return '📝';
+  if (['zip','rar'].includes(ext)) return '📦';
+  if (['jpg','jpeg','png','gif','webp'].includes(ext)) return '🖼️';
+  return '📄';
+}
+
+function formatSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + 'KB';
+  return (bytes/1024/1024).toFixed(1) + 'MB';
+}
+
+function statusLabel(s) {
+  return { pending: 'Menunggu', uploading: 'Uploading...', done: 'Tersimpan', err: 'Gagal' }[s] || s;
+}
+
+function hapusFileEntry(id, i) {
+  if (uploadFiles[id]) {
+    uploadFiles[id].splice(i, 1);
+    renderFileList(id);
+  }
+}
+
+function handleFileInput(event, id) {
+  addFiles(id, Array.from(event.target.files));
+  event.target.value = '';
+}
+
+function handleDrop(event, id) {
+  event.preventDefault();
+  document.getElementById(`dropzone-${id}`)?.classList.remove('dragover');
+  addFiles(id, Array.from(event.dataTransfer.files));
+}
+
+function addFiles(id, files) {
+  if (!uploadFiles[id]) uploadFiles[id] = [];
+  files.forEach(f => {
+    if (f.size > 10 * 1024 * 1024) { showToast(`${f.name} terlalu besar (maks 10MB)`, 'error'); return; }
+    uploadFiles[id].push({ file: f, name: f.name, size: f.size, status: 'pending', url: null });
+  });
+  renderFileList(id);
+  // Pastikan tombol upload ada
+  setTimeout(() => {
+    if (!document.getElementById(`upload-btn-${id}`)) {
+      const el = document.getElementById(`file-list-${id}`);
+      if (el) {
+        const actions = document.createElement('div');
+        actions.className = 'upload-actions';
+        actions.id = `upload-actions-${id}`;
+        actions.innerHTML = `<button class="btn-upload-all" id="upload-btn-${id}" onclick="uploadSemuaFile(${id},'${getFolderNameById(id)}')">☁ Upload ke Drive</button>`;
+        el.after(actions);
+      }
+    }
+  }, 50);
+}
+
+async function uploadSemuaFile(id, folderName) {
+  const gasUrl = getGasUrl();
+  if (!gasUrl) { showToast('URL Apps Script belum diisi!', 'error'); return; }
+
+  const files = (uploadFiles[id] || []).filter(f => f.status === 'pending' || f.status === 'err');
+  if (!files.length) { showToast('Tidak ada file yang perlu diupload.', 'info'); return; }
+
+  const btn = document.getElementById(`upload-btn-${id}`);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Mengupload...'; }
+
+  let sukses = 0, gagal = 0;
+
+  for (let i = 0; i < uploadFiles[id].length; i++) {
+    const f = uploadFiles[id][i];
+    if (f.status !== 'pending' && f.status !== 'err') continue;
+
+    uploadFiles[id][i].status = 'uploading';
+    renderFileList(id);
+
+    try {
+      const base64 = await fileToBase64(f.file);
+      const resp   = await fetch(gasUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'uploadFile',
+          fileName: f.name,
+          fileBase64: base64,
+          mimeType: f.file.type || 'application/octet-stream',
+          folderName
+        })
+      });
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error);
+
+      uploadFiles[id][i].status = 'done';
+      uploadFiles[id][i].url    = data.fileUrl;
+      sukses++;
+    } catch (e) {
+      uploadFiles[id][i].status = 'err';
+      gagal++;
+    }
+
+    renderFileList(id);
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '☁ Upload ke Drive'; }
+  showToast(`Upload selesai: ${sukses} berhasil${gagal ? `, ${gagal} gagal` : ''}`, sukses ? 'success' : 'error');
+  renderArsip(); // update badge di list
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Gagal baca file'));
+    r.readAsDataURL(file);
+  });
 }
 
 function hapusArsip(id) {
   if (!confirm('Hapus arsip ini?')) return;
   arsipList = arsipList.filter(r => r.id !== id);
   localStorage.setItem('sirapat_arsip', JSON.stringify(arsipList));
-  renderArsip(); showToast('Arsip dihapus', 'info');
+  delete uploadFiles[id];
+  renderArsip();
+  showToast('Arsip dihapus', 'info');
 }
 
 function closeModal(e) {
@@ -923,7 +1342,9 @@ function closeModal(e) {
     document.getElementById('modal-overlay').classList.remove('open');
 }
 
-// ── PESERTA MANAGE ──
+// ══════════════════════════════════════════════════════════════
+//  PESERTA MANAGE
+// ══════════════════════════════════════════════════════════════
 function renderPesertaManage() {
   document.getElementById('peserta-manage-list').innerHTML = pesertaList.map((p,i) => `
     <div class="peserta-row">
@@ -943,7 +1364,10 @@ function tambahPeserta() {
 function hapusPesertaRow(i) { pesertaList.splice(i,1); renderPesertaManage(); }
 
 function simpanPeserta() {
-  pesertaList = pesertaList.map((_,i)=>({ nama: document.getElementById('pm-nama-'+i)?.value||'', jabatan: document.getElementById('pm-jab-'+i)?.value||'' })).filter(p=>p.nama.trim());
+  pesertaList = pesertaList.map((_,i)=>({
+    nama: document.getElementById('pm-nama-'+i)?.value||'',
+    jabatan: document.getElementById('pm-jab-'+i)?.value||''
+  })).filter(p=>p.nama.trim());
   localStorage.setItem('sirapat_peserta', JSON.stringify(pesertaList));
   renderPesertaGen(); showToast('Daftar peserta disimpan!', 'success');
 }
@@ -955,11 +1379,13 @@ function resetPeserta() {
   renderPesertaManage(); renderPesertaGen(); showToast('Direset ke default.', 'info');
 }
 
-// ── DASHBOARD ──
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════════
 function renderDashboard() {
   const total = arsipList.length;
-  const ti = arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
-  const avg = total ? Math.round(arsipList.reduce((a,r)=>a+r.peserta.length,0)/total) : 0;
+  const ti    = arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
+  const avg   = total ? Math.round(arsipList.reduce((a,r)=>a+r.peserta.length,0)/total) : 0;
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card"><div class="stat-label">Total Rapat</div><div class="stat-value">${total}</div><div class="stat-sub">Sepanjang waktu</div></div>
     <div class="stat-card"><div class="stat-label">Tahun ${today.getFullYear()}</div><div class="stat-value">${ti}</div><div class="stat-sub">Rapat tahun ini</div></div>
@@ -968,12 +1394,14 @@ function renderDashboard() {
   const months = Array(12).fill(0);
   arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).forEach(r=>months[new Date(r.tanggal).getMonth()]++);
   const max = Math.max(...months,1);
-  const SH = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const SH  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
   document.getElementById('bar-chart').innerHTML = months.map((n,i)=>
     `<div class="bar-group"><div class="bar" style="height:${Math.round(n/max*90)}px" title="${n} rapat"></div><div class="bar-label">${SH[i]}</div></div>`).join('');
 }
 
-// ── KALENDER ──
+// ══════════════════════════════════════════════════════════════
+//  KALENDER
+// ══════════════════════════════════════════════════════════════
 function initKalender() { calYear=today.getFullYear(); calMonth=today.getMonth(); }
 function changeMonth(d) { calMonth+=d; if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;} renderKalender(); }
 function renderKalender() {
@@ -1003,32 +1431,38 @@ function calClickDay(ds) {
   }
 }
 
-// ── PENGATURAN ──
+// ══════════════════════════════════════════════════════════════
+//  PENGATURAN
+// ══════════════════════════════════════════════════════════════
 function loadPengaturan() {
   ['instansi','kota','ketua','sekretaris'].forEach(k=>{ document.getElementById('set-'+k).value=settings[k]||''; });
-  document.getElementById('set-nomor-fmt').value=settings.nomorFmt||'';
-  document.getElementById('set-nomor-last').value=settings.nomorLast||0;
-  document.getElementById('set-url-und').value=settings.urlUnd||'';
-  document.getElementById('set-url-abs').value=settings.urlAbs||'';
-  document.getElementById('set-url-ris').value=settings.urlRis||'';
+  document.getElementById('set-nomor-fmt').value  = settings.nomorFmt||'';
+  document.getElementById('set-nomor-last').value = settings.nomorLast||0;
+  document.getElementById('set-gas-url').value    = settings.gasUrl||'';
+  document.getElementById('set-url-und').value    = settings.urlUnd||'';
+  document.getElementById('set-url-abs').value    = settings.urlAbs||'';
+  document.getElementById('set-url-ris').value    = settings.urlRis||'';
 }
 
 function simpanPengaturan() {
   ['instansi','kota','ketua','sekretaris'].forEach(k=>{ settings[k]=document.getElementById('set-'+k).value; });
-  settings.nomorFmt=document.getElementById('set-nomor-fmt').value;
-  settings.nomorLast=parseInt(document.getElementById('set-nomor-last').value)||0;
-  settings.urlUnd=document.getElementById('set-url-und').value;
-  settings.urlAbs=document.getElementById('set-url-abs').value;
-  settings.urlRis=document.getElementById('set-url-ris').value;
+  settings.nomorFmt  = document.getElementById('set-nomor-fmt').value;
+  settings.nomorLast = parseInt(document.getElementById('set-nomor-last').value)||0;
+  settings.gasUrl    = document.getElementById('set-gas-url').value;
+  settings.urlUnd    = document.getElementById('set-url-und').value;
+  settings.urlAbs    = document.getElementById('set-url-abs').value;
+  settings.urlRis    = document.getElementById('set-url-ris').value;
   localStorage.setItem('sirapat_settings', JSON.stringify(settings));
-  // sync ke manual url inputs
   if(settings.urlUnd) document.getElementById('url-und').value=settings.urlUnd;
   if(settings.urlAbs) document.getElementById('url-abs').value=settings.urlAbs;
   if(settings.urlRis) document.getElementById('url-ris').value=settings.urlRis;
+  if(settings.gasUrl) document.getElementById('gas-url-input').value=settings.gasUrl;
   showToast('Pengaturan disimpan!', 'success');
 }
 
-// ── TOAST ──
+// ══════════════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════════════
 let toastT;
 function showToast(msg, type='info') {
   const t=document.getElementById('toast');
@@ -1036,13 +1470,21 @@ function showToast(msg, type='info') {
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),4000);
 }
 
-// ── INIT ──
+// ══════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════
 document.getElementById('inp-tanggal').value = today.toISOString().split('T')[0];
 initKalender();
 renderPesertaGen();
-if(settings.urlUnd) document.getElementById('url-und').value=settings.urlUnd;
-if(settings.urlAbs) document.getElementById('url-abs').value=settings.urlAbs;
-if(settings.urlRis) document.getElementById('url-ris').value=settings.urlRis;
+
+// Load saved GAS URL
+if(settings.gasUrl) {
+  document.getElementById('gas-url-input').value = settings.gasUrl;
+  fetchNomorDariSheets();
+}
+if(settings.urlUnd) document.getElementById('url-und').value = settings.urlUnd;
+if(settings.urlAbs) document.getElementById('url-abs').value = settings.urlAbs;
+if(settings.urlRis) document.getElementById('url-ris').value = settings.urlRis;
 </script>
 </body>
 </html>
