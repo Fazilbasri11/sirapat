@@ -32,30 +32,145 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .nav-btn:hover{background:rgba(255,255,255,.08);color:var(--white)}
 .nav-btn.active{background:var(--gold);color:var(--maroon-deep);font-weight:600}
 .page{display:none}.page.active{display:block}
-.hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 55%,var(--maroon-light) 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
-.hero-orb{position:absolute;border-radius:50%;border:1px solid rgba(201,147,42,.15);animation:orb-spin 20s linear infinite}
-.hero-orb:nth-child(1){width:320px;height:320px;top:-80px;right:-80px}
-.hero-orb:nth-child(2){width:200px;height:200px;bottom:-60px;left:10%;animation-duration:14s;animation-direction:reverse}
-.hero-orb:nth-child(3){width:120px;height:120px;top:20%;right:20%;animation-duration:9s}
-@keyframes orb-spin{from{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.05)}to{transform:rotate(360deg) scale(1)}}
-.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,147,42,.15);border:1px solid rgba(201,147,42,.3);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--gold-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;animation:fade-up .6s ease both}
-.hero-badge::before{content:'●';font-size:8px}
-.hero h1{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:.4rem;animation:fade-up .6s .1s ease both}
+
+/* ══════════════════════════════════════════
+   HERO — ANIMATED
+══════════════════════════════════════════ */
+.hero{
+  background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 55%,var(--maroon-light) 100%);
+  padding:3.5rem 2rem 3rem;position:relative;overflow:hidden;
+  min-height:280px;
+}
+
+/* Particle canvas */
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
+
+/* Animated rings */
+.hero-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(201,147,42,.18);
+  animation:ring-pulse 4s ease-in-out infinite;
+}
+.hero-ring:nth-child(1){width:340px;height:340px;top:-90px;right:-60px;animation-delay:0s}
+.hero-ring:nth-child(2){width:200px;height:200px;bottom:-70px;left:8%;animation-delay:1.4s;border-color:rgba(201,147,42,.1)}
+.hero-ring:nth-child(3){width:130px;height:130px;top:25%;right:22%;animation-delay:2.8s;border-color:rgba(255,255,255,.1)}
+
+@keyframes ring-pulse{
+  0%,100%{transform:scale(1);opacity:.6}
+  50%{transform:scale(1.06);opacity:1}
+}
+
+/* Floating dots */
+.hero-dot{
+  position:absolute;border-radius:50%;background:var(--gold);
+  animation:dot-float 6s ease-in-out infinite;
+  opacity:0;
+}
+@keyframes dot-float{
+  0%{opacity:0;transform:translateY(0) scale(0)}
+  20%{opacity:.7;transform:translateY(-12px) scale(1)}
+  80%{opacity:.4;transform:translateY(-40px) scale(.7)}
+  100%{opacity:0;transform:translateY(-60px) scale(0)}
+}
+
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:2}
+
+/* Staggered text animations */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(201,147,42,.15);border:1px solid rgba(201,147,42,.3);
+  border-radius:20px;padding:5px 14px;font-size:11px;
+  color:var(--gold-light);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:1rem;
+  opacity:0;animation:hero-up .7s .1s cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-badge::before{content:'●';font-size:8px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{
+  font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;
+  color:var(--white);line-height:1.2;margin-bottom:.5rem;
+  opacity:0;animation:hero-up .7s .25s cubic-bezier(.22,1,.36,1) forwards;
+}
 .hero h1 em{font-style:italic;color:var(--gold-light)}
-.hero p{font-size:14px;color:rgba(255,255,255,.65);max-width:520px;line-height:1.7;animation:fade-up .6s .2s ease both}
-@keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── CLOUD STATUS BANNER ── */
-.cloud-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:12px;margin-bottom:1rem;border:1px solid}
-.cloud-banner.loading{background:rgba(201,147,42,.08);border-color:rgba(201,147,42,.25);color:#7a5010}
-.cloud-banner.ok{background:rgba(76,175,80,.08);border-color:rgba(76,175,80,.25);color:#2e7d32}
-.cloud-banner.err{background:rgba(229,57,53,.06);border-color:rgba(229,57,53,.2);color:#c62828}
-.cloud-banner.warn{background:rgba(122,16,32,.05);border-color:rgba(122,16,32,.15);color:var(--maroon)}
-.cloud-spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
+.hero p{
+  font-size:14px;color:rgba(255,255,255,.65);max-width:520px;
+  line-height:1.7;
+  opacity:0;animation:hero-up .7s .4s cubic-bezier(.22,1,.36,1) forwards;
+}
 
-.form-section,.content-section{max-width:900px;margin:0 auto;padding:2rem}
+/* Stats row in hero */
+.hero-stats{
+  display:flex;gap:2rem;margin-top:1.8rem;
+  opacity:0;animation:hero-up .7s .55s cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-stat{text-align:left}
+.hero-stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold-light);line-height:1}
+.hero-stat-lbl{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.hero-stat-sep{width:1px;background:rgba(255,255,255,.12);align-self:stretch}
+
+/* Shimmer line across bottom of hero */
+.hero-shimmer{
+  position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent 0%,var(--gold) 40%,var(--gold-light) 60%,transparent 100%);
+  background-size:200% 100%;
+  animation:shimmer-slide 3s linear infinite;
+  opacity:.6;
+}
+@keyframes shimmer-slide{from{background-position:200% 0}to{background-position:-200% 0}}
+
+@keyframes hero-up{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ══════════════════════════════════════════
+   KALENDER + GRAFIK PANEL — di bawah hero
+══════════════════════════════════════════ */
+.home-panel{max-width:900px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+.cal-wrapper{background:var(--white);border-radius:16px;border:1px solid rgba(122,16,32,.08);overflow:hidden;box-shadow:var(--shadow)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:var(--maroon);border-bottom:1px solid rgba(122,16,32,.1)}
+.cal-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--white)}
+.cal-nav{display:flex;gap:6px}
+.cal-nav button{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);cursor:pointer;font-size:14px;color:rgba(255,255,255,.8);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{background:rgba(255,255,255,.2);color:var(--white)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:.75rem}
+.cal-day-name{text-align:center;font-size:10px;font-weight:600;color:var(--text-muted);padding:6px 0}
+.cal-day{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text-dark);gap:3px}
+.cal-day:hover{background:rgba(122,16,32,.08)}
+.cal-day.today{background:var(--maroon);color:var(--white);font-weight:600}
+.cal-day.selected{outline:2px solid var(--gold);outline-offset:1px}
+.cal-day.has-event{position:relative}
+.cal-day.has-event::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.cal-day.booked{background:rgba(229,57,53,.1);color:#c62828}
+.cal-day.booked::after{content:'';width:5px;height:5px;border-radius:50%;background:#e53935}
+.cal-day.other-month{color:#ccc;pointer-events:none}
+.cal-legend{display:flex;gap:12px;padding:.5rem 1rem .75rem;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
+.cal-legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* GRAFIK PANEL */
+.stats-panel{display:flex;flex-direction:column;gap:12px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:var(--white);border-radius:12px;padding:1rem 1.2rem;box-shadow:var(--shadow);border:1px solid rgba(122,16,32,.06)}
+.stat-label{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.stat-value{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--maroon);line-height:1;margin-bottom:2px}
+.stat-sub{font-size:11px;color:var(--text-muted)}
+.chart-card{background:var(--white);border-radius:12px;padding:1.2rem 1.2rem 1rem;box-shadow:var(--shadow);border:1px solid rgba(122,16,32,.06)}
+.chart-title{font-size:12px;font-weight:600;color:var(--text-dark);margin-bottom:.9rem;letter-spacing:.02em}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:88px}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .4s ease}
+.bar-inner{width:100%;height:100%;background:linear-gradient(180deg,var(--maroon-light) 0%,var(--maroon) 100%);border-radius:3px 3px 0 0}
+.bar-label{font-size:9px;color:var(--text-muted)}
+.bar-val{font-size:9px;font-weight:600;color:var(--maroon)}
+
+/* ══════════════════════════════════════════
+   FORM SECTION
+══════════════════════════════════════════ */
+.form-section{max-width:900px;margin:0 auto;padding:0 2rem 2rem}
+.content-section{max-width:900px;margin:0 auto;padding:2rem}
 .form-card{background:var(--white);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden}
 .form-card-header{background:var(--cream-dark);border-bottom:1px solid rgba(122,16,32,.1);padding:1.25rem 1.75rem;display:flex;align-items:center;gap:10px}
 .form-card-header h2{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--maroon)}
@@ -111,29 +226,20 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-generate:disabled{opacity:.65;cursor:not-allowed;transform:none}
 .btn-generate .gold-star{color:var(--gold-light);font-size:16px}
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 .btn-awan{display:none;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:var(--white);border:none;border-radius:10px;padding:13px 22px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(21,101,192,.35)}
 .btn-awan:hover{transform:translateY(-1px)}
 .btn-awan.visible{display:flex;animation:fade-up .3s ease}
-.cal-wrapper{background:var(--white);border-radius:12px;border:1px solid rgba(122,16,32,.08);overflow:hidden;margin-top:1.5rem}
-.cal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:var(--cream-dark);border-bottom:1px solid rgba(122,16,32,.08)}
-.cal-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--maroon)}
-.cal-nav{display:flex;gap:6px}
-.cal-nav button{width:30px;height:30px;border-radius:6px;border:1.5px solid #e8ddd5;background:var(--white);cursor:pointer;font-size:14px;color:var(--text-mid);transition:all .15s;display:flex;align-items:center;justify-content:center}
-.cal-nav button:hover{border-color:var(--maroon);color:var(--maroon)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:.75rem}
-.cal-day-name{text-align:center;font-size:10px;font-weight:600;color:var(--text-muted);padding:6px 0}
-.cal-day{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text-dark);gap:3px}
-.cal-day:hover{background:rgba(122,16,32,.08)}
-.cal-day.today{background:var(--maroon);color:var(--white);font-weight:600}
-.cal-day.selected{outline:2px solid var(--gold);outline-offset:1px}
-.cal-day.has-event{position:relative}
-.cal-day.has-event::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold)}
-.cal-day.booked{background:rgba(229,57,53,.1);color:#c62828}
-.cal-day.booked::after{content:'';width:5px;height:5px;border-radius:50%;background:#e53935}
-.cal-day.other-month{color:#ccc;pointer-events:none}
-.cal-legend{display:flex;gap:16px;padding:.5rem 1rem .75rem;flex-wrap:wrap}
-.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
-.cal-legend-dot{width:8px;height:8px;border-radius:50%}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CLOUD STATUS BANNER ── */
+.cloud-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:12px;margin-bottom:1rem;border:1px solid}
+.cloud-banner.loading{background:rgba(201,147,42,.08);border-color:rgba(201,147,42,.25);color:#7a5010}
+.cloud-banner.ok{background:rgba(76,175,80,.08);border-color:rgba(76,175,80,.25);color:#2e7d32}
+.cloud-banner.err{background:rgba(229,57,53,.06);border-color:rgba(229,57,53,.2);color:#c62828}
+.cloud-banner.warn{background:rgba(122,16,32,.05);border-color:rgba(122,16,32,.15);color:var(--maroon)}
+.cloud-spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+
 .page-header{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 100%);padding:2.5rem 2rem 2rem}
 .page-header-inner{max-width:900px;margin:0 auto}
 .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:4px}
@@ -170,17 +276,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .save-bar{position:sticky;bottom:0;background:var(--white);border-top:1px solid #e8ddd5;padding:1rem 2rem;display:flex;justify-content:flex-end;gap:10px}
 .btn-primary{background:var(--maroon);color:var(--white);border:none;border-radius:8px;padding:10px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-primary:hover{background:var(--maroon-dark)}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem}
-.stat-card{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(90,10,24,.07);border:1px solid rgba(122,16,32,.06)}
-.stat-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-.stat-value{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--maroon);line-height:1;margin-bottom:4px}
-.stat-sub{font-size:12px;color:var(--text-muted)}
-.chart-card{background:var(--white);border-radius:12px;padding:1.4rem;box-shadow:0 2px 8px rgba(90,10,24,.07);border:1px solid rgba(122,16,32,.06);margin-bottom:12px}
-.chart-title{font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:1rem}
-.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px}
-.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
-.bar{width:100%;background:linear-gradient(180deg,var(--maroon-light) 0%,var(--maroon) 100%);border-radius:4px 4px 0 0;min-height:4px}
-.bar-label{font-size:10px;color:var(--text-muted)}
+
 .setting-group{margin-bottom:2rem}
 .setting-group h3{font-size:13px;font-weight:600;color:var(--text-mid);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid #e8ddd5}
 .tpl-box{background:linear-gradient(135deg,rgba(61,7,16,.03),rgba(201,147,42,.05));border:1.5px solid rgba(201,147,42,.2);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
@@ -297,7 +393,8 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .toast.success{border-left:4px solid #4caf50}
 .toast.error{border-left:4px solid #e53935}
 .toast.info{border-left:4px solid var(--gold)}
-@media(max-width:640px){
+@media(max-width:700px){
+  .home-panel{grid-template-columns:1fr}
   .form-row,.form-row-2,.peserta-grid{grid-template-columns:1fr}
   .tpl-url-row{grid-template-columns:1fr}
   nav{padding:0 1rem}
@@ -305,6 +402,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   .hero{padding:2rem 1rem 1.5rem}
   .hero h1{font-size:1.8rem}
   .gen-btns{flex-wrap:wrap}
+  .stat-row{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -325,7 +423,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
     <button class="nav-btn active" onclick="showPage('generate',this)">✦ Generate</button>
     <button class="nav-btn" onclick="showPage('arsip',this)">Arsip Rapat</button>
     <button class="nav-btn" onclick="showPage('peserta',this)">Peserta</button>
-    <button class="nav-btn" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-btn" onclick="showPage('pengaturan',this)">⚙ Pengaturan</button>
     <button class="nav-btn" onclick="showPage('tentang',this)">ℹ Tentang</button>
   </div>
@@ -333,14 +430,89 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 
 <!-- PAGE: GENERATE -->
 <div id="page-generate" class="page active">
+
+  <!-- ★ HERO DENGAN ANIMASI ★ -->
   <div class="hero">
-    <div class="hero-orb"></div><div class="hero-orb"></div><div class="hero-orb"></div>
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-ring"></div>
+    <div class="hero-ring"></div>
+    <div class="hero-ring"></div>
+    <!-- Floating dots spawned by JS -->
+    <div class="hero-shimmer"></div>
     <div class="hero-inner">
       <div class="hero-badge">Sistem Rapat Digital</div>
       <h1>Generate Dokumen<br><em>Rapat KIP</em></h1>
       <p>Template Word diambil dari repo GitHub, data diinject, 3 dokumen resmi siap diunduh sebagai ZIP.</p>
+      <div class="hero-stats" id="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-total">0</div>
+          <div class="hero-stat-lbl">Total Rapat</div>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-tahun">0</div>
+          <div class="hero-stat-lbl">Tahun Ini</div>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-nomor">—</div>
+          <div class="hero-stat-lbl">Nomor Berikutnya</div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- ★ KALENDER + GRAFIK PANEL ★ -->
+  <div class="home-panel">
+    <!-- KIRI: Kalender -->
+    <div class="cal-wrapper">
+      <div class="cal-header">
+        <div class="cal-title" id="cal-title-inline"></div>
+        <div class="cal-nav">
+          <button onclick="changeMonthInline(-1)">‹</button>
+          <button onclick="changeMonthInline(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid-inline"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--maroon)"></div>Hari ini</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--gold)"></div>Ada rapat</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#e53935"></div>Konflik ruangan</div>
+      </div>
+    </div>
+
+    <!-- KANAN: Statistik + Grafik -->
+    <div class="stats-panel">
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Rapat</div>
+          <div class="stat-value" id="dash-total">0</div>
+          <div class="stat-sub">Sepanjang waktu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tahun Ini</div>
+          <div class="stat-value" id="dash-tahun">0</div>
+          <div class="stat-sub" id="dash-tahun-lbl">Rapat 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rata-rata Peserta</div>
+          <div class="stat-value" id="dash-avg">0</div>
+          <div class="stat-sub">Per rapat</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dokumen Dibuat</div>
+          <div class="stat-value" id="dash-dok">0</div>
+          <div class="stat-sub">Und+Absen+Risalah</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Rapat per Bulan — <span id="chart-tahun-lbl"></span></div>
+        <div class="bar-chart" id="bar-chart-home"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM GENERATE -->
   <div class="form-section">
     <div class="form-card">
       <div class="form-card-header">
@@ -357,7 +529,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <div class="form-row">
           <div class="field">
             <label>Tanggal Rapat</label>
-            <input type="date" id="inp-tanggal" onchange="updateCalSelection();updateNomorPreview()">
+            <input type="date" id="inp-tanggal" onchange="updateNomorPreview()">
           </div>
           <div class="field">
             <label>Pukul Mulai</label>
@@ -382,22 +554,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <div class="section-divider"><span>Peserta yang Diundang</span></div>
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Centang peserta yang hadir.</p>
         <div class="peserta-grid" id="peserta-gen-grid"></div>
-        <div class="section-divider"><span>Kalender Rapat</span></div>
-        <div class="cal-wrapper">
-          <div class="cal-header">
-            <div class="cal-title" id="cal-title-inline"></div>
-            <div class="cal-nav">
-              <button onclick="changeMonthInline(-1)">‹</button>
-              <button onclick="changeMonthInline(1)">›</button>
-            </div>
-          </div>
-          <div class="cal-grid" id="cal-grid-inline"></div>
-          <div class="cal-legend">
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--maroon)"></div>Hari ini</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--gold)"></div>Ada rapat</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#e53935"></div>Konflik ruangan</div>
-          </div>
-        </div>
       </div>
       <div class="progress-bar" id="progress-bar">
         <span class="prog-step" id="ps-fetch">⬇ Fetch</span><span class="prog-arrow">›</span>
@@ -431,7 +587,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
     <p>Data disimpan di Google Sheets — aman meski browser di-clear atau dibuka di perangkat lain.</p>
   </div></div>
   <div class="content-section">
-    <!-- ★ CLOUD STATUS BANNER — BARU ★ -->
     <div id="cloud-status-banner" class="cloud-banner loading" style="display:none">
       <div class="cloud-spin" id="cloud-spin"></div>
       <span id="cloud-status-text">Memuat arsip dari cloud...</span>
@@ -448,7 +603,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <option value="">Semua Tahun</option>
         <option>2026</option><option>2025</option>
       </select>
-      <!-- ★ TOMBOL REFRESH MANUAL ★ -->
       <button class="btn-sm" onclick="refreshArsipCloud()" title="Muat ulang dari cloud">☁ Sync</button>
     </div>
     <div class="arsip-list" id="arsip-list"></div>
@@ -468,19 +622,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   <div class="save-bar">
     <button class="btn-sm" onclick="resetPeserta()">Reset Default</button>
     <button class="btn-primary" onclick="simpanPeserta()">Simpan Perubahan</button>
-  </div>
-</div>
-
-<!-- PAGE: DASHBOARD -->
-<div id="page-dashboard" class="page">
-  <div class="page-header"><div class="page-header-inner">
-    <h1>Dashboard</h1><p>Statistik rapat KIP Pidie Jaya</p>
-  </div></div>
-  <div class="content-section">
-    <div class="stats-grid" id="stats-grid"></div>
-    <div class="chart-card"><div class="chart-title">Jumlah Rapat per Bulan (Tahun Ini)</div>
-      <div class="bar-chart" id="bar-chart"></div>
-    </div>
   </div>
 </div>
 
@@ -576,7 +717,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 <!-- PAGE: TENTANG -->
 <div id="page-tentang" class="page">
   <div class="about-hero">
-    <div class="hero-orb"></div><div class="hero-orb"></div>
     <div class="hero-inner">
       <div>
         <img src="https://drive.google.com/thumbnail?id=1q9StOGlf7EQqrHh8Y_B5j4avQVbUtLBH&sz=w160"
@@ -613,8 +753,8 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <div class="faq-a">
           <ol>
             <li>Buka <a href="https://script.google.com" target="_blank" style="color:var(--blue)">script.google.com</a> → Proyek Baru</li>
-            <li>Paste isi file <code>gas_backend_v2.js</code></li>
-            <li>Isi <code>SHEET_ID</code> dan <code>DRIVE_FOLDER_ID</code> di baris paling atas</li>
+            <li>Paste isi file <code>gas_backend_fixed.js</code></li>
+            <li>Isi <code>SS_SURAT_ID</code>, <code>SS_ARSIP_ID</code>, dan <code>DRIVE_FOLDER_ID</code></li>
             <li>Deploy → Web App → Execute as: Me · Access: Anyone</li>
             <li>Salin URL → paste ke Pengaturan SiRapat</li>
           </ol>
@@ -651,6 +791,59 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 </div>
 
 <script>
+// ════════════════════════════════════════════════
+//  HERO CANVAS ANIMATION — Floating particles
+// ════════════════════════════════════════════════
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], raf;
+
+  function resize(){
+    const hero = canvas.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+
+  function mkParticle(){
+    return {
+      x: Math.random()*W,
+      y: H + 10,
+      r: Math.random()*2.5 + .5,
+      speed: Math.random()*.6 + .3,
+      opacity: Math.random()*.6 + .2,
+      drift: (Math.random()-.5)*.4,
+      life: 0,
+      maxLife: Math.random()*160 + 80
+    };
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // add new particles gradually
+    if(particles.length < 55 && Math.random() < .35) particles.push(mkParticle());
+
+    particles = particles.filter(p=>{
+      p.y  -= p.speed;
+      p.x  += p.drift;
+      p.life++;
+      const t = p.life/p.maxLife;
+      const alpha = t < .2 ? t/.2 : t > .8 ? (1-t)/.2 : 1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(201,147,42,${p.opacity * alpha})`;
+      ctx.fill();
+      return p.life < p.maxLife && p.y > -10;
+    });
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+})();
+
 // ════════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════════
@@ -694,7 +887,6 @@ let uploadFiles   = {};
 //  HELPERS
 // ════════════════════════════════════════════════
 function getGasUrl(){ return (settings.gasUrl||'').trim(); }
-
 function buildNomor(no, tgl){
   return settings.nomorFmt
     .replace('[NO]', String(no))
@@ -704,6 +896,54 @@ function buildNomor(no, tgl){
 function tglGeneret(){ return `${today.getDate()} ${BULAN_ID[today.getMonth()]} ${today.getFullYear()}`; }
 function tglFull(d){ return `${d.getDate()} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`; }
 function saveLocal(){ localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList)); }
+
+// ════════════════════════════════════════════════
+//  HERO STATS + DASHBOARD PANEL
+// ════════════════════════════════════════════════
+function updateHeroStats(){
+  const total = arsipList.length;
+  const ti    = arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
+  const nextNo= settings.nomorLast + 1;
+  const ht = document.getElementById('hs-total'); if(ht) animCount(ht, total);
+  const hy = document.getElementById('hs-tahun'); if(hy) animCount(hy, ti);
+  const hn = document.getElementById('hs-nomor'); if(hn) hn.textContent = '#'+nextNo;
+}
+
+function animCount(el, target){
+  let cur = 0; const step = Math.max(1, Math.floor(target/20));
+  const t = setInterval(()=>{
+    cur = Math.min(cur+step, target);
+    el.textContent = cur;
+    if(cur>=target) clearInterval(t);
+  }, 40);
+}
+
+function renderDashHome(){
+  const total = arsipList.length;
+  const ti    = arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
+  const avg   = total ? Math.round(arsipList.reduce((a,r)=>a+(r.peserta||[]).length,0)/total) : 0;
+  const dt = document.getElementById('dash-total'); if(dt) animCount(dt,total);
+  const dy = document.getElementById('dash-tahun'); if(dy) animCount(dy,ti);
+  const da = document.getElementById('dash-avg');   if(da) animCount(da,avg);
+  const dd = document.getElementById('dash-dok');   if(dd) animCount(dd,total*3);
+  const dl = document.getElementById('dash-tahun-lbl'); if(dl) dl.textContent='Rapat '+today.getFullYear();
+  const cl = document.getElementById('chart-tahun-lbl'); if(cl) cl.textContent=today.getFullYear();
+
+  const months = Array(12).fill(0);
+  arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear())
+           .forEach(r=>months[new Date(r.tanggal).getMonth()]++);
+  const max = Math.max(...months, 1);
+
+  const bc = document.getElementById('bar-chart-home');
+  if(bc) bc.innerHTML = months.map((n,i)=>`
+    <div class="bar-group">
+      ${n>0?`<div class="bar-val">${n}</div>`:''}
+      <div class="bar" style="height:${Math.round(n/max*80)}px">
+        <div class="bar-inner" style="height:100%"></div>
+      </div>
+      <div class="bar-label">${SH_ID[i]}</div>
+    </div>`).join('');
+}
 
 // ════════════════════════════════════════════════
 //  SYNC INDICATOR
@@ -735,25 +975,19 @@ async function gasPost(payload){
 }
 
 // ════════════════════════════════════════════════
-//  ★ CLOUD ARSIP — SELALU FETCH, MERGE DENGAN LOKAL ★
+//  CLOUD ARSIP
 // ════════════════════════════════════════════════
 function setCloudBanner(state, msg){
   const b=document.getElementById('cloud-status-banner');
   const sp=document.getElementById('cloud-spin');
   const tx=document.getElementById('cloud-status-text');
   if(!b) return;
-  b.style.display='flex';
-  b.className='cloud-banner '+state;
+  b.style.display='flex'; b.className='cloud-banner '+state;
   sp.style.display=(state==='loading')?'block':'none';
   tx.textContent=msg;
   if(state==='ok'||state==='err') setTimeout(()=>{b.style.display='none';},5000);
 }
 
-/**
- * ★ KUNCI PERBAIKAN ★
- * Selalu fetch dari cloud, merge (cloud jadi acuan),
- * simpan kembali ke localStorage sebagai cache.
- */
 async function loadArsipFromCloud(){
   if(!getGasUrl()){
     setCloudBanner('warn','URL GAS belum diisi — data hanya dari browser lokal. Isi di Pengaturan.');
@@ -764,50 +998,29 @@ async function loadArsipFromCloud(){
   try{
     const data = await gasGet('getArsip');
     const cloudArsip = data.arsip || [];
-
-    // Merge: cloud sebagai sumber kebenaran (master).
-    // Tambahkan item lokal yang belum ada di cloud (baru digenerate, belum tersync).
     const cloudIds = new Set(cloudArsip.map(r=>String(r.id)));
     const localOnly = arsipList.filter(r=>!cloudIds.has(String(r.id)));
-
-    // Gabung: cloud (sudah benar) + lokal yang belum tersync
     arsipList = [...cloudArsip, ...localOnly];
-
-    // Urutkan terbaru dulu
     arsipList.sort((a,b)=>String(b.id).localeCompare(String(a.id)));
-
-    // Simpan kembali ke lokal sebagai cache
     saveLocal();
-
-    // Restore uploadFiles dari cloud data
     arsipList.forEach(r=>{
       if(r.uploadedFiles && r.uploadedFiles.length && !(uploadFiles[r.id]||[]).length){
         uploadFiles[r.id] = r.uploadedFiles.map(f=>({...f,file:null}));
       }
     });
-
-    // Sync item lokal-only ke cloud
     if(localOnly.length){
-      for(const item of localOnly){
-        gasPost({action:'simpanArsip',...item}).catch(()=>{});
-      }
+      for(const item of localOnly) gasPost({action:'simpanArsip',...item}).catch(()=>{});
     }
-
     setCloudBanner('ok',`✓ ${arsipList.length} arsip dimuat dari cloud`);
     showSync(`${arsipList.length} arsip tersinkron`,'ok');
-    renderArsip();
-    renderCalInline();
-
+    renderArsip(); renderCalInline(); renderDashHome(); updateHeroStats();
   }catch(e){
     setCloudBanner('err','❌ Gagal memuat dari cloud: '+e.message+' — menampilkan data lokal');
     showSync('Gagal sync cloud','err');
   }
 }
 
-/** Dipanggil manual dari tombol ☁ Sync */
-async function refreshArsipCloud(){
-  await loadArsipFromCloud();
-}
+async function refreshArsipCloud(){ await loadArsipFromCloud(); }
 
 async function syncArsipToCloud(item){
   if(!getGasUrl()) return;
@@ -839,7 +1052,7 @@ async function fetchNomor(){
     settings.nomorLast=data.lastNomor;
     localStorage.setItem('sirapat_settings',JSON.stringify(settings));
     dot.className='nomor-dot ok';
-    updateNomorPreview();
+    updateNomorPreview(); updateHeroStats();
   }catch(e){
     dot.className='nomor-dot err';
     prev.textContent='❌ Gagal baca Sheets — pakai nomor lokal: '+(settings.nomorLast+1);
@@ -898,8 +1111,7 @@ async function testGasUrl(){
   try{
     const d=await gasGet('getLastNomor');
     st.textContent=`✅ Terhubung! Nomor terakhir: ${d.lastNomor}`;st.style.color='#2e7d32';
-    showToast('GAS terhubung!','success');
-    fetchNomor();
+    showToast('GAS terhubung!','success'); fetchNomor();
   }catch(e){
     st.textContent='❌ Gagal: '+e.message;st.style.color='#c62828';
     showToast('GAS gagal: '+e.message,'error');
@@ -961,7 +1173,6 @@ function renderCalInline(){
   }
   document.getElementById('cal-grid-inline').innerHTML=html;
 }
-function updateCalSelection(){renderCalInline();checkBooking();}
 function calClickInline(ds){
   const found=arsipList.find(r=>r.tanggal===ds);
   if(found){showArsipDetail(found.id);return;}
@@ -990,7 +1201,7 @@ async function fetchAndInject(url,data){
 }
 
 // ════════════════════════════════════════════════
-//  GENERATE DOKUMEN — ★ LANGSUNG SYNC KE CLOUD ★
+//  GENERATE DOKUMEN
 // ════════════════════════════════════════════════
 async function generateDokumen(){
   const tanggalVal=document.getElementById('inp-tanggal').value;
@@ -1036,7 +1247,6 @@ async function generateDokumen(){
     try{blobs=await Promise.all([fetchAndInject(urlUnd,data),fetchAndInject(urlAbs,data),fetchAndInject(urlRis,data)]);}
     catch(e){setPS('ps-fetch','err');throw e;}
     setPS('ps-fetch','done');setPS('ps-inject','done');
-
     setPS('ps-zip','active');tx.textContent='Membuat ZIP...';
     const prefix=`Rapat_${tanggalVal.replace(/-/g,'')}`;
     const zipOut=new JSZip();
@@ -1045,35 +1255,21 @@ async function generateDokumen(){
     zipOut.file(`${prefix}_Risalah.docx`,blobs[2]);
     const zipBlob=await zipOut.generateAsync({type:'blob'});
     setPS('ps-zip','done');
-
     const a=document.createElement('a');a.href=URL.createObjectURL(zipBlob);
     a.download=`${prefix}_DokumenRapat.zip`;a.click();URL.revokeObjectURL(a.href);
     setPS('ps-done','done');
-
-    // ★ Simpan arsip lokal
     const arsipId=Date.now();
-    const newItem={
-      id:arsipId,tanggal:tanggalVal,hari:hariStr,jam:jamVal,
-      tempat,agenda,nomorSurat,tglGeneret:tglGen,
-      peserta:pesertaHadir.map(p=>p.nama),uploadedFiles:[]
-    };
-    arsipList.unshift(newItem);
-    saveLocal();
-
-    settings.nomorLast=nextNo;
-    localStorage.setItem('sirapat_settings',JSON.stringify(settings));
-
-    // ★ LANGSUNG sync ke cloud tanpa menunggu
+    const newItem={id:arsipId,tanggal:tanggalVal,hari:hariStr,jam:jamVal,tempat,agenda,nomorSurat,tglGeneret:tglGen,peserta:pesertaHadir.map(p=>p.nama),uploadedFiles:[]};
+    arsipList.unshift(newItem); saveLocal();
+    settings.nomorLast=nextNo; localStorage.setItem('sirapat_settings',JSON.stringify(settings));
     if(getGasUrl()){
       gasPost({action:'simpanNomor',nomorUrut:nextNo,nomorSurat,tanggal:tglStr,agenda,tujuan:'',tglGeneret:tglGen,pesertaCount:pesertaHadir.length}).catch(()=>{});
-      syncArsipToCloud(newItem); // fire and forget
+      syncArsipToCloud(newItem);
     }
-
     lastGenId=arsipId;
     document.getElementById('btn-awan').classList.add('visible');
-    updateNomorPreview();renderCalInline();
-    showToast('✓ 3 dokumen berhasil diinject & diunduh! Arsip disimpan ke cloud.','success');
-
+    updateNomorPreview(); renderCalInline(); renderDashHome(); updateHeroStats();
+    showToast('✓ 3 dokumen berhasil diinject & diunduh!','success');
   }catch(err){
     console.error(err);showToast('❌ '+err.message,'error');
   }finally{
@@ -1116,8 +1312,7 @@ function renderArsip(){
   el.innerHTML=list.map(r=>{
     const d=new Date(r.tanggal);
     const files=uploadFiles[r.id]||[];
-    const doneFiles=[...files,(r.uploadedFiles||[])].filter(f=>f&&f.status==='done');
-    const totalCloud=new Set(doneFiles.map(f=>f.name)).size;
+    const totalCloud=new Set([...files,...(r.uploadedFiles||[])].filter(f=>f&&f.status==='done').map(f=>f.name)).size;
     return `<div class="arsip-item" id="arsip-item-${r.id}" onclick="showArsipDetail(${r.id})">
       <div class="arsip-date-box"><div class="day">${d.getDate()}</div><div class="month">${SH_ID[d.getMonth()]}</div></div>
       <div class="arsip-info">
@@ -1139,11 +1334,10 @@ function renderArsip(){
 
 function hapusArsip(id){
   if(!confirm('Hapus arsip ini dari lokal dan cloud?')) return;
-  arsipList=arsipList.filter(r=>r.id!==id);
-  saveLocal();
-  delete uploadFiles[id];
-  hapusArsipCloud(id);
-  renderArsip();showToast('Arsip dihapus','info');
+  arsipList=arsipList.filter(r=>r.id!==id); saveLocal();
+  delete uploadFiles[id]; hapusArsipCloud(id);
+  renderArsip(); renderDashHome(); updateHeroStats();
+  showToast('Arsip dihapus','info');
 }
 
 // ════════════════════════════════════════════════
@@ -1219,7 +1413,6 @@ function hapusFile(id,i){
   }
   renderArsip();
 }
-
 function handleFileInput(ev,id){addFiles(id,Array.from(ev.target.files));ev.target.value='';}
 function handleDrop(ev,id){
   ev.preventDefault();
@@ -1265,7 +1458,6 @@ async function uploadSemuaFile(id,folderName){
   }
   renderArsip();
 }
-
 function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Baca gagal'));r.readAsDataURL(file);});}
 function closeModal(e){if(!e||e.target.id==='modal-overlay') document.getElementById('modal-overlay').classList.remove('open');}
 
@@ -1294,25 +1486,6 @@ function resetPeserta(){
   pesertaList=DEFAULT_PESERTA.map(p=>({...p}));
   localStorage.setItem('sirapat_peserta',JSON.stringify(pesertaList));
   renderPesertaManage();renderPesertaGen();showToast('Direset ke default.','info');
-}
-
-// ════════════════════════════════════════════════
-//  DASHBOARD
-// ════════════════════════════════════════════════
-function renderDashboard(){
-  const total=arsipList.length;
-  const ti=arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
-  const avg=total?Math.round(arsipList.reduce((a,r)=>a+(r.peserta||[]).length,0)/total):0;
-  document.getElementById('stats-grid').innerHTML=`
-    <div class="stat-card"><div class="stat-label">Total Rapat</div><div class="stat-value">${total}</div><div class="stat-sub">Sepanjang waktu</div></div>
-    <div class="stat-card"><div class="stat-label">Tahun ${today.getFullYear()}</div><div class="stat-value">${ti}</div><div class="stat-sub">Rapat tahun ini</div></div>
-    <div class="stat-card"><div class="stat-label">Rata-rata Peserta</div><div class="stat-value">${avg}</div><div class="stat-sub">Per rapat</div></div>
-    <div class="stat-card"><div class="stat-label">Dokumen Dibuat</div><div class="stat-value">${total*3}</div><div class="stat-sub">Und+Absen+Risalah</div></div>`;
-  const months=Array(12).fill(0);
-  arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).forEach(r=>months[new Date(r.tanggal).getMonth()]++);
-  const max=Math.max(...months,1);
-  document.getElementById('bar-chart').innerHTML=months.map((n,i)=>
-    `<div class="bar-group"><div class="bar" style="height:${Math.round(n/max*90)}px" title="${n} rapat"></div><div class="bar-label">${SH_ID[i]}</div></div>`).join('');
 }
 
 // ════════════════════════════════════════════════
@@ -1351,8 +1524,7 @@ function showPage(id,btn){
   document.getElementById('page-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
   if(id==='peserta')   renderPesertaManage();
-  if(id==='arsip')     { renderArsip(); loadArsipFromCloud(); }  // ★ selalu refresh saat buka arsip
-  if(id==='dashboard') renderDashboard();
+  if(id==='arsip')     { renderArsip(); loadArsipFromCloud(); }
   if(id==='pengaturan') loadPengaturan();
 }
 
@@ -1370,17 +1542,16 @@ function showToast(msg,type='info'){
 //  INIT
 // ════════════════════════════════════════════════
 document.getElementById('inp-tanggal').value=today.toISOString().split('T')[0];
-initCalInline();renderCalInline();
+initCalInline(); renderCalInline();
 renderPesertaGen();
+renderDashHome();
+updateHeroStats();
 if(settings.tplMode==='manual'){tplMode='manual';document.querySelectorAll('.tpl-mode-tab')[1]?.click();}
-
-// ★ Saat pertama buka: fetch nomor + langsung sync arsip dari cloud
 if(getGasUrl()){
   fetchNomor();
-  loadArsipFromCloud().then(()=>{renderCalInline();});
+  loadArsipFromCloud().then(()=>{renderCalInline(); renderDashHome(); updateHeroStats();});
 } else {
-  updateNomorPreview();
-  renderArsip();
+  updateNomorPreview(); renderArsip();
 }
 </script>
 </body>
