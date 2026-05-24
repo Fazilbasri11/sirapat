@@ -8,12 +8,7 @@
 <script src="https://unpkg.com/pizzip@3.1.4/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
-
-<!-- ═══════════════════════════════════════════════════════
-     CSS
-═══════════════════════════════════════════════════════ -->
 <style>
-/* ── Tokens ── */
 :root {
   --maroon:#7a1020;--maroon-dark:#5a0b18;--maroon-deep:#3d0710;
   --maroon-light:#9b1a2e;--gold:#c9932a;--gold-light:#e8b84b;
@@ -24,8 +19,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
-
-/* ── Nav ── */
 nav{background:var(--maroon-deep);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
 .nav-brand{display:flex;align-items:center;gap:12px}
 .nav-logo{width:38px;height:38px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
@@ -38,11 +31,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .nav-btn{background:none;border:none;color:rgba(255,255,255,.65);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:8px 14px;border-radius:6px;cursor:pointer;transition:all .15s}
 .nav-btn:hover{background:rgba(255,255,255,.08);color:var(--white)}
 .nav-btn.active{background:var(--gold);color:var(--maroon-deep);font-weight:600}
-
-/* ── Pages ── */
 .page{display:none}.page.active{display:block}
-
-/* ── Hero with animation ── */
 .hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 55%,var(--maroon-light) 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
 .hero-orb{position:absolute;border-radius:50%;border:1px solid rgba(201,147,42,.15);animation:orb-spin 20s linear infinite}
 .hero-orb:nth-child(1){width:320px;height:320px;top:-80px;right:-80px}
@@ -57,7 +46,15 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .hero p{font-size:14px;color:rgba(255,255,255,.65);max-width:520px;line-height:1.7;animation:fade-up .6s .2s ease both}
 @keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Layout helpers ── */
+/* ── CLOUD STATUS BANNER ── */
+.cloud-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:12px;margin-bottom:1rem;border:1px solid}
+.cloud-banner.loading{background:rgba(201,147,42,.08);border-color:rgba(201,147,42,.25);color:#7a5010}
+.cloud-banner.ok{background:rgba(76,175,80,.08);border-color:rgba(76,175,80,.25);color:#2e7d32}
+.cloud-banner.err{background:rgba(229,57,53,.06);border-color:rgba(229,57,53,.2);color:#c62828}
+.cloud-banner.warn{background:rgba(122,16,32,.05);border-color:rgba(122,16,32,.15);color:var(--maroon)}
+.cloud-spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 .form-section,.content-section{max-width:900px;margin:0 auto;padding:2rem}
 .form-card{background:var(--white);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden}
 .form-card-header{background:var(--cream-dark);border-bottom:1px solid rgba(122,16,32,.1);padding:1.25rem 1.75rem;display:flex;align-items:center;gap:10px}
@@ -74,8 +71,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .section-divider{display:flex;align-items:center;gap:12px;margin:1.5rem 0 1.25rem}
 .section-divider span{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:#e8ddd5}
-
-/* ── Nomor status ── */
 .nomor-status-bar{display:flex;align-items:center;gap:10px;background:rgba(201,147,42,.08);border:1px solid rgba(201,147,42,.2);border-radius:10px;padding:10px 16px;margin-bottom:1.25rem;font-size:13px}
 .nomor-status-val{font-family:monospace;font-weight:700;color:var(--maroon);font-size:14px;flex:1}
 .nomor-refresh-btn{padding:5px 12px;border-radius:6px;border:1.5px solid rgba(201,147,42,.3);background:transparent;font-size:12px;color:var(--gold);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
@@ -83,14 +78,10 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .nomor-dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0}
 .nomor-dot.ok{background:#4caf50}.nomor-dot.loading{background:var(--gold);animation:pulse 1s infinite}.nomor-dot.err{background:#e53935}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-
-/* ── Agenda chips ── */
 .agenda-tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
 .agenda-chip{padding:6px 14px;border-radius:20px;border:1.5px solid #e8ddd5;background:#fdfaf7;font-size:12px;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all .15s}
 .agenda-chip:hover{border-color:var(--maroon);color:var(--maroon)}
 .agenda-chip.active{background:var(--maroon);border-color:var(--maroon);color:var(--white)}
-
-/* ── Peserta gen ── */
 .peserta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .peserta-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e8ddd5;border-radius:8px;background:#fdfaf7;cursor:pointer;transition:all .15s;user-select:none}
 .peserta-item:hover{border-color:var(--maroon-light)}
@@ -101,16 +92,12 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .peserta-info{flex:1;min-width:0}
 .peserta-nama{font-size:13px;font-weight:500;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .peserta-jabatan{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* ── Progress ── */
 .progress-bar{display:none;align-items:center;gap:0;padding:0 1.75rem 1rem}
 .prog-step{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);padding:6px 12px;border-radius:20px;transition:all .3s}
 .prog-step.active{background:rgba(201,147,42,.15);color:#8a6010;font-weight:600}
 .prog-step.done{background:rgba(76,175,80,.1);color:#2e7d32;font-weight:600}
 .prog-step.err{background:rgba(229,57,53,.1);color:#c62828}
 .prog-arrow{color:#ccc;font-size:12px;flex-shrink:0}
-
-/* ── Generate area ── */
 .generate-area{padding:1.5rem 1.75rem;background:var(--cream-dark);border-top:1px solid rgba(122,16,32,.1);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .doc-preview{display:flex;gap:8px;flex-wrap:wrap}
 .doc-badge{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500}
@@ -124,12 +111,9 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-generate:disabled{opacity:.65;cursor:not-allowed;transform:none}
 .btn-generate .gold-star{color:var(--gold-light);font-size:16px}
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:none}
-@keyframes spin{to{transform:rotate(360deg)}}
 .btn-awan{display:none;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:var(--white);border:none;border-radius:10px;padding:13px 22px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(21,101,192,.35)}
 .btn-awan:hover{transform:translateY(-1px)}
 .btn-awan.visible{display:flex;animation:fade-up .3s ease}
-
-/* ── Calendar (inline di generate) ── */
 .cal-wrapper{background:var(--white);border-radius:12px;border:1px solid rgba(122,16,32,.08);overflow:hidden;margin-top:1.5rem}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:var(--cream-dark);border-bottom:1px solid rgba(122,16,32,.08)}
 .cal-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--maroon)}
@@ -150,20 +134,14 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .cal-legend{display:flex;gap:16px;padding:.5rem 1rem .75rem;flex-wrap:wrap}
 .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
 .cal-legend-dot{width:8px;height:8px;border-radius:50%}
-
-/* ── Page header ── */
 .page-header{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 100%);padding:2.5rem 2rem 2rem}
 .page-header-inner{max-width:900px;margin:0 auto}
 .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:4px}
 .page-header p{font-size:13px;color:rgba(255,255,255,.6)}
-
-/* ── Search & filter ── */
-.search-bar{display:flex;gap:10px;margin-bottom:1.5rem}
-.search-bar input{flex:1;font-family:'Inter',sans-serif;font-size:14px;padding:11px 16px;border:1.5px solid #e8ddd5;border-radius:10px;background:var(--white);outline:none}
+.search-bar{display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:160px;font-family:'Inter',sans-serif;font-size:14px;padding:11px 16px;border:1.5px solid #e8ddd5;border-radius:10px;background:var(--white);outline:none}
 .search-bar input:focus{border-color:var(--maroon)}
 .search-bar select{font-family:'Inter',sans-serif;font-size:13px;padding:11px 14px;border:1.5px solid #e8ddd5;border-radius:10px;background:var(--white);outline:none;color:var(--text-dark);cursor:pointer}
-
-/* ── Arsip list ── */
 .arsip-list{display:flex;flex-direction:column;gap:10px}
 .arsip-item{background:var(--white);border-radius:12px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;box-shadow:0 2px 8px rgba(90,10,24,.07);border:1px solid rgba(122,16,32,.06);transition:all .15s;cursor:pointer}
 .arsip-item:hover{border-color:rgba(122,16,32,.2);box-shadow:0 4px 16px rgba(90,10,24,.12);transform:translateY(-1px)}
@@ -180,8 +158,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
 .empty-state .icon{font-size:3rem;margin-bottom:1rem;opacity:.5}
 .empty-state h3{font-size:16px;font-weight:500;margin-bottom:6px}
-
-/* ── Peserta manage ── */
 .peserta-manage-list{display:flex;flex-direction:column;gap:8px}
 .peserta-row{background:var(--white);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(90,10,24,.06);border:1px solid rgba(122,16,32,.06)}
 .peserta-num{width:28px;height:28px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--maroon);flex-shrink:0}
@@ -194,8 +170,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .save-bar{position:sticky;bottom:0;background:var(--white);border-top:1px solid #e8ddd5;padding:1rem 2rem;display:flex;justify-content:flex-end;gap:10px}
 .btn-primary{background:var(--maroon);color:var(--white);border:none;border-radius:8px;padding:10px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-primary:hover{background:var(--maroon-dark)}
-
-/* ── Dashboard ── */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem}
 .stat-card{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(90,10,24,.07);border:1px solid rgba(122,16,32,.06)}
 .stat-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
@@ -207,8 +181,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
 .bar{width:100%;background:linear-gradient(180deg,var(--maroon-light) 0%,var(--maroon) 100%);border-radius:4px 4px 0 0;min-height:4px}
 .bar-label{font-size:10px;color:var(--text-muted)}
-
-/* ── Pengaturan ── */
 .setting-group{margin-bottom:2rem}
 .setting-group h3{font-size:13px;font-weight:600;color:var(--text-mid);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid #e8ddd5}
 .tpl-box{background:linear-gradient(135deg,rgba(61,7,16,.03),rgba(201,147,42,.05));border:1.5px solid rgba(201,147,42,.2);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
@@ -251,8 +223,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .gas-url-input input{flex:1;font-family:'Inter',sans-serif;font-size:12px;padding:7px 12px;border:1.5px solid rgba(21,101,192,.3);border-radius:7px;background:white;outline:none;color:var(--text-dark)}
 .gas-url-input input:focus{border-color:var(--blue)}
 .gas-url-input button{padding:7px 16px;border-radius:7px;border:none;background:var(--blue);color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
-
-/* ── Modal ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--white);border-radius:16px;width:100%;max-width:580px;box-shadow:var(--shadow-lg);transform:translateY(20px);transition:transform .2s;max-height:90vh;overflow-y:auto}
@@ -266,8 +236,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .detail-row:last-of-type{border-bottom:none}
 .detail-label{font-weight:600;color:var(--text-mid);min-width:120px;flex-shrink:0}
 .detail-val{color:var(--text-dark);flex:1}
-
-/* ── Upload section ── */
 .upload-section{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e8ddd5}
 .upload-section-title{font-size:13px;font-weight:600;color:var(--maroon);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .upload-section-title .folder-tag{font-size:11px;font-weight:400;color:var(--text-muted);background:var(--cream-dark);padding:2px 8px;border-radius:10px}
@@ -297,11 +265,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-upload-all:hover{opacity:.9}
 .btn-upload-all:disabled{opacity:.5;cursor:not-allowed}
 .no-gas-warning{background:rgba(229,57,53,.07);border:1px solid rgba(229,57,53,.2);border-radius:8px;padding:12px 16px;font-size:12px;color:#c62828;margin-bottom:12px}
-
-/* ── Tentang & FAQ ── */
 .about-hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
-.about-logo-box{width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:1rem;box-shadow:0 4px 16px rgba(0,0,0,.3)}
-.about-logo-box img{width:100%;height:100%;object-fit:cover}
 .about-logo-fallback{width:80px;height:80px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--maroon-deep);margin-bottom:1rem}
 .about-name{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);font-weight:700;margin-bottom:.3rem}
 .about-sub{font-size:13px;color:rgba(255,255,255,.65)}
@@ -322,22 +286,17 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .faq-a ol,.faq-a ul{padding-left:1.2rem;margin-top:6px}
 .faq-a li{margin-bottom:4px}
 .faq-a code{background:rgba(122,16,32,.08);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--maroon)}
-
-/* ── Sync status ── */
 .sync-indicator{position:fixed;bottom:2rem;left:2rem;background:var(--white);border:1px solid #e8ddd5;border-radius:10px;padding:8px 14px;font-size:12px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all .3s;z-index:99}
 .sync-indicator.show{transform:translateY(0);opacity:1}
 .sync-dot{width:7px;height:7px;border-radius:50%}
 .sync-dot.syncing{background:var(--gold);animation:pulse 1s infinite}
 .sync-dot.ok{background:#4caf50}
 .sync-dot.err{background:#e53935}
-
-/* ── Toast ── */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--maroon-deep);color:var(--white);padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);transform:translateY(100px);opacity:0;transition:all .3s;z-index:999;max-width:360px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left:4px solid #4caf50}
 .toast.error{border-left:4px solid #e53935}
 .toast.info{border-left:4px solid var(--gold)}
-
 @media(max-width:640px){
   .form-row,.form-row-2,.peserta-grid{grid-template-columns:1fr}
   .tpl-url-row{grid-template-columns:1fr}
@@ -351,12 +310,9 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     NAV
-═══════════════════════════════════════════════════════ -->
 <nav>
   <div class="nav-brand">
-    <div class="nav-logo" id="nav-logo-wrap">
+    <div class="nav-logo">
       <img src="https://drive.google.com/thumbnail?id=1q9StOGlf7EQqrHh8Y_B5j4avQVbUtLBH&sz=w80"
            alt="KIP" onerror="this.parentElement.innerHTML='<div class=nav-logo-fallback>KIP</div>'">
     </div>
@@ -375,9 +331,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: GENERATE
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: GENERATE -->
 <div id="page-generate" class="page active">
   <div class="hero">
     <div class="hero-orb"></div><div class="hero-orb"></div><div class="hero-orb"></div>
@@ -387,25 +341,19 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
       <p>Template Word diambil dari repo GitHub, data diinject, 3 dokumen resmi siap diunduh sebagai ZIP.</p>
     </div>
   </div>
-
   <div class="form-section">
     <div class="form-card">
-
-      <!-- STEP 1: Waktu & Tempat -->
       <div class="form-card-header">
         <div class="step-dot">1</div>
         <h2>Waktu & Tempat Rapat</h2>
       </div>
       <div class="form-body">
-
-        <!-- Nomor Surat Preview -->
         <div class="nomor-status-bar">
           <div class="nomor-dot" id="nomor-dot"></div>
           <span style="font-weight:500;color:var(--text-muted);font-size:12px">Nomor berikutnya:</span>
           <span class="nomor-status-val" id="nomor-preview">— (isi URL Apps Script di Pengaturan)</span>
           <button class="nomor-refresh-btn" onclick="fetchNomor()">↻ Refresh</button>
         </div>
-
         <div class="form-row">
           <div class="field">
             <label>Tanggal Rapat</label>
@@ -420,12 +368,9 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
             <input type="text" id="inp-tempat" value="Aula Kantor KIP Kabupaten Pidie Jaya">
           </div>
         </div>
-
-        <!-- Booking warning -->
         <div id="booking-warn" style="display:none;background:rgba(229,57,53,.08);border:1px solid rgba(229,57,53,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:#c62828;margin-bottom:1rem">
           ⚠ Ruangan ini sudah dipakai pada tanggal & jam yang sama!
         </div>
-
         <div class="section-divider"><span>Agenda Rapat</span></div>
         <div class="agenda-tabs">
           <div class="agenda-chip active" onclick="pilihAgenda(this,'Rapat Pleno Rutin, Evaluasi Pelaksanaan Kegiatan Mingguan dan Hal-hal lain yang dianggap perlu.')">Pleno Rutin</div>
@@ -434,12 +379,9 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           <div class="agenda-chip" onclick="pilihAgenda(this,'')">✏ Ketik Sendiri</div>
         </div>
         <div class="field"><textarea id="inp-agenda" rows="2">Rapat Pleno Rutin, Evaluasi Pelaksanaan Kegiatan Mingguan dan Hal-hal lain yang dianggap perlu.</textarea></div>
-
         <div class="section-divider"><span>Peserta yang Diundang</span></div>
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Centang peserta yang hadir.</p>
         <div class="peserta-grid" id="peserta-gen-grid"></div>
-
-        <!-- ── Kalender inline ── -->
         <div class="section-divider"><span>Kalender Rapat</span></div>
         <div class="cal-wrapper">
           <div class="cal-header">
@@ -457,15 +399,12 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           </div>
         </div>
       </div>
-
-      <!-- PROGRESS -->
       <div class="progress-bar" id="progress-bar">
         <span class="prog-step" id="ps-fetch">⬇ Fetch</span><span class="prog-arrow">›</span>
         <span class="prog-step" id="ps-inject">⚙ Inject</span><span class="prog-arrow">›</span>
         <span class="prog-step" id="ps-zip">📦 ZIP</span><span class="prog-arrow">›</span>
         <span class="prog-step" id="ps-done">✓ Selesai</span>
       </div>
-
       <div class="generate-area">
         <div class="doc-preview">
           <span class="doc-badge undangan">Surat Undangan</span>
@@ -485,15 +424,18 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: ARSIP
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: ARSIP -->
 <div id="page-arsip" class="page">
   <div class="page-header"><div class="page-header-inner">
     <h1>Arsip Rapat</h1>
-    <p>Seluruh rapat yang pernah di-generate. Klik item untuk detail & upload dokumen.</p>
+    <p>Data disimpan di Google Sheets — aman meski browser di-clear atau dibuka di perangkat lain.</p>
   </div></div>
   <div class="content-section">
+    <!-- ★ CLOUD STATUS BANNER — BARU ★ -->
+    <div id="cloud-status-banner" class="cloud-banner loading" style="display:none">
+      <div class="cloud-spin" id="cloud-spin"></div>
+      <span id="cloud-status-text">Memuat arsip dari cloud...</span>
+    </div>
     <div class="search-bar">
       <input type="text" placeholder="Cari agenda, peserta..." id="search-inp" oninput="renderArsip()">
       <select id="filter-bulan" onchange="renderArsip()">
@@ -506,14 +448,14 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <option value="">Semua Tahun</option>
         <option>2026</option><option>2025</option>
       </select>
+      <!-- ★ TOMBOL REFRESH MANUAL ★ -->
+      <button class="btn-sm" onclick="refreshArsipCloud()" title="Muat ulang dari cloud">☁ Sync</button>
     </div>
     <div class="arsip-list" id="arsip-list"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: PESERTA
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: PESERTA -->
 <div id="page-peserta" class="page">
   <div class="page-header"><div class="page-header-inner">
     <h1>Manajemen Peserta</h1>
@@ -529,9 +471,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: DASHBOARD
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: DASHBOARD -->
 <div id="page-dashboard" class="page">
   <div class="page-header"><div class="page-header-inner">
     <h1>Dashboard</h1><p>Statistik rapat KIP Pidie Jaya</p>
@@ -544,17 +484,13 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: PENGATURAN
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: PENGATURAN -->
 <div id="page-pengaturan" class="page">
   <div class="page-header"><div class="page-header-inner">
     <h1>Pengaturan</h1><p>Konfigurasi sistem SiRapat</p>
   </div></div>
   <div class="content-section">
     <div class="form-card"><div class="form-body">
-
-      <!-- GAS -->
       <div class="setting-group">
         <h3>⚡ Koneksi Google Apps Script</h3>
         <div class="gas-banner">
@@ -570,15 +506,13 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           </div>
         </div>
       </div>
-
-      <!-- Template -->
       <div class="setting-group">
         <h3>📄 Sumber Template Word</h3>
         <div class="tpl-box">
           <div class="tpl-box-title">Mode Pengambilan Template <span>WAJIB</span></div>
           <div class="tpl-mode-tabs">
-            <button class="tpl-mode-tab active" onclick="setTplMode('auto',this)" id="tpl-tab-auto">📁 Otomatis (Repo Sama)</button>
-            <button class="tpl-mode-tab" onclick="setTplMode('manual',this)" id="tpl-tab-manual">🔗 URL Manual</button>
+            <button class="tpl-mode-tab active" onclick="setTplMode('auto',this)">📁 Otomatis (Repo Sama)</button>
+            <button class="tpl-mode-tab" onclick="setTplMode('manual',this)">🔗 URL Manual</button>
           </div>
           <div class="tpl-mode-panel active" id="tpl-panel-auto">
             <div class="auto-info">
@@ -615,8 +549,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           </div>
         </div>
       </div>
-
-      <!-- Instansi -->
       <div class="setting-group">
         <h3>🏛 Informasi Instansi</h3>
         <div class="form-row-2">
@@ -626,8 +558,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           <div class="field"><label>Nama Sekretaris (TTD)</label><input type="text" id="set-sekretaris"></div>
         </div>
       </div>
-
-      <!-- Nomor Surat -->
       <div class="setting-group">
         <h3>🔢 Format Nomor Surat</h3>
         <div class="form-row-2">
@@ -636,7 +566,6 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         </div>
         <p style="font-size:12px;color:var(--text-muted);margin-top:6px">Placeholder: <code style="background:rgba(122,16,32,.07);padding:1px 6px;border-radius:4px;font-family:monospace">[NO]</code> <code style="background:rgba(122,16,32,.07);padding:1px 6px;border-radius:4px;font-family:monospace">[BULAN]</code> <code style="background:rgba(122,16,32,.07);padding:1px 6px;border-radius:4px;font-family:monospace">[TAHUN]</code></p>
       </div>
-
       <div style="display:flex;justify-content:flex-end">
         <button class="btn-primary" onclick="simpanPengaturan()">💾 Simpan Semua Pengaturan</button>
       </div>
@@ -644,14 +573,12 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PAGE: TENTANG & FAQ
-═══════════════════════════════════════════════════════ -->
+<!-- PAGE: TENTANG -->
 <div id="page-tentang" class="page">
   <div class="about-hero">
     <div class="hero-orb"></div><div class="hero-orb"></div>
     <div class="hero-inner">
-      <div id="about-logo-wrap">
+      <div>
         <img src="https://drive.google.com/thumbnail?id=1q9StOGlf7EQqrHh8Y_B5j4avQVbUtLBH&sz=w160"
              alt="KIP Logo" style="width:80px;height:80px;border-radius:16px;object-fit:cover;margin-bottom:1rem;box-shadow:0 4px 16px rgba(0,0,0,.3)"
              onerror="this.outerHTML='<div class=about-logo-fallback>KIP</div>'">
@@ -661,110 +588,58 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
     </div>
   </div>
   <div class="content-section">
-
-    <!-- Identitas -->
     <div class="about-card">
       <h3>🏛 Identitas Instansi</h3>
       <div class="about-row"><div class="lbl">Nama Lembaga</div><div class="val">Komisi Independen Pemilihan (KIP) Kabupaten Pidie Jaya</div></div>
       <div class="about-row"><div class="lbl">Provinsi</div><div class="val">Aceh</div></div>
       <div class="about-row"><div class="lbl">Kabupaten</div><div class="val">Pidie Jaya</div></div>
       <div class="about-row"><div class="lbl">Ibukota</div><div class="val">Meureudu</div></div>
-      <div class="about-row"><div class="lbl">Fungsi</div><div class="val">Penyelenggara Pemilihan Umum di tingkat Kabupaten/Kota sesuai UU Nomor 7 Tahun 2017</div></div>
     </div>
-
-    <!-- Tentang SiRapat -->
     <div class="about-card">
       <h3>💻 Tentang SiRapat</h3>
       <div class="about-row"><div class="lbl">Nama Sistem</div><div class="val">SiRapat — Sistem Rapat Digital KIP Pidie Jaya</div></div>
       <div class="about-row"><div class="lbl">Fungsi Utama</div><div class="val">Generate otomatis 3 dokumen rapat (Undangan, Absen, Risalah) dari template Word</div></div>
       <div class="about-row"><div class="lbl">Teknologi</div><div class="val">HTML5 + JavaScript · docxtemplater · Google Apps Script · Google Drive</div></div>
-      <div class="about-row"><div class="lbl">Penyimpanan</div><div class="val">localStorage (lokal) + Google Sheets (cloud backup) + Google Drive (file)</div></div>
+      <div class="about-row"><div class="lbl">Penyimpanan</div><div class="val">Google Sheets (permanen, multi-device) + localStorage (cache lokal)</div></div>
     </div>
-
-    <!-- FAQ -->
     <div class="about-card">
       <h3>❓ FAQ — Cara Penggunaan</h3>
-
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">1. Bagaimana cara pertama kali setup SiRapat? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">
-          <ol>
-            <li>Buka <strong>Pengaturan</strong> → isi URL Google Apps Script (GAS)</li>
-            <li>Pilih mode template: <em>Otomatis</em> (jika file ada di folder <code>templates/</code>) atau <em>URL Manual</em></li>
-            <li>Isi nama instansi, kota, ketua, sekretaris, dan format nomor surat</li>
-            <li>Klik <strong>Simpan Semua Pengaturan</strong></li>
-          </ol>
-        </div>
+        <div class="faq-q" onclick="toggleFaq(this)">1. Kenapa data arsip hilang saat clear browser? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Data arsip kini disimpan permanen di <strong>Google Sheets</strong> via GAS. localStorage hanya sebagai cache cepat. Pastikan URL GAS sudah diisi di Pengaturan — data akan tersedia di browser manapun.</div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">2. Cara deploy Google Apps Script? <span class="faq-arrow">▼</span></div>
         <div class="faq-a">
           <ol>
             <li>Buka <a href="https://script.google.com" target="_blank" style="color:var(--blue)">script.google.com</a> → Proyek Baru</li>
-            <li>Hapus kode default, paste isi file <code>gas_backend_v2.js</code></li>
-            <li>Klik <strong>Deploy</strong> → Deployment Baru → Web App</li>
-            <li>Atur: <em>Execute as: Me</em> · <em>Who has access: Anyone</em></li>
-            <li>Salin URL deployment → paste ke Pengaturan SiRapat</li>
+            <li>Paste isi file <code>gas_backend_v2.js</code></li>
+            <li>Isi <code>SHEET_ID</code> dan <code>DRIVE_FOLDER_ID</code> di baris paling atas</li>
+            <li>Deploy → Web App → Execute as: Me · Access: Anyone</li>
+            <li>Salin URL → paste ke Pengaturan SiRapat</li>
           </ol>
         </div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">3. Cara generate dokumen rapat? <span class="faq-arrow">▼</span></div>
         <div class="faq-a">
           <ol>
-            <li>Buka menu <strong>Generate</strong></li>
-            <li>Pilih tanggal & jam rapat, isi tempat</li>
-            <li>Pilih agenda (atau ketik sendiri)</li>
-            <li>Centang peserta yang hadir</li>
-            <li>Klik <strong>Generate 3 Dokumen</strong> — ZIP otomatis terunduh</li>
-            <li>Setelah sukses, klik <strong>☁ Simpan ke Awan</strong> untuk lihat arsip</li>
+            <li>Pilih tanggal, jam, tempat, agenda, dan centang peserta</li>
+            <li>Klik <strong>Generate 3 Dokumen</strong> — ZIP otomatis terunduh dan arsip langsung disimpan ke cloud</li>
+            <li>Cek di menu Arsip — data sudah tersinkron</li>
           </ol>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">4. Cara upload berkas ke Google Drive? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">
-          <ol>
-            <li>Buka <strong>Arsip Rapat</strong> → klik item rapat yang diinginkan</li>
-            <li>Di bagian bawah modal, drag & drop file atau klik area upload</li>
-            <li>Klik <strong>Upload ke Drive</strong></li>
-            <li>File tersimpan di Drive dengan folder nama tanggal rapat</li>
-            <li>File yang sukses bisa dibuka langsung via link di modal</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">5. Kenapa data arsip bisa hilang saat clear cache? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">
-          Data arsip disimpan di localStorage browser (sementara) DAN di Google Sheets (permanen). Jika localStorage kosong, sistem otomatis muat ulang dari Sheets saat halaman dibuka. Pastikan GAS URL sudah diisi di Pengaturan.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">6. Format placeholder template Word? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">
-          Gunakan kurung siku ganda: <code>[[nomorSurat]]</code>, <code>[[tanggal]]</code>, <code>[[agenda]]</code>, dll.<br>
-          Untuk tabel peserta (loop): baris tabel dibuka dengan <code>{#peserta}</code> dan ditutup <code>{/peserta}</code>, isi kolom pakai <code>[[no]]</code> <code>[[nama]]</code> <code>[[jabatan]]</code>.
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── Toast & Sync Indicator ── -->
 <div class="toast" id="toast"></div>
 <div class="sync-indicator" id="sync-indicator">
   <div class="sync-dot" id="sync-dot"></div>
   <span id="sync-text"></span>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     MODAL DETAIL ARSIP + UPLOAD
-═══════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-header">
@@ -775,13 +650,10 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════════════════ -->
 <script>
-// ═══════════════════════════════════════════════════════════
-//  DATA & STATE
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
 const DEFAULT_PESERTA = [
   {nama:'ISKANDAR, S.Sos.',jabatan:'Ketua'},
   {nama:'DARKASYI ABDUL HAMID, S.Pd.',jabatan:'Anggota'},
@@ -801,62 +673,54 @@ const DEFAULT_PESERTA = [
 let pesertaList = JSON.parse(localStorage.getItem('sirapat_peserta')||'null') || DEFAULT_PESERTA.map(p=>({...p}));
 let arsipList   = JSON.parse(localStorage.getItem('sirapat_arsip')||'[]');
 let settings    = JSON.parse(localStorage.getItem('sirapat_settings')||'null') || {
-  instansi:'KIP Kabupaten Pidie Jaya',kota:'Meureudu',
-  ketua:'Iskandar',sekretaris:'Iswandi',
-  nomorFmt:'[NO]/PK.01-Und/1118/[BULAN]/[TAHUN]',nomorLast:0,
-  gasUrl:'',urlUnd:'',urlAbs:'',urlRis:'',tplMode:'auto'
+  instansi:'KIP Kabupaten Pidie Jaya', kota:'Meureudu',
+  ketua:'Iskandar', sekretaris:'Iswandi',
+  nomorFmt:'[NO]/PK.01-Und/1118/[BULAN]/[TAHUN]', nomorLast:0,
+  gasUrl:'', urlUnd:'', urlAbs:'', urlRis:'', tplMode:'auto'
 };
 
-const AUTO_PATHS = {
-  und:'./templates/UND_template.docx',
-  abs:'./templates/ABSEN_template.docx',
-  ris:'./templates/RISALAH_template.docx'
-};
-const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const HARI_ID  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const SH_ID    = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const AUTO_PATHS = {und:'./templates/UND_template.docx',abs:'./templates/ABSEN_template.docx',ris:'./templates/RISALAH_template.docx'};
+const BULAN_ID   = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const HARI_ID    = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const SH_ID      = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
 let tplMode       = settings.tplMode || 'auto';
 let calYearInline, calMonthInline;
 const today       = new Date();
 let lastGenId     = null;
-let uploadFiles   = {};   // { arsipId: [{file,name,size,status,url}] }
+let uploadFiles   = {};
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  HELPERS
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function getGasUrl(){ return (settings.gasUrl||'').trim(); }
 
 function buildNomor(no, tgl){
   return settings.nomorFmt
-    .replace('[NO]', String(no))            // FIX: tanpa padStart
+    .replace('[NO]', String(no))
     .replace('[BULAN]', tgl instanceof Date ? tgl.getMonth()+1 : no)
     .replace('[TAHUN]', tgl instanceof Date ? tgl.getFullYear() : today.getFullYear());
 }
-
-function tglGeneret(){
-  return `${today.getDate()} ${BULAN_ID[today.getMonth()]} ${today.getFullYear()}`;
-}
+function tglGeneret(){ return `${today.getDate()} ${BULAN_ID[today.getMonth()]} ${today.getFullYear()}`; }
 function tglFull(d){ return `${d.getDate()} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`; }
+function saveLocal(){ localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList)); }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  SYNC INDICATOR
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 let syncTimer;
-function showSync(msg, state='syncing'){
+function showSync(msg,state='syncing'){
   const el=document.getElementById('sync-indicator');
-  const dot=document.getElementById('sync-dot');
+  document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
-  dot.className='sync-dot '+state;
   el.classList.add('show');
   clearTimeout(syncTimer);
-  if(state!=='syncing') syncTimer=setTimeout(()=>el.classList.remove('show'),3000);
+  if(state!=='syncing') syncTimer=setTimeout(()=>el.classList.remove('show'),3500);
 }
-function hideSync(){ document.getElementById('sync-indicator').classList.remove('show'); }
 
-// ═══════════════════════════════════════════════════════════
-//  GAS API CALLS
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  GAS API
+// ════════════════════════════════════════════════
 async function gasGet(action){
   const url=getGasUrl(); if(!url) throw new Error('GAS URL belum diisi');
   const r=await fetch(`${url}?action=${action}`);
@@ -870,63 +734,91 @@ async function gasPost(payload){
   return d;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  NOMOR SURAT
-// ═══════════════════════════════════════════════════════════
-async function fetchNomor(){
-  const dot=document.getElementById('nomor-dot');
-  const prev=document.getElementById('nomor-preview');
-  if(!getGasUrl()){ dot.className='nomor-dot err'; prev.textContent='— isi URL Apps Script di Pengaturan'; return; }
-  dot.className='nomor-dot loading'; prev.textContent='Membaca dari Sheets...';
+// ════════════════════════════════════════════════
+//  ★ CLOUD ARSIP — SELALU FETCH, MERGE DENGAN LOKAL ★
+// ════════════════════════════════════════════════
+function setCloudBanner(state, msg){
+  const b=document.getElementById('cloud-status-banner');
+  const sp=document.getElementById('cloud-spin');
+  const tx=document.getElementById('cloud-status-text');
+  if(!b) return;
+  b.style.display='flex';
+  b.className='cloud-banner '+state;
+  sp.style.display=(state==='loading')?'block':'none';
+  tx.textContent=msg;
+  if(state==='ok'||state==='err') setTimeout(()=>{b.style.display='none';},5000);
+}
+
+/**
+ * ★ KUNCI PERBAIKAN ★
+ * Selalu fetch dari cloud, merge (cloud jadi acuan),
+ * simpan kembali ke localStorage sebagai cache.
+ */
+async function loadArsipFromCloud(){
+  if(!getGasUrl()){
+    setCloudBanner('warn','URL GAS belum diisi — data hanya dari browser lokal. Isi di Pengaturan.');
+    return;
+  }
+  setCloudBanner('loading','Memuat arsip dari cloud...');
+  showSync('Memuat dari cloud...','syncing');
   try{
-    const data=await gasGet('getLastNomor');
-    settings.nomorLast=data.lastNomor;
-    localStorage.setItem('sirapat_settings',JSON.stringify(settings));
-    dot.className='nomor-dot ok';
-    prev.textContent=buildNomor(data.nextNomor, new Date(document.getElementById('inp-tanggal').value+'T00:00:00')) + ` (urut ke-${data.nextNomor})`;
-    updateNomorPreview();
+    const data = await gasGet('getArsip');
+    const cloudArsip = data.arsip || [];
+
+    // Merge: cloud sebagai sumber kebenaran (master).
+    // Tambahkan item lokal yang belum ada di cloud (baru digenerate, belum tersync).
+    const cloudIds = new Set(cloudArsip.map(r=>String(r.id)));
+    const localOnly = arsipList.filter(r=>!cloudIds.has(String(r.id)));
+
+    // Gabung: cloud (sudah benar) + lokal yang belum tersync
+    arsipList = [...cloudArsip, ...localOnly];
+
+    // Urutkan terbaru dulu
+    arsipList.sort((a,b)=>String(b.id).localeCompare(String(a.id)));
+
+    // Simpan kembali ke lokal sebagai cache
+    saveLocal();
+
+    // Restore uploadFiles dari cloud data
+    arsipList.forEach(r=>{
+      if(r.uploadedFiles && r.uploadedFiles.length && !(uploadFiles[r.id]||[]).length){
+        uploadFiles[r.id] = r.uploadedFiles.map(f=>({...f,file:null}));
+      }
+    });
+
+    // Sync item lokal-only ke cloud
+    if(localOnly.length){
+      for(const item of localOnly){
+        gasPost({action:'simpanArsip',...item}).catch(()=>{});
+      }
+    }
+
+    setCloudBanner('ok',`✓ ${arsipList.length} arsip dimuat dari cloud`);
+    showSync(`${arsipList.length} arsip tersinkron`,'ok');
+    renderArsip();
+    renderCalInline();
+
   }catch(e){
-    dot.className='nomor-dot err'; prev.textContent='❌ Gagal baca Sheets — pakai nomor lokal: '+(settings.nomorLast+1);
+    setCloudBanner('err','❌ Gagal memuat dari cloud: '+e.message+' — menampilkan data lokal');
+    showSync('Gagal sync cloud','err');
   }
 }
 
-function updateNomorPreview(){
-  const tgl=document.getElementById('inp-tanggal').value;
-  if(!tgl) return;
-  const d=new Date(tgl+'T00:00:00');
-  document.getElementById('nomor-preview').textContent = buildNomor(settings.nomorLast+1,d)+` (urut ke-${settings.nomorLast+1})`;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  CLOUD ARSIP — load dari Sheets jika localStorage kosong
-// ═══════════════════════════════════════════════════════════
-async function loadArsipFromCloud(){
-  if(!getGasUrl()) return;
-  if(arsipList.length>0) return; // sudah ada lokal
-  showSync('Memuat arsip dari cloud...','syncing');
-  try{
-    const data=await gasGet('getArsip');
-    if(data.arsip && data.arsip.length){
-      arsipList=data.arsip;
-      localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList));
-      // Restore uploadedFiles dari cloud data
-      arsipList.forEach(r=>{ if(r.uploadedFiles && r.uploadedFiles.length) uploadFiles[r.id]=r.uploadedFiles; });
-      showSync('Arsip berhasil dimuat dari cloud','ok');
-    } else {
-      hideSync();
-    }
-  }catch(e){ hideSync(); }
+/** Dipanggil manual dari tombol ☁ Sync */
+async function refreshArsipCloud(){
+  await loadArsipFromCloud();
 }
 
 async function syncArsipToCloud(item){
   if(!getGasUrl()) return;
   showSync('Menyimpan ke cloud...','syncing');
   try{
-    // Sertakan uploadedFiles (hanya metadata, tanpa object File)
-    const payload={...item, uploadedFiles: (uploadFiles[item.id]||[]).map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}))};
+    const payload={...item,
+      uploadedFiles:(uploadFiles[item.id]||[]).map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}))
+    };
     await gasPost({action:'simpanArsip',...payload});
     showSync('Tersimpan ke cloud','ok');
-  }catch(e){ showSync('Gagal sync ke cloud','err'); }
+  }catch(e){ showSync('Gagal sync cloud','err'); }
 }
 
 async function hapusArsipCloud(id){
@@ -934,9 +826,34 @@ async function hapusArsipCloud(id){
   try{ await gasPost({action:'hapusArsip',id}); }catch(e){}
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  NOMOR SURAT
+// ════════════════════════════════════════════════
+async function fetchNomor(){
+  const dot=document.getElementById('nomor-dot');
+  const prev=document.getElementById('nomor-preview');
+  if(!getGasUrl()){dot.className='nomor-dot err';prev.textContent='— isi URL Apps Script di Pengaturan';return;}
+  dot.className='nomor-dot loading'; prev.textContent='Membaca dari Sheets...';
+  try{
+    const data=await gasGet('getLastNomor');
+    settings.nomorLast=data.lastNomor;
+    localStorage.setItem('sirapat_settings',JSON.stringify(settings));
+    dot.className='nomor-dot ok';
+    updateNomorPreview();
+  }catch(e){
+    dot.className='nomor-dot err';
+    prev.textContent='❌ Gagal baca Sheets — pakai nomor lokal: '+(settings.nomorLast+1);
+  }
+}
+function updateNomorPreview(){
+  const tgl=document.getElementById('inp-tanggal').value; if(!tgl) return;
+  const d=new Date(tgl+'T00:00:00');
+  document.getElementById('nomor-preview').textContent=buildNomor(settings.nomorLast+1,d)+` (urut ke-${settings.nomorLast+1})`;
+}
+
+// ════════════════════════════════════════════════
 //  TEMPLATE MODE
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function setTplMode(mode,btn){
   tplMode=mode; settings.tplMode=mode;
   document.querySelectorAll('.tpl-mode-tab').forEach(b=>b.classList.remove('active'));
@@ -949,9 +866,9 @@ function getTemplateUrl(key){
   return (document.getElementById('url-'+key)||{value:''}).value.trim();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  TEST TEMPLATE URLs
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  TEST URLs
+// ════════════════════════════════════════════════
 async function testUrl(url){
   const r=await fetch(url); if(!r.ok) throw new Error('HTTP '+r.status);
   const buf=await r.arrayBuffer(); if(buf.byteLength<200) throw new Error('Bukan docx');
@@ -963,7 +880,7 @@ async function testAutoUrl(key){
   try{const s=await testUrl(AUTO_PATHS[key]);b.className='tpl-badge ok';b.textContent=`✓ OK (${(s/1024).toFixed(1)}KB)`;}
   catch(e){b.className='tpl-badge err';b.textContent='✗ '+e.message;}
 }
-async function testSemuaAuto(){ await Promise.all(['und','abs','ris'].map(k=>testAutoUrl(k))); }
+async function testSemuaAuto(){await Promise.all(['und','abs','ris'].map(k=>testAutoUrl(k)));}
 async function testManualUrl(key){
   const b=document.getElementById('badge-'+key);
   const url=(document.getElementById('url-'+key)||{value:''}).value.trim();
@@ -972,28 +889,26 @@ async function testManualUrl(key){
   try{const s=await testUrl(url);b.className='tpl-badge ok';b.textContent=`✓ OK (${(s/1024).toFixed(1)}KB)`;showToast('✓ OK','success');}
   catch(e){b.className='tpl-badge err';b.textContent='✗ '+e.message;showToast('Gagal: '+e.message,'error');}
 }
-
 async function testGasUrl(){
   const url=(document.getElementById('set-gas-url')||{value:''}).value.trim();
   if(!url){showToast('Masukkan URL GAS','error');return;}
   const st=document.getElementById('gas-status');
-  st.textContent='⏳ Menguji...'; st.style.color='#8a6010';
+  st.textContent='⏳ Menguji...';st.style.color='#8a6010';
   settings.gasUrl=url; localStorage.setItem('sirapat_settings',JSON.stringify(settings));
   try{
     const d=await gasGet('getLastNomor');
-    st.textContent=`✅ Terhubung! Nomor terakhir di Sheets: ${d.lastNomor}`;
-    st.style.color='#2e7d32';
+    st.textContent=`✅ Terhubung! Nomor terakhir: ${d.lastNomor}`;st.style.color='#2e7d32';
     showToast('GAS terhubung!','success');
     fetchNomor();
   }catch(e){
-    st.textContent='❌ Gagal: '+e.message; st.style.color='#c62828';
+    st.textContent='❌ Gagal: '+e.message;st.style.color='#c62828';
     showToast('GAS gagal: '+e.message,'error');
   }
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  PESERTA GEN
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderPesertaGen(){
   document.getElementById('peserta-gen-grid').innerHTML=pesertaList.map((p,i)=>`
     <div class="peserta-item checked" id="pgen-${i}" onclick="togglePeserta(${i})">
@@ -1011,9 +926,9 @@ function pilihAgenda(el,text){
   if(!text){ta.disabled=false;ta.focus();}
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CALENDAR INLINE
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  CALENDAR
+// ════════════════════════════════════════════════
 function initCalInline(){calYearInline=today.getFullYear();calMonthInline=today.getMonth();}
 function changeMonthInline(d){
   calMonthInline+=d;
@@ -1025,7 +940,7 @@ function renderCalInline(){
   if(calYearInline===undefined) initCalInline();
   document.getElementById('cal-title-inline').textContent=`${BULAN_ID[calMonthInline]} ${calYearInline}`;
   const rapatMap={};
-  arsipList.forEach(r=>{ if(!rapatMap[r.tanggal]) rapatMap[r.tanggal]={jam:r.jam,tempat:r.tempat}; });
+  arsipList.forEach(r=>{if(!rapatMap[r.tanggal]) rapatMap[r.tanggal]={jam:r.jam,tempat:r.tempat};});
   const selectedTgl=document.getElementById('inp-tanggal').value;
   const selectedJam=document.getElementById('inp-jam').value;
   const selectedTempat=document.getElementById('inp-tempat').value.trim();
@@ -1036,38 +951,34 @@ function renderCalInline(){
   for(let i=0;i<firstDay;i++) html+=`<div class="cal-day other-month"></div>`;
   for(let d=1;d<=days;d++){
     const ds=`${calYearInline}-${String(calMonthInline+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=ds===todayStr;
-    const isSel=ds===selectedTgl;
-    const ev=rapatMap[ds];
-    const isBooked=ev && ds===selectedTgl && ev.jam===selectedJam && ev.tempat===selectedTempat;
+    const isToday=ds===todayStr, isSel=ds===selectedTgl, ev=rapatMap[ds];
+    const isBooked=ev&&ds===selectedTgl&&ev.jam===selectedJam&&ev.tempat===selectedTempat;
     let cls='cal-day';
     if(isToday) cls+=' today';
-    if(isSel && !isToday) cls+=' selected';
-    if(isBooked) cls+=' booked';
-    else if(ev) cls+=' has-event';
-    if(isBooked) html+=`<div class="${cls}" title="⚠ Konflik! Rapat: ${ev.tempat} ${ev.jam}" onclick="calClickInline('${ds}')">${d}</div>`;
-    else html+=`<div class="${cls}" onclick="calClickInline('${ds}')">${d}</div>`;
+    if(isSel&&!isToday) cls+=' selected';
+    if(isBooked) cls+=' booked'; else if(ev) cls+=' has-event';
+    html+=`<div class="${cls}" onclick="calClickInline('${ds}')">${d}</div>`;
   }
   document.getElementById('cal-grid-inline').innerHTML=html;
 }
-function updateCalSelection(){ renderCalInline(); checkBooking(); }
+function updateCalSelection(){renderCalInline();checkBooking();}
 function calClickInline(ds){
   const found=arsipList.find(r=>r.tanggal===ds);
-  if(found){ showArsipDetail(found.id); return; }
+  if(found){showArsipDetail(found.id);return;}
   document.getElementById('inp-tanggal').value=ds;
-  renderCalInline(); updateNomorPreview(); checkBooking();
+  renderCalInline();updateNomorPreview();checkBooking();
 }
 function checkBooking(){
   const tgl=document.getElementById('inp-tanggal').value;
   const jam=document.getElementById('inp-jam').value;
   const tempat=document.getElementById('inp-tempat').value.trim();
-  const conflict=arsipList.find(r=>r.tanggal===tgl && r.jam===jam && r.tempat===tempat);
+  const conflict=arsipList.find(r=>r.tanggal===tgl&&r.jam===jam&&r.tempat===tempat);
   document.getElementById('booking-warn').style.display=conflict?'block':'none';
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  INJECT docxtemplater
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function setPS(id,state){const el=document.getElementById(id);if(el) el.className='prog-step'+(state?' '+state:'');}
 async function fetchAndInject(url,data){
   const r=await fetch(url); if(!r.ok) throw new Error(`HTTP ${r.status} untuk "${url}"`);
@@ -1078,9 +989,9 @@ async function fetchAndInject(url,data){
   return doc.getZip().generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
 }
 
-// ═══════════════════════════════════════════════════════════
-//  GENERATE DOKUMEN
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  GENERATE DOKUMEN — ★ LANGSUNG SYNC KE CLOUD ★
+// ════════════════════════════════════════════════
 async function generateDokumen(){
   const tanggalVal=document.getElementById('inp-tanggal').value;
   const jamVal=document.getElementById('inp-jam').value;
@@ -1094,49 +1005,39 @@ async function generateDokumen(){
   if(!pesertaHadir.length){showToast('Pilih minimal 1 peserta!','error');return;}
 
   document.getElementById('btn-awan').classList.remove('visible'); lastGenId=null;
-
   const tgl=new Date(tanggalVal+'T00:00:00');
   const hariStr=HARI_ID[tgl.getDay()];
   const tglStr=tglFull(tgl);
-  const tahunStr=String(tgl.getFullYear());
-  const jamFmt=jamVal+' WIB s/d Selesai';
   const tglGen=tglGeneret();
+  const jamFmt=jamVal+' WIB s/d Selesai';
 
-  // Ambil nomor dari Sheets (dengan fallback ke lokal)
   let nextNo=settings.nomorLast+1;
-  if(getGasUrl()){
-    try{const d=await gasGet('getLastNomor');nextNo=d.nextNomor;}catch(e){}
-  }
+  if(getGasUrl()){try{const d=await gasGet('getLastNomor');nextNo=d.nextNomor;}catch(e){}}
   const nomorSurat=buildNomor(nextNo,tgl);
 
   const data={
-    nomorSurat, hari:hariStr, tanggal:tglStr,
-    tanggalHari:`${hariStr}, ${tglStr}`,
-    jam:jamFmt, jamPolos:jamVal, tempat, agenda,
-    ketua:settings.ketua, sekretaris:settings.sekretaris,
-    kota:settings.kota, kotaTanggal:`${settings.kota}, ${tglStr}`,
-    tahun:tahunStr, bulan:BULAN_ID[tgl.getMonth()],
-    instansi:settings.instansi,
-    jumlahPeserta:String(pesertaHadir.length),
-    tgl_generet:tglGen,
+    nomorSurat,hari:hariStr,tanggal:tglStr,tanggalHari:`${hariStr}, ${tglStr}`,
+    jam:jamFmt,jamPolos:jamVal,tempat,agenda,
+    ketua:settings.ketua,sekretaris:settings.sekretaris,
+    kota:settings.kota,kotaTanggal:`${settings.kota}, ${tglStr}`,
+    tahun:String(tgl.getFullYear()),bulan:BULAN_ID[tgl.getMonth()],
+    instansi:settings.instansi,jumlahPeserta:String(pesertaHadir.length),tgl_generet:tglGen,
     peserta:pesertaHadir.map((p,i)=>({no:String(i+1),nama:p.nama,jabatan:p.jabatan,ttd:''}))
   };
 
-  const btn=document.getElementById('btn-gen');
-  const sp=document.getElementById('spinner');
-  const tx=document.getElementById('btn-gen-text');
-  btn.disabled=true; sp.style.display='block';
+  const btn=document.getElementById('btn-gen'),sp=document.getElementById('spinner'),tx=document.getElementById('btn-gen-text');
+  btn.disabled=true;sp.style.display='block';
   document.getElementById('progress-bar').style.display='flex';
   ['ps-fetch','ps-inject','ps-zip','ps-done'].forEach(id=>setPS(id,''));
 
   try{
-    setPS('ps-fetch','active'); tx.textContent='Mengambil template...';
+    setPS('ps-fetch','active');tx.textContent='Mengambil template...';
     let blobs;
     try{blobs=await Promise.all([fetchAndInject(urlUnd,data),fetchAndInject(urlAbs,data),fetchAndInject(urlRis,data)]);}
     catch(e){setPS('ps-fetch','err');throw e;}
-    setPS('ps-fetch','done'); setPS('ps-inject','done');
+    setPS('ps-fetch','done');setPS('ps-inject','done');
 
-    setPS('ps-zip','active'); tx.textContent='Membuat ZIP...';
+    setPS('ps-zip','active');tx.textContent='Membuat ZIP...';
     const prefix=`Rapat_${tanggalVal.replace(/-/g,'')}`;
     const zipOut=new JSZip();
     zipOut.file(`${prefix}_Undangan.docx`,blobs[0]);
@@ -1145,41 +1046,44 @@ async function generateDokumen(){
     const zipBlob=await zipOut.generateAsync({type:'blob'});
     setPS('ps-zip','done');
 
-    const a=document.createElement('a'); a.href=URL.createObjectURL(zipBlob);
-    a.download=`${prefix}_DokumenRapat.zip`; a.click(); URL.revokeObjectURL(a.href);
+    const a=document.createElement('a');a.href=URL.createObjectURL(zipBlob);
+    a.download=`${prefix}_DokumenRapat.zip`;a.click();URL.revokeObjectURL(a.href);
     setPS('ps-done','done');
 
-    // Simpan arsip lokal
+    // ★ Simpan arsip lokal
     const arsipId=Date.now();
-    const newItem={id:arsipId,tanggal:tanggalVal,hari:hariStr,jam:jamVal,tempat,agenda,nomorSurat,tglGeneret:tglGen,peserta:pesertaHadir.map(p=>p.nama),uploadedFiles:[]};
+    const newItem={
+      id:arsipId,tanggal:tanggalVal,hari:hariStr,jam:jamVal,
+      tempat,agenda,nomorSurat,tglGeneret:tglGen,
+      peserta:pesertaHadir.map(p=>p.nama),uploadedFiles:[]
+    };
     arsipList.unshift(newItem);
-    localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList));
+    saveLocal();
+
     settings.nomorLast=nextNo;
     localStorage.setItem('sirapat_settings',JSON.stringify(settings));
 
-    // Simpan nomor ke Sheets
+    // ★ LANGSUNG sync ke cloud tanpa menunggu
     if(getGasUrl()){
       gasPost({action:'simpanNomor',nomorUrut:nextNo,nomorSurat,tanggal:tglStr,agenda,tujuan:'',tglGeneret:tglGen,pesertaCount:pesertaHadir.length}).catch(()=>{});
-      // Simpan arsip ke cloud
-      syncArsipToCloud(newItem);
+      syncArsipToCloud(newItem); // fire and forget
     }
 
     lastGenId=arsipId;
     document.getElementById('btn-awan').classList.add('visible');
-    updateNomorPreview();
-    renderCalInline();
-    showToast('✓ 3 dokumen berhasil diinject & diunduh!','success');
+    updateNomorPreview();renderCalInline();
+    showToast('✓ 3 dokumen berhasil diinject & diunduh! Arsip disimpan ke cloud.','success');
 
   }catch(err){
-    console.error(err); showToast('❌ '+err.message,'error');
+    console.error(err);showToast('❌ '+err.message,'error');
   }finally{
-    btn.disabled=false; sp.style.display='none'; tx.textContent='Generate 3 Dokumen';
+    btn.disabled=false;sp.style.display='none';tx.textContent='Generate 3 Dokumen';
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SIMPAN KE AWAN → redirect ke arsip
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+//  SIMPAN KE AWAN
+// ════════════════════════════════════════════════
 function simpanKeAwan(){
   if(!lastGenId) return;
   showPage('arsip',document.querySelectorAll('.nav-btn')[1]);
@@ -1190,13 +1094,13 @@ function simpanKeAwan(){
   },200);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  ARSIP RENDER
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderArsip(){
-  const q=(document.getElementById('search-inp').value||'').toLowerCase();
-  const bln=document.getElementById('filter-bulan').value;
-  const thn=document.getElementById('filter-tahun').value;
+  const q=(document.getElementById('search-inp')?.value||'').toLowerCase();
+  const bln=document.getElementById('filter-bulan')?.value||'';
+  const thn=document.getElementById('filter-tahun')?.value||'';
   const list=arsipList.filter(r=>{
     const d=new Date(r.tanggal);
     if(bln && BULAN_ID[d.getMonth()]!==bln) return false;
@@ -1206,15 +1110,14 @@ function renderArsip(){
   });
   const el=document.getElementById('arsip-list');
   if(!list.length){
-    el.innerHTML=`<div class="empty-state"><div class="icon">📭</div><h3>Belum ada arsip</h3><p>Arsip muncul setelah generate pertama.</p></div>`;
+    el.innerHTML=`<div class="empty-state"><div class="icon">📭</div><h3>Belum ada arsip</h3><p>${getGasUrl()?'Data cloud kosong atau belum ada rapat.':'Arsip muncul setelah generate pertama.'}</p></div>`;
     return;
   }
   el.innerHTML=list.map(r=>{
     const d=new Date(r.tanggal);
-    const files=(uploadFiles[r.id]||[]);
-    const doneFiles=files.filter(f=>f.status==='done');
-    const cloudFiles=r.uploadedFiles ? r.uploadedFiles.filter(f=>f.status==='done') : [];
-    const totalCloud=Math.max(doneFiles.length,cloudFiles.length);
+    const files=uploadFiles[r.id]||[];
+    const doneFiles=[...files,(r.uploadedFiles||[])].filter(f=>f&&f.status==='done');
+    const totalCloud=new Set(doneFiles.map(f=>f.name)).size;
     return `<div class="arsip-item" id="arsip-item-${r.id}" onclick="showArsipDetail(${r.id})">
       <div class="arsip-date-box"><div class="day">${d.getDate()}</div><div class="month">${SH_ID[d.getMonth()]}</div></div>
       <div class="arsip-info">
@@ -1222,8 +1125,9 @@ function renderArsip(){
         <div class="arsip-meta">
           <span>📅 ${r.hari}, ${d.getFullYear()}</span>
           <span>🕐 ${r.jam} WIB</span>
-          <span>👥 ${r.peserta.length} peserta</span>
+          <span>👥 ${(r.peserta||[]).length} peserta</span>
           ${totalCloud?`<span style="color:var(--blue)">☁ ${totalCloud} file</span>`:''}
+          ${r.nomorSurat?`<span title="Nomor surat">${r.nomorSurat}</span>`:''}
         </div>
       </div>
       <div class="arsip-actions" onclick="event.stopPropagation()">
@@ -1234,27 +1138,24 @@ function renderArsip(){
 }
 
 function hapusArsip(id){
-  if(!confirm('Hapus arsip ini?')) return;
+  if(!confirm('Hapus arsip ini dari lokal dan cloud?')) return;
   arsipList=arsipList.filter(r=>r.id!==id);
-  localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList));
+  saveLocal();
   delete uploadFiles[id];
   hapusArsipCloud(id);
-  renderArsip(); showToast('Arsip dihapus','info');
+  renderArsip();showToast('Arsip dihapus','info');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  MODAL DETAIL + UPLOAD
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function showArsipDetail(id){
   const r=arsipList.find(x=>x.id===id); if(!r) return;
   const d=new Date(r.tanggal);
   const folderName=`${String(d.getDate()).padStart(2,'0')} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;
-
-  // Merge cloud files ke uploadFiles jika belum ada
-  if(r.uploadedFiles && r.uploadedFiles.length && !(uploadFiles[id]||[]).length){
+  if(r.uploadedFiles&&r.uploadedFiles.length&&!(uploadFiles[id]||[]).length){
     uploadFiles[id]=r.uploadedFiles.map(f=>({...f,file:null}));
   }
-
   document.getElementById('modal-title').textContent='Detail Rapat';
   document.getElementById('modal-body').innerHTML=`
     <div class="detail-row"><div class="detail-label">Tanggal</div><div class="detail-val">${r.hari}, ${tglFull(d)}</div></div>
@@ -1263,37 +1164,24 @@ function showArsipDetail(id){
     <div class="detail-row"><div class="detail-label">Agenda</div><div class="detail-val">${r.agenda}</div></div>
     <div class="detail-row"><div class="detail-label">Nomor Surat</div><div class="detail-val">${r.nomorSurat||'-'}</div></div>
     <div class="detail-row"><div class="detail-label">Di-generate pada</div><div class="detail-val">${r.tglGeneret||'-'}</div></div>
-    <div class="detail-row" style="border-bottom:none"><div class="detail-label">Peserta (${r.peserta.length})</div>
-      <div class="detail-val">${r.peserta.map((n,i)=>`${i+1}. ${n}`).join('<br>')}</div>
+    <div class="detail-row" style="border-bottom:none"><div class="detail-label">Peserta (${(r.peserta||[]).length})</div>
+      <div class="detail-val">${(r.peserta||[]).map((n,i)=>`${i+1}. ${n}`).join('<br>')}</div>
     </div>
-
     <div class="upload-section">
-      <div class="upload-section-title">
-        ☁ Upload Dokumen ke Google Drive
-        <span class="folder-tag">📁 ${folderName}</span>
-      </div>
-      ${!getGasUrl()?`<div class="no-gas-warning">⚠ URL Apps Script belum diisi di Pengaturan. Upload tidak akan berfungsi.</div>`:''}
+      <div class="upload-section-title">☁ Upload Dokumen ke Google Drive <span class="folder-tag">📁 ${folderName}</span></div>
+      ${!getGasUrl()?'<div class="no-gas-warning">⚠ URL Apps Script belum diisi di Pengaturan.</div>':''}
       <div class="upload-zone" id="dropzone-${id}"
-           ondrop="handleDrop(event,${id})"
-           ondragover="event.preventDefault();this.classList.add('dragover')"
-           ondragleave="this.classList.remove('dragover')"
-           onclick="document.getElementById('fi-${id}').click()">
+           ondrop="handleDrop(event,${id})" ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')" onclick="document.getElementById('fi-${id}').click()">
         <div class="upload-zone-icon">📂</div>
-        <div class="upload-zone-text">
-          <strong>Drag & drop file di sini</strong><br>
-          atau klik untuk pilih file<br>
-          <span style="font-size:11px">.docx .pdf .zip gambar — maks. 10MB</span>
-        </div>
+        <div class="upload-zone-text"><strong>Drag & drop file di sini</strong><br>atau klik untuk pilih<br><span style="font-size:11px">.docx .pdf .zip — maks. 10MB</span></div>
         <input type="file" id="fi-${id}" multiple onchange="handleFileInput(event,${id})">
       </div>
       <div class="uploaded-files" id="file-list-${id}"></div>
       <div class="upload-actions" id="upload-actions-${id}" style="display:none">
-        <button class="btn-upload-all" id="upload-btn-${id}" onclick="uploadSemuaFile(${id},'${folderName}')">
-          ☁ Upload ke Drive
-        </button>
+        <button class="btn-upload-all" id="upload-btn-${id}" onclick="uploadSemuaFile(${id},'${folderName}')">☁ Upload ke Drive</button>
       </div>
     </div>`;
-
   renderFileList(id);
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -1301,24 +1189,21 @@ function showArsipDetail(id){
 function renderFileList(id){
   const files=uploadFiles[id]||[];
   const el=document.getElementById(`file-list-${id}`); if(!el) return;
-  const actEl=document.getElementById(`upload-actions-${id}`); if(actEl) actEl.style.display=files.length?'flex':'none';
+  const actEl=document.getElementById(`upload-actions-${id}`);if(actEl) actEl.style.display=files.length?'flex':'none';
   if(!files.length){el.innerHTML='';return;}
   el.innerHTML=files.map((f,i)=>`
-    <div class="uploaded-file-item" id="fi-item-${id}-${i}">
+    <div class="uploaded-file-item">
       <div class="file-icon">${getFileIcon(f.name)}</div>
       <div class="file-name">${f.name}</div>
       <div class="file-size">${fmtSize(f.size)}</div>
-      ${f.status==='done' && f.url
-        ?`<a class="file-link" href="${f.url}" target="_blank">Buka ↗</a>`
-        :`<span class="file-status ${f.status}">${statusLbl(f.status)}</span>`}
+      ${f.status==='done'&&f.url?`<a class="file-link" href="${f.url}" target="_blank">Buka ↗</a>`:`<span class="file-status ${f.status}">${statusLbl(f.status)}</span>`}
       <div class="file-actions">
         ${f.status!=='uploading'?`<button onclick="hapusFile(${id},${i})" title="Hapus">✕</button>`:''}
-        ${f.status==='done'?`<button onclick="gantiFile(${id},${i})" title="Ganti file">↺</button>`:''}
       </div>
     </div>`).join('');
 }
 
-function getFileIcon(n){const e=(n||'').split('.').pop().toLowerCase();return{pdf:'📕',doc:'📝',docx:'📝',zip:'📦',rar:'📦',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',gif:'🖼️'}[e]||'📄';}
+function getFileIcon(n){const e=(n||'').split('.').pop().toLowerCase();return{pdf:'📕',doc:'📝',docx:'📝',zip:'📦',jpg:'🖼️',jpeg:'🖼️',png:'🖼️'}[e]||'📄';}
 function fmtSize(b){if(!b) return '';if(b<1024) return b+'B';if(b<1048576) return (b/1024).toFixed(1)+'KB';return (b/1048576).toFixed(1)+'MB';}
 function statusLbl(s){return{pending:'Menunggu',uploading:'Uploading...',done:'Tersimpan',err:'Gagal'}[s]||s;}
 
@@ -1326,22 +1211,13 @@ function hapusFile(id,i){
   if(!uploadFiles[id]) return;
   uploadFiles[id].splice(i,1);
   renderFileList(id);
-  // update arsip uploadedFiles
   const r=arsipList.find(x=>x.id===id);
-  if(r){ r.uploadedFiles=uploadFiles[id].filter(f=>f.status==='done').map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null})); localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList)); if(getGasUrl()) gasPost({action:'updateArsipFiles',id,uploadedFiles:r.uploadedFiles}).catch(()=>{}); }
+  if(r){
+    r.uploadedFiles=uploadFiles[id].filter(f=>f.status==='done').map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}));
+    saveLocal();
+    if(getGasUrl()) gasPost({action:'updateArsipFiles',id,uploadedFiles:r.uploadedFiles}).catch(()=>{});
+  }
   renderArsip();
-}
-
-function gantiFile(id,i){
-  // Buat input file trigger
-  const inp=document.createElement('input'); inp.type='file'; inp.accept='*/*';
-  inp.onchange=e=>{
-    const f=e.target.files[0]; if(!f) return;
-    if(f.size>10*1024*1024){showToast('File terlalu besar (maks 10MB)','error');return;}
-    uploadFiles[id][i]={file:f,name:f.name,size:f.size,status:'pending',url:null};
-    renderFileList(id);
-  };
-  inp.click();
 }
 
 function handleFileInput(ev,id){addFiles(id,Array.from(ev.target.files));ev.target.value='';}
@@ -1368,45 +1244,34 @@ async function uploadSemuaFile(id,folderName){
   let ok=0,fail=0;
   for(let i=0;i<(uploadFiles[id]||[]).length;i++){
     const f=uploadFiles[id][i];
-    if(f.status!=='pending' && f.status!=='err') continue;
+    if(f.status!=='pending'&&f.status!=='err') continue;
     if(!f.file){uploadFiles[id][i].status='err';fail++;renderFileList(id);continue;}
-    uploadFiles[id][i].status='uploading'; renderFileList(id);
+    uploadFiles[id][i].status='uploading';renderFileList(id);
     try{
       const b64=await toBase64(f.file);
       const res=await gasPost({action:'uploadFile',fileName:f.name,fileBase64:b64,mimeType:f.file.type||'application/octet-stream',folderName});
-      // FIX: GAS mengembalikan fileUrl, periksa success
       if(!res.success) throw new Error(res.error||'Unknown error');
-      uploadFiles[id][i].status='done';
-      uploadFiles[id][i].url=res.fileUrl;
-      ok++;
-    }catch(e){
-      uploadFiles[id][i].status='err'; fail++;
-      console.error('Upload error',e);
-    }
+      uploadFiles[id][i].status='done';uploadFiles[id][i].url=res.fileUrl;ok++;
+    }catch(e){uploadFiles[id][i].status='err';fail++;console.error('Upload error',e);}
     renderFileList(id);
   }
   if(btn){btn.disabled=false;btn.textContent='☁ Upload ke Drive';}
   showToast(`Upload: ${ok} berhasil${fail?`, ${fail} gagal`:''}`,ok?'success':'error');
-  // Sync uploaded files ke arsip & cloud
   const r=arsipList.find(x=>x.id===id);
   if(r){
     r.uploadedFiles=uploadFiles[id].map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}));
-    localStorage.setItem('sirapat_arsip',JSON.stringify(arsipList));
+    saveLocal();
     if(getGasUrl()) gasPost({action:'updateArsipFiles',id,uploadedFiles:r.uploadedFiles}).catch(()=>{});
   }
   renderArsip();
 }
 
 function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Baca gagal'));r.readAsDataURL(file);});}
+function closeModal(e){if(!e||e.target.id==='modal-overlay') document.getElementById('modal-overlay').classList.remove('open');}
 
-function closeModal(e){
-  if(!e||e.target.id==='modal-overlay'||e.currentTarget?.classList?.contains('modal-close'))
-    document.getElementById('modal-overlay').classList.remove('open');
-}
-
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  PESERTA MANAGE
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderPesertaManage(){
   document.getElementById('peserta-manage-list').innerHTML=pesertaList.map((p,i)=>`
     <div class="peserta-row">
@@ -1416,29 +1281,28 @@ function renderPesertaManage(){
       <button class="btn-icon" onclick="hapusPesertaRow(${i})">✕</button>
     </div>`).join('');
 }
-function tambahPeserta(){pesertaList.push({nama:'',jabatan:''});renderPesertaManage();document.querySelectorAll('[id^=pm-nama-]').forEach((el,_,a)=>{if(el===a[a.length-1])el.focus();});}
+function tambahPeserta(){pesertaList.push({nama:'',jabatan:''});renderPesertaManage();}
 function hapusPesertaRow(i){pesertaList.splice(i,1);renderPesertaManage();}
 function simpanPeserta(){
   pesertaList=pesertaList.map((_,i)=>({nama:document.getElementById('pm-nama-'+i)?.value||'',jabatan:document.getElementById('pm-jab-'+i)?.value||''})).filter(p=>p.nama.trim());
   localStorage.setItem('sirapat_peserta',JSON.stringify(pesertaList));
-  renderPesertaGen(); showToast('Daftar peserta disimpan!','success');
-  // Sync ke cloud
+  renderPesertaGen();showToast('Daftar peserta disimpan!','success');
   if(getGasUrl()) gasPost({action:'simpanPeserta',peserta:pesertaList}).catch(()=>{});
 }
 function resetPeserta(){
   if(!confirm('Reset ke default?')) return;
   pesertaList=DEFAULT_PESERTA.map(p=>({...p}));
   localStorage.setItem('sirapat_peserta',JSON.stringify(pesertaList));
-  renderPesertaManage(); renderPesertaGen(); showToast('Direset ke default.','info');
+  renderPesertaManage();renderPesertaGen();showToast('Direset ke default.','info');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  DASHBOARD
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderDashboard(){
   const total=arsipList.length;
   const ti=arsipList.filter(r=>new Date(r.tanggal).getFullYear()===today.getFullYear()).length;
-  const avg=total?Math.round(arsipList.reduce((a,r)=>a+r.peserta.length,0)/total):0;
+  const avg=total?Math.round(arsipList.reduce((a,r)=>a+(r.peserta||[]).length,0)/total):0;
   document.getElementById('stats-grid').innerHTML=`
     <div class="stat-card"><div class="stat-label">Total Rapat</div><div class="stat-value">${total}</div><div class="stat-sub">Sepanjang waktu</div></div>
     <div class="stat-card"><div class="stat-label">Tahun ${today.getFullYear()}</div><div class="stat-value">${ti}</div><div class="stat-sub">Rapat tahun ini</div></div>
@@ -1451,9 +1315,9 @@ function renderDashboard(){
     `<div class="bar-group"><div class="bar" style="height:${Math.round(n/max*90)}px" title="${n} rapat"></div><div class="bar-label">${SH_ID[i]}</div></div>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  PENGATURAN
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function loadPengaturan(){
   ['instansi','kota','ketua','sekretaris'].forEach(k=>{const el=document.getElementById('set-'+k);if(el)el.value=settings[k]||'';});
   const nf=document.getElementById('set-nomor-fmt');if(nf)nf.value=settings.nomorFmt||'';
@@ -1462,10 +1326,7 @@ function loadPengaturan(){
   const uu=document.getElementById('url-und');if(uu)uu.value=settings.urlUnd||'';
   const ua=document.getElementById('url-abs');if(ua)ua.value=settings.urlAbs||'';
   const ur=document.getElementById('url-ris');if(ur)ur.value=settings.urlRis||'';
-  // restore tpl mode
-  if(settings.tplMode==='manual'){
-    document.getElementById('tpl-tab-manual')?.click();
-  }
+  if(settings.tplMode==='manual'){document.querySelectorAll('.tpl-mode-tab')[1]?.click();}
 }
 function simpanPengaturan(){
   ['instansi','kota','ketua','sekretaris'].forEach(k=>{const el=document.getElementById('set-'+k);if(el)settings[k]=el.value;});
@@ -1477,63 +1338,50 @@ function simpanPengaturan(){
   const ur=document.getElementById('url-ris');if(ur)settings.urlRis=ur.value;
   settings.tplMode=tplMode;
   localStorage.setItem('sirapat_settings',JSON.stringify(settings));
-  showToast('Pengaturan disimpan!','success');
-  fetchNomor();
+  showToast('Pengaturan disimpan!','success');fetchNomor();
 }
+function toggleFaq(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open');}
 
-// ═══════════════════════════════════════════════════════════
-//  FAQ TOGGLE
-// ═══════════════════════════════════════════════════════════
-function toggleFaq(el){
-  el.classList.toggle('open');
-  const ans=el.nextElementSibling;
-  ans.classList.toggle('open');
-}
-
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  NAV
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(id==='peserta')    renderPesertaManage();
-  if(id==='arsip')      renderArsip();
-  if(id==='dashboard')  renderDashboard();
+  if(id==='peserta')   renderPesertaManage();
+  if(id==='arsip')     { renderArsip(); loadArsipFromCloud(); }  // ★ selalu refresh saat buka arsip
+  if(id==='dashboard') renderDashboard();
   if(id==='pengaturan') loadPengaturan();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  TOAST
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 let toastT;
 function showToast(msg,type='info'){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type} show`;
-  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),4000);
+  t.textContent=msg;t.className=`toast ${type} show`;
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),4500);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 document.getElementById('inp-tanggal').value=today.toISOString().split('T')[0];
-initCalInline(); renderCalInline();
+initCalInline();renderCalInline();
 renderPesertaGen();
-// Restore template mode
-if(settings.tplMode==='manual'){
-  tplMode='manual';
-  document.getElementById('tpl-tab-manual')?.classList.add('active');
-  document.getElementById('tpl-tab-auto')?.classList.remove('active');
-  document.getElementById('tpl-panel-manual')?.classList.add('active');
-  document.getElementById('tpl-panel-auto')?.classList.remove('active');
+if(settings.tplMode==='manual'){tplMode='manual';document.querySelectorAll('.tpl-mode-tab')[1]?.click();}
+
+// ★ Saat pertama buka: fetch nomor + langsung sync arsip dari cloud
+if(getGasUrl()){
+  fetchNomor();
+  loadArsipFromCloud().then(()=>{renderCalInline();});
+} else {
+  updateNomorPreview();
+  renderArsip();
 }
-// Load arsip dari cloud jika localStorage kosong
-loadArsipFromCloud().then(()=>{
-  renderCalInline();
-  if(getGasUrl()) fetchNomor();
-});
-updateNomorPreview();
 </script>
 </body>
 </html>
