@@ -1398,26 +1398,34 @@ function downloadDraft(arsipId, fileIdx){
 }
 
 function renderFileList(id){
-  // Filter: tampilkan hanya file non-draft (draft ditampilkan di section terpisah)
   const files=(uploadFiles[id]||[]).filter(f=>!f._isDraft);
   const el=document.getElementById(`file-list-${id}`);if(!el) return;
   const actEl=document.getElementById(`upload-actions-${id}`);if(actEl) actEl.style.display=files.length?'flex':'none';
   if(!files.length){el.innerHTML='';return;}
+  
   el.innerHTML=files.map((f,i)=>{
-    // Cari index asli di uploadFiles (bisa ada draft di depan)
     const realIdx=(uploadFiles[id]||[]).indexOf(f);
     const isDone=f.status==='done'&&f.url;
     const imgFile=isImage(f.name);
     const pdfFile=isPdf(f.name);
+    
     let actionBtns='';
+    
     if(isDone){
       actionBtns+=`<a class="file-link" href="${f.url}" target="_blank">Buka ↗</a>`;
+      // TOMBOL SHARE KHUSUS FILE INI (Muncul jika sudah tersimpan di Drive)
+      actionBtns+=` <button class="file-preview-btn" onclick="shareSingleFile('${f.url}', '${f.name}')" title="Share link file">🔗</button>`;
     } else {
       actionBtns+=`<span class="file-status ${f.status}">${statusLbl(f.status)}</span>`;
     }
+    
+    // TOMBOL PREVIEW (MATA) & PRINT
+    // Print hanya dimunculkan untuk gambar/PDF karena dokumen Word (.docx) tidak bisa diprint langsung tanpa di-render.
     if((imgFile && (f._blobUrl||isDone)) || (pdfFile && isDone)){
       actionBtns+=` <button class="file-preview-btn${f._showPreview?' active':''}" onclick="togglePreview(${id},${realIdx})" title="${f._showPreview?'Tutup preview':'Lihat preview'}">👁</button>`;
+      actionBtns+=` <button class="file-preview-btn" onclick="printSingleFile(${id},${realIdx})" title="Print file ini">🖨️</button>`;
     }
+    
     let previewArea='';
     if(f._showPreview){
       if(imgFile){
@@ -1431,6 +1439,7 @@ function renderFileList(id){
         previewArea=`<div class="file-preview-area"><iframe src="${pdfSrc}" style="width:100%;height:440px;border:none;border-radius:8px" allowfullscreen loading="lazy"></iframe></div>`;
       }
     }
+    
     return `<div class="uploaded-file-item" id="fitem-${id}-${realIdx}" style="flex-direction:column;align-items:stretch">
       <div style="display:flex;align-items:center;gap:9px">
         <div class="file-icon">${getFileIcon(f.name)}</div>
@@ -1445,7 +1454,6 @@ function renderFileList(id){
     </div>`;
   }).join('');
 }
-
 function togglePreview(arsipId, fileIdx){
   const files=uploadFiles[arsipId];if(!files||!files[fileIdx]) return;
   files[fileIdx]._showPreview=!files[fileIdx]._showPreview;
@@ -1581,6 +1589,75 @@ function showToast(msg,type='info'){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className=`toast ${type} show`;
   clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),4500);
+}
+
+  // Fungsi untuk membagikan 1 file spesifik
+function shareSingleFile(url, name) {
+  const shareText = `File Rapat DocuMeet: ${name}\n${url}`;
+  if (navigator.share) {
+    navigator.share({ title: name, text: shareText }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      showToast('✓ Link file disalin ke clipboard!', 'success');
+    }).catch(() => {
+      prompt('Salin link berikut:', shareText);
+    });
+  }
+}
+
+// Fungsi untuk menge-print 1 file spesifik (Gambar atau PDF)
+function printSingleFile(arsipId, fileIdx) {
+  const files = uploadFiles[arsipId];
+  if (!files || !files[fileIdx]) return;
+  const f = files[fileIdx];
+  
+  const isImg = isImage(f.name);
+  const isPd = isPdf(f.name);
+  
+  let printUrl = '';
+  
+  if (isImg) {
+    if (f._blobUrl) { printUrl = f._blobUrl; }
+    else if (f.url) { 
+      const driveId = extractDriveId(f.url); 
+      // Mengambil resolusi besar (w2000) agar tidak pecah saat di-print
+      printUrl = driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w2000` : f.url; 
+    }
+  } else if (isPd && f.url) {
+    printUrl = f.url; 
+  }
+  
+  if (!printUrl) {
+    showToast('File belum siap di-print', 'error');
+    return;
+  }
+  
+  if (isImg) {
+    // Membuka window baru untuk mengeprint gambar saja tanpa UI halaman web
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print - ${f.name}</title>
+          <style>
+            @media print {
+              @page { margin: 0; }
+              body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+              img { max-width: 100%; max-height: 100vh; object-fit: contain; }
+            }
+          </style>
+        </head>
+        <body onload="setTimeout(function(){ window.print(); window.close(); }, 500);">
+          <img src="${printUrl}" alt="${f.name}" style="max-width: 100%; max-height: 100vh; object-fit: contain;">
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  } else if (isPd) {
+    // Karena aturan keamanan/CORS Google Drive, PDF tidak bisa di-print langsung dari latar belakang.
+    // Membuka tab baru adalah cara paling andal, dan kamu bisa menggunakan tombol print bawaan browser.
+    window.open(printUrl, '_blank');
+  }
 }
 
 // INIT
