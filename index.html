@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiRapat — KIP Pidie Jaya</title>
+<title>DocuMeet — KIP Pidie Jaya</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/pizzip@3.1.4/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
@@ -15,26 +14,26 @@
   --text-mid:#5a3040;--text-muted:#8a6070;--white:#ffffff;
   --blue:#1565c0;--blue-light:#1976d2;--green:#2e7d32;
   --shadow:0 4px 24px rgba(90,10,24,.13);--shadow-lg:0 12px 48px rgba(90,10,24,.18);
-  --r:16px; /* border-radius base */
+  --r:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;overflow-x:hidden}
 
-/* ══ NAV ══ */
+/* NAV */
 nav{background:var(--maroon-deep);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
 .nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .nav-logo{width:36px;height:36px;border-radius:7px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .nav-logo img{width:100%;height:100%;object-fit:cover}
 .nav-logo-fallback{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--maroon-deep)}
 .nav-title{display:flex;flex-direction:column}
-.nav-title span:first-child{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--white);line-height:1.2}
+.nav-title span:first-child{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--white);line-height:1.2;letter-spacing:.02em}
 .nav-title span:last-child{font-size:10px;color:var(--gold-light);letter-spacing:.08em;text-transform:uppercase}
 .nav-menu{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
 .nav-btn{background:none;border:none;color:rgba(255,255,255,.65);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:7px 11px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .nav-btn:hover{background:rgba(255,255,255,.08);color:var(--white)}
 .nav-btn.active{background:var(--gold);color:var(--maroon-deep);font-weight:600}
 
-/* ══ MOBILE NAV HAMBURGER ══ */
+/* MOBILE NAV */
 .nav-toggle{display:none;background:none;border:none;color:rgba(255,255,255,.8);font-size:22px;cursor:pointer;padding:6px;border-radius:6px;flex-shrink:0}
 .nav-toggle:hover{background:rgba(255,255,255,.1)}
 .nav-drawer{display:none;position:fixed;top:60px;left:0;right:0;background:var(--maroon-deep);z-index:99;padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);box-shadow:0 8px 24px rgba(0,0,0,.3);flex-direction:column;gap:4px}
@@ -43,8 +42,8 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 
 .page{display:none}.page.active{display:block}
 
-/* ══ HERO ══ */
-.hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 55%,var(--maroon-light) 100%);padding:2.5rem 1.5rem 2.5rem;position:relative;overflow:hidden;min-height:240px}
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 55%,var(--maroon-light) 100%);padding:2.5rem 1.5rem 2.5rem;position:relative;overflow:hidden;min-height:260px}
 #hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
 .hero-ring{position:absolute;border-radius:50%;border:1px solid rgba(201,147,42,.18);animation:ring-pulse 4s ease-in-out infinite}
 .hero-ring:nth-child(1){width:320px;height:320px;top:-90px;right:-60px;animation-delay:0s}
@@ -57,9 +56,12 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,147,42,.15);border:1px solid rgba(201,147,42,.3);border-radius:20px;padding:4px 12px;font-size:10px;color:var(--gold-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;opacity:0;animation:hero-up .7s .1s cubic-bezier(.22,1,.36,1) forwards}
 .hero-badge::before{content:'●';font-size:7px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:.4rem;opacity:0;animation:hero-up .7s .25s cubic-bezier(.22,1,.36,1) forwards}
-.hero h1 em{font-style:italic;color:var(--gold-light)}
-.hero p{font-size:13px;color:rgba(255,255,255,.65);max-width:480px;line-height:1.7;opacity:0;animation:hero-up .7s .4s cubic-bezier(.22,1,.36,1) forwards}
+.hero-brand-line{display:flex;align-items:baseline;gap:10px;margin-bottom:.3rem;opacity:0;animation:hero-up .7s .2s cubic-bezier(.22,1,.36,1) forwards}
+.hero-brand-name{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--white);line-height:1;letter-spacing:-.01em}
+.hero-brand-name em{font-style:italic;color:var(--gold-light)}
+.hero-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-bottom:6px;flex-shrink:0}
+.hero-tagline{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.55);margin-bottom:.6rem;opacity:0;animation:hero-up .7s .35s cubic-bezier(.22,1,.36,1) forwards;letter-spacing:.02em}
+.hero p{font-size:12px;color:rgba(255,255,255,.5);max-width:460px;line-height:1.75;opacity:0;animation:hero-up .7s .45s cubic-bezier(.22,1,.36,1) forwards}
 .hero-stats{display:flex;gap:1.5rem;margin-top:1.4rem;opacity:0;animation:hero-up .7s .55s cubic-bezier(.22,1,.36,1) forwards;flex-wrap:wrap}
 .hero-stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold-light);line-height:1}
 .hero-stat-lbl{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
@@ -73,10 +75,10 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ══ HOME PANEL (kalender + grafik) ══ */
+/* HOME PANEL */
 .home-panel{max-width:860px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start}
 
-/* ══ KALENDER ══ */
+/* KALENDER */
 .cal-wrapper{background:var(--white);border-radius:var(--r);border:1px solid rgba(122,16,32,.08);overflow:hidden;box-shadow:var(--shadow)}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;background:var(--maroon)}
 .cal-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--white)}
@@ -99,7 +101,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .cal-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted)}
 .cal-legend-dot{width:7px;height:7px;border-radius:50%}
 
-/* ══ STATS PANEL ══ */
+/* STATS PANEL */
 .stats-panel{display:flex;flex-direction:column;gap:10px}
 .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stat-card{background:var(--white);border-radius:12px;padding:.9rem 1rem;box-shadow:var(--shadow);border:1px solid rgba(122,16,32,.06)}
@@ -115,7 +117,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .bar-label{font-size:8px;color:var(--text-muted)}
 .bar-val{font-size:8px;font-weight:600;color:var(--maroon)}
 
-/* ══ FORM ══ */
+/* FORM */
 .form-section{max-width:860px;margin:0 auto;padding:0 1.5rem 2rem}
 .content-section{max-width:860px;margin:0 auto;padding:1.5rem}
 .form-card{background:var(--white);border-radius:var(--r);box-shadow:var(--shadow-lg);overflow:hidden}
@@ -177,7 +179,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-awan.visible{display:flex;animation:fade-up .3s ease}
 @keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══ CLOUD BANNER ══ */
+/* CLOUD BANNER */
 .cloud-banner{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:9px;font-size:11px;margin-bottom:.9rem;border:1px solid}
 .cloud-banner.loading{background:rgba(201,147,42,.08);border-color:rgba(201,147,42,.25);color:#7a5010}
 .cloud-banner.ok{background:rgba(76,175,80,.08);border-color:rgba(76,175,80,.25);color:#2e7d32}
@@ -185,19 +187,19 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .cloud-banner.warn{background:rgba(122,16,32,.05);border-color:rgba(122,16,32,.15);color:var(--maroon)}
 .cloud-spin{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 
-/* ══ PAGE HEADER ══ */
+/* PAGE HEADER */
 .page-header{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 100%);padding:2rem 1.5rem 1.75rem}
 .page-header-inner{max-width:860px;margin:0 auto}
 .page-header h1{font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--white);margin-bottom:3px}
 .page-header p{font-size:12px;color:rgba(255,255,255,.6)}
 
-/* ══ SEARCH ══ */
+/* SEARCH */
 .search-bar{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
 .search-bar input{flex:1;min-width:140px;font-family:'Inter',sans-serif;font-size:13px;padding:10px 14px;border:1.5px solid #e8ddd5;border-radius:9px;background:var(--white);outline:none}
 .search-bar input:focus{border-color:var(--maroon)}
 .search-bar select{font-family:'Inter',sans-serif;font-size:12px;padding:10px 12px;border:1.5px solid #e8ddd5;border-radius:9px;background:var(--white);outline:none;color:var(--text-dark);cursor:pointer}
 
-/* ══ ARSIP LIST ══ */
+/* ARSIP LIST */
 .arsip-list{display:flex;flex-direction:column;gap:8px}
 .arsip-item{background:var(--white);border-radius:11px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.9rem;box-shadow:0 2px 8px rgba(90,10,24,.07);border:1px solid rgba(122,16,32,.06);transition:all .15s;cursor:pointer}
 .arsip-item:hover{border-color:rgba(122,16,32,.2);box-shadow:0 4px 14px rgba(90,10,24,.12);transform:translateY(-1px)}
@@ -215,7 +217,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .empty-state .icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.5}
 .empty-state h3{font-size:15px;font-weight:500;margin-bottom:5px}
 
-/* ══ PESERTA MANAGE ══ */
+/* PESERTA MANAGE */
 .peserta-manage-list{display:flex;flex-direction:column;gap:7px}
 .peserta-row{background:var(--white);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(90,10,24,.06);border:1px solid rgba(122,16,32,.06);flex-wrap:wrap}
 .peserta-num{width:26px;height:26px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--maroon);flex-shrink:0}
@@ -229,7 +231,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-primary{background:var(--maroon);color:var(--white);border:none;border-radius:7px;padding:9px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-primary:hover{background:var(--maroon-dark)}
 
-/* ══ PENGATURAN ══ */
+/* PENGATURAN */
 .setting-group{margin-bottom:1.75rem}
 .setting-group h3{font-size:12px;font-weight:600;color:var(--text-mid);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.85rem;padding-bottom:7px;border-bottom:1px solid #e8ddd5}
 .tpl-box{background:linear-gradient(135deg,rgba(61,7,16,.03),rgba(201,147,42,.05));border:1.5px solid rgba(201,147,42,.2);border-radius:11px;padding:1.1rem 1.25rem;margin-bottom:1.25rem}
@@ -273,14 +275,21 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .gas-url-input input:focus{border-color:var(--blue)}
 .gas-url-input button{padding:7px 14px;border-radius:6px;border:none;background:var(--blue);color:white;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
 
-/* ══ MODAL ══ */
+/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--white);border-radius:var(--r);width:100%;max-width:560px;box-shadow:var(--shadow-lg);transform:translateY(20px);transition:transform .2s;max-height:92vh;overflow-y:auto}
 .modal-overlay.open .modal{transform:translateY(0)}
 .modal-header{background:var(--maroon);padding:1.1rem 1.35rem;border-radius:var(--r) var(--r) 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1}
 .modal-header h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--white)}
-.modal-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer}
+.modal-header-actions{display:flex;align-items:center;gap:6px}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:5px;transition:all .15s}
+.modal-close:hover{background:rgba(255,255,255,.1);color:var(--white)}
+/* Tombol Print & Share di header modal */
+.modal-action-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.modal-action-btn:hover{background:rgba(255,255,255,.22);color:var(--white)}
+.modal-action-btn.share-btn{background:rgba(21,101,192,.3);border-color:rgba(21,101,192,.5)}
+.modal-action-btn.share-btn:hover{background:rgba(21,101,192,.5)}
 .modal-body{padding:1.35rem}
 .detail-row{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid #f0e8e0;font-size:12px}
 .detail-row:last-of-type{border-bottom:none}
@@ -316,7 +325,18 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .btn-upload-all:disabled{opacity:.5;cursor:not-allowed}
 .no-gas-warning{background:rgba(229,57,53,.07);border:1px solid rgba(229,57,53,.2);border-radius:7px;padding:10px 13px;font-size:11px;color:#c62828;margin-bottom:10px}
 
-/* ══ TENTANG ══ */
+/* Draft file section */
+.draft-section{margin-top:1rem;padding:10px 13px;background:rgba(122,16,32,.03);border:1px solid rgba(122,16,32,.1);border-radius:9px}
+.draft-section-title{font-size:11px;font-weight:600;color:var(--maroon);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.draft-files{display:flex;flex-direction:column;gap:4px}
+.draft-file-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-mid);padding:5px 0;border-bottom:1px solid rgba(122,16,32,.06)}
+.draft-file-item:last-child{border-bottom:none}
+.draft-file-icon{font-size:13px;flex-shrink:0}
+.draft-file-name{flex:1;font-family:monospace;font-size:10px;color:var(--text-dark)}
+.draft-file-dl{font-size:10px;color:var(--blue);cursor:pointer;font-weight:600;padding:2px 7px;border-radius:4px;border:1px solid rgba(21,101,192,.2);background:rgba(21,101,192,.05);transition:all .15s}
+.draft-file-dl:hover{background:rgba(21,101,192,.12)}
+
+/* TENTANG */
 .about-hero{background:linear-gradient(160deg,var(--maroon-deep) 0%,var(--maroon) 100%);padding:2.5rem 1.5rem 2rem;position:relative;overflow:hidden}
 .about-logo-fallback{width:70px;height:70px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--maroon-deep);margin-bottom:.85rem}
 .about-name{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;margin-bottom:.25rem}
@@ -339,7 +359,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .faq-a li{margin-bottom:3px}
 .faq-a code{background:rgba(122,16,32,.08);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px;color:var(--maroon)}
 
-/* ══ SYNC / TOAST ══ */
+/* SYNC / TOAST */
 .sync-indicator{position:fixed;bottom:1.5rem;left:1.5rem;background:var(--white);border:1px solid #e8ddd5;border-radius:9px;padding:7px 12px;font-size:11px;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all .3s;z-index:99}
 .sync-indicator.show{transform:translateY(0);opacity:1}
 .sync-dot{width:6px;height:6px;border-radius:50%}
@@ -352,108 +372,83 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .toast.error{border-left:4px solid #e53935}
 .toast.info{border-left:4px solid var(--gold)}
 
-/* ══════════════════════════════════════════
-   RESPONSIVE BREAKPOINTS
-══════════════════════════════════════════ */
+/* PRINT STYLES */
+@media print{
+  nav,.nav-drawer,.generate-area,.save-bar,.search-bar,.arsip-actions,.modal-header-actions,.upload-section,.draft-section,.toast,.sync-indicator{display:none!important}
+  .modal-overlay{position:static!important;background:none!important;opacity:1!important;pointer-events:all!important;display:block!important;padding:0!important}
+  .modal{box-shadow:none!important;max-height:none!important;border-radius:0!important;transform:none!important}
+  body{background:white!important}
+}
 
-/* ── Tablet landscape & smaller desktop (≤900px) ── */
+/* RESPONSIVE */
 @media(max-width:900px){
   .home-panel{grid-template-columns:1fr 1fr;padding:1.25rem}
   .form-row{grid-template-columns:1fr 1fr}
 }
-
-/* ── Tablet portrait (≤768px) ── */
 @media(max-width:768px){
-  /* Nav: sembunyikan menu biasa, tampilkan hamburger */
   .nav-menu{display:none}
   .nav-toggle{display:flex;align-items:center;justify-content:center}
-
   .hero{padding:2rem 1rem 2rem}
-  .hero h1{font-size:2rem}
+  .hero-brand-name{font-size:2.4rem}
   .hero p{font-size:12px}
   .hero-stats{gap:1.1rem;margin-top:1.1rem}
   .hero-stat-val{font-size:1.4rem}
-
   .home-panel{grid-template-columns:1fr;padding:1rem}
-  /* Di tablet, kalender penuh lebar, grafik di bawahnya */
-
   .form-section{padding:0 1rem 1.5rem}
   .content-section{padding:1rem}
   .form-body{padding:1.1rem}
   .form-row{grid-template-columns:1fr 1fr}
   .form-row-2{grid-template-columns:1fr 1fr}
-
   .stat-row{grid-template-columns:1fr 1fr}
-
   .page-header{padding:1.5rem 1rem 1.25rem}
   .page-header h1{font-size:1.5rem}
-
   .arsip-item{padding:.85rem 1rem}
   .arsip-title{font-size:12px}
-
   .save-bar{padding:.75rem 1rem}
-
   .modal{max-width:100%;margin:0;border-radius:var(--r) var(--r) 0 0;max-height:95vh}
   .modal-overlay{align-items:flex-end;padding:0}
   .modal-overlay.open .modal{transform:translateY(0)}
-
   .tpl-url-row{grid-template-columns:1fr 1fr}
   .tpl-url-row span:first-child{display:none}
-
   .toast{right:.75rem;left:.75rem;max-width:none;font-size:12px}
   .sync-indicator{left:.75rem;bottom:.75rem;font-size:10px;padding:6px 10px}
 }
-
-/* ── Mobile (≤480px) ── */
 @media(max-width:480px){
   nav{padding:0 .9rem;height:56px}
   .nav-title span:last-child{display:none}
   .nav-logo{width:32px;height:32px}
   .nav-logo-fallback{width:32px;height:32px;font-size:12px}
-
-  /* Kalender: grid hari lebih kecil */
   .cal-grid{padding:.4rem}
   .cal-day{font-size:10px}
   .cal-day-name{font-size:8px;padding:4px 0}
   .cal-legend{gap:7px;padding:.3rem .7rem .55rem}
   .cal-legend-item{font-size:9px}
-
   .hero{padding:1.5rem .9rem 1.75rem;min-height:unset}
-  .hero h1{font-size:1.65rem;line-height:1.15}
-  .hero h1 br{display:none}
-  .hero p{display:none} /* Sembunyikan deskripsi panjang di layar kecil */
-  .hero-stats{gap:.9rem;margin-top:1rem}
+  .hero-brand-name{font-size:2rem;line-height:1.1}
+  .hero-tagline{font-size:.9rem}
+  .hero p{display:none}
+  .hero-stats{gap:.9rem;margin-top:1rem;display:grid;grid-template-columns:1fr 1fr 1fr}
+  .hero-stat{text-align:center}
   .hero-stat-val{font-size:1.25rem}
   .hero-stat-lbl{font-size:9px}
   .hero-stat-sep{display:none}
-  /* Tata ulang stats jadi 3 kolom */
-  .hero-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
-  .hero-stat{text-align:center}
-
   .home-panel{padding:.75rem}
   .stat-row{grid-template-columns:1fr 1fr}
   .stat-value{font-size:1.4rem}
-
   .form-section{padding:0 .75rem 1.25rem}
   .content-section{padding:.75rem}
   .form-body{padding:.9rem}
-  .form-row{grid-template-columns:1fr}   /* 1 kolom di mobile */
+  .form-row{grid-template-columns:1fr}
   .form-row-2{grid-template-columns:1fr}
   .form-card-header{padding:.9rem 1rem}
   .form-card-header h2{font-size:.9rem}
-
-  /* Peserta: 1 kolom di mobile */
   .peserta-grid{grid-template-columns:1fr}
   .peserta-item{padding:8px 9px}
   .peserta-nama{font-size:11px}
-
-  /* Nomor bar: bungkus */
   .nomor-status-bar{flex-wrap:wrap;padding:8px 11px}
   .nomor-status-val{width:100%;flex:none}
-
   .agenda-tabs{gap:4px}
   .agenda-chip{font-size:10px;padding:4px 10px}
-
   .generate-area{padding:1rem;gap:.75rem}
   .doc-preview{gap:4px}
   .doc-badge{font-size:10px;padding:3px 8px}
@@ -461,68 +456,48 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   .gen-btns{width:100%;justify-content:flex-end}
   .btn-generate{flex:1;justify-content:center;padding:10px 14px;font-size:12px}
   .btn-awan{padding:10px 14px;font-size:12px}
-
   .arsip-item{padding:.75rem .9rem;gap:.65rem}
   .arsip-date-box{width:42px;height:42px}
   .arsip-date-box .day{font-size:14px}
   .arsip-meta{gap:6px;font-size:10px}
-  /* Sembunyikan nomor surat di mobile agar tidak overflow */
   .arsip-meta span:last-child{display:none}
-
   .page-header{padding:1.25rem .9rem 1rem}
   .page-header h1{font-size:1.3rem}
-
   .search-bar{gap:6px}
   .search-bar input{font-size:12px;padding:8px 11px}
   .search-bar select{font-size:11px;padding:8px 10px}
-
-  /* Peserta manage: input jabatan wrap */
   .peserta-row{flex-wrap:wrap;padding:8px 10px}
   .peserta-row input[style*="max-width"]{max-width:100%!important;width:100%}
-
   .save-bar{padding:.65rem .75rem;gap:6px}
   .btn-primary{font-size:11px;padding:8px 16px}
   .btn-sm{font-size:10px;padding:5px 10px}
-
-  /* Setting: url row jadi 1 kolom */
   .tpl-url-row{grid-template-columns:1fr}
   .gas-url-input{flex-direction:column}
   .gas-url-input input,.gas-url-input button{width:100%}
-
-  /* Modal jadi full bottom sheet */
   .modal{border-radius:14px 14px 0 0}
   .modal-body{padding:1rem}
   .detail-row{flex-direction:column;gap:2px}
   .detail-label{min-width:unset}
-
-  /* Tentang */
+  .modal-action-btn span.label-text{display:none}
   .about-hero{padding:1.75rem .9rem 1.5rem}
   .about-name{font-size:1.35rem}
   .about-card{padding:1.1rem}
   .about-row{flex-direction:column;gap:2px}
   .about-row .lbl{min-width:unset;color:var(--text-muted);font-size:11px}
   .about-row .val{font-size:12px}
-
-  /* Toast full width */
   .toast{right:.5rem;left:.5rem;bottom:.5rem;font-size:11px;padding:10px 13px}
-  .sync-indicator{display:none} /* terlalu sempit, hide */
-
-  /* Progress bar wrap */
+  .sync-indicator{display:none}
   .progress-bar{gap:3px;padding:0 .9rem .75rem}
   .prog-step{font-size:10px;padding:4px 8px}
   .prog-arrow{font-size:10px}
 }
-
-/* ── Very small (≤360px) ── */
 @media(max-width:360px){
-  .hero h1{font-size:1.4rem}
+  .hero-brand-name{font-size:1.7rem}
   .hero-stats{grid-template-columns:1fr 1fr}
   .hero-stat:last-child{display:none}
   .stat-row{grid-template-columns:1fr}
   .stat-value{font-size:1.5rem}
 }
-
-/* ══ TOUCH: Bigger tap targets ══ */
 @media(hover:none) and (pointer:coarse){
   .cal-day{min-height:32px}
   .btn-sm,.btn-primary,.btn-generate,.btn-awan,.btn-upload-all{min-height:40px}
@@ -533,12 +508,11 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   .agenda-chip{min-height:36px;display:flex;align-items:center}
 }
 
-/* ══ FILE PREVIEW ══ */
+/* FILE PREVIEW */
 .file-preview-area{margin-top:10px;border-top:1px solid rgba(122,16,32,.08);padding-top:10px;animation:fade-up .25s ease}
 .file-preview-btn{background:rgba(122,16,32,.07);border:1.5px solid rgba(122,16,32,.15);border-radius:5px;cursor:pointer;font-size:13px;padding:2px 7px;color:var(--maroon);transition:all .15s;flex-shrink:0}
 .file-preview-btn:hover{background:rgba(122,16,32,.15)}
 .file-preview-btn.active{background:var(--maroon);color:white}
-/* item file jadi flex-col saat ada preview */
 .uploaded-file-item{flex-direction:column;align-items:stretch}
 </style>
 </head>
@@ -551,7 +525,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
            alt="KIP" onerror="this.parentElement.innerHTML='<div class=nav-logo-fallback>KIP</div>'">
     </div>
     <div class="nav-title">
-      <span>SiRapat</span>
+      <span>DocuMeet</span>
       <span>KIP Pidie Jaya</span>
     </div>
   </div>
@@ -562,11 +536,9 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
     <button class="nav-btn" onclick="showPage('pengaturan',this)">⚙ Pengaturan</button>
     <button class="nav-btn" onclick="showPage('tentang',this)">ℹ Tentang</button>
   </div>
-  <!-- Hamburger untuk mobile -->
   <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleDrawer()">☰</button>
 </nav>
 
-<!-- Mobile drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <button class="nav-btn active" onclick="showPage('generate',this);closeDrawer()">✦ Generate Dokumen</button>
   <button class="nav-btn" onclick="showPage('arsip',this);closeDrawer()">📁 Arsip Rapat</button>
@@ -582,9 +554,13 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
     <div class="hero-ring"></div><div class="hero-ring"></div><div class="hero-ring"></div>
     <div class="hero-shimmer"></div>
     <div class="hero-inner">
-      <div class="hero-badge">Sistem Rapat Digital</div>
-      <h1>Generate Dokumen<br><em>Rapat KIP</em></h1>
-      <p>Template Word diambil dari repo GitHub, data diinject, 3 dokumen resmi siap diunduh sebagai ZIP.</p>
+      <div class="hero-badge">Sistem Rapat Digital · KIP Pidie Jaya</div>
+      <div class="hero-brand-line">
+        <div class="hero-brand-name">Docu<em>Meet</em></div>
+        <div class="hero-brand-dot"></div>
+      </div>
+      <div class="hero-tagline">Rapat lebih rapi, dokumen siap dalam hitungan detik.</div>
+      <p>Template Word diambil dari repo, data diinject otomatis — 3 dokumen resmi terunduh sekaligus. Arsip tersimpan ke cloud.</p>
       <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-val" id="hs-total">0</div><div class="hero-stat-lbl">Total Rapat</div></div>
         <div class="hero-stat-sep"></div>
@@ -729,7 +705,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 
 <!-- PAGE: PENGATURAN -->
 <div id="page-pengaturan" class="page">
-  <div class="page-header"><div class="page-header-inner"><h1>Pengaturan</h1><p>Konfigurasi sistem SiRapat</p></div></div>
+  <div class="page-header"><div class="page-header-inner"><h1>Pengaturan</h1><p>Konfigurasi sistem DocuMeet</p></div></div>
   <div class="content-section">
     <div class="form-card"><div class="form-body">
       <div class="setting-group">
@@ -831,8 +807,8 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
       <div class="about-row"><div class="lbl">Ibukota</div><div class="val">Meureudu</div></div>
     </div>
     <div class="about-card">
-      <h3>💻 Tentang SiRapat</h3>
-      <div class="about-row"><div class="lbl">Nama Sistem</div><div class="val">SiRapat — Sistem Rapat Digital KIP Pidie Jaya</div></div>
+      <h3>💻 Tentang DocuMeet</h3>
+      <div class="about-row"><div class="lbl">Nama Sistem</div><div class="val">DocuMeet — Sistem Rapat Digital KIP Pidie Jaya</div></div>
       <div class="about-row"><div class="lbl">Fungsi Utama</div><div class="val">Generate otomatis 3 dokumen rapat dari template Word</div></div>
       <div class="about-row"><div class="lbl">Teknologi</div><div class="val">HTML5 · docxtemplater · Google Apps Script · Drive</div></div>
       <div class="about-row"><div class="lbl">Penyimpanan</div><div class="val">Google Sheets (permanen) + localStorage (cache)</div></div>
@@ -847,7 +823,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
         <div class="faq-q" onclick="toggleFaq(this)">2. Cara generate dokumen rapat? <span class="faq-arrow">▼</span></div>
         <div class="faq-a"><ol>
           <li>Pilih tanggal, jam, tempat, agenda, centang peserta</li>
-          <li>Klik <strong>Generate 3 Dokumen</strong> — ZIP terunduh otomatis</li>
+          <li>Klik <strong>Generate 3 Dokumen</strong> — file .docx terunduh otomatis</li>
           <li>Arsip langsung tersimpan ke cloud</li>
         </ol></div>
       </div>
@@ -864,13 +840,59 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   <div class="modal">
     <div class="modal-header">
       <h3 id="modal-title">Detail Rapat</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-header-actions">
+        <button class="modal-action-btn" id="modal-print-btn" onclick="printDetail()" title="Print detail rapat">🖨️ <span class="label-text">Print</span></button>
+        <button class="modal-action-btn share-btn" id="modal-share-btn" onclick="shareFiles()" title="Bagikan link file">🔗 <span class="label-text">Share</span></button>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
     </div>
     <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
 
 <script>
+// ════ STATE ════
+const DEFAULT_PESERTA=[
+  {nama:'ISKANDAR, S.Sos.',jabatan:'Ketua'},
+  {nama:'DARKASYI ABDUL HAMID, S.Pd.',jabatan:'Anggota'},
+  {nama:'ABDULLAH, S.Sos.',jabatan:'Anggota'},
+  {nama:'MASRUR, MA.',jabatan:'Anggota'},
+  {nama:'HASMUNIR, SH.',jabatan:'Anggota'},
+  {nama:'ISWANDI, S.Sos.',jabatan:'Sekretaris'},
+  {nama:'DAHLAN, A.Md.',jabatan:'Kasubbag Keuangan, Umum, dan Logistik'},
+  {nama:'MASYKUR, S.Pd.I.',jabatan:'Kasubbag Perencanaan, Data dan Informasi'},
+  {nama:'MAHMUNIR, S.Kom.',jabatan:'Kasubbag Teknis Penyelenggaraan Pemilu, dan Hukum'},
+  {nama:'MAIMUN MAHMILUL, S.IP.',jabatan:'Kasubbag Keuangan, Umum dan Logistik'},
+  {nama:'ISNAINI, SE.',jabatan:'Analis Pengelola Keuangan APBN Ahli Muda'},
+  {nama:'NURHAYATI, A.Md.',jabatan:'Bendahara Pengeluaran'},
+  {nama:'FAZIL BASRI, S.Kom.',jabatan:'Notulen'},
+];
+let pesertaList=JSON.parse(localStorage.getItem('sirapat_peserta')||'null')||DEFAULT_PESERTA.map(p=>({...p}));
+let arsipList=JSON.parse(localStorage.getItem('sirapat_arsip')||'[]');
+let settings=JSON.parse(localStorage.getItem('sirapat_settings')||'null')||{
+  instansi:'KIP Kabupaten Pidie Jaya',kota:'Meureudu',ketua:'Iskandar',sekretaris:'Iswandi',
+  nomorFmt:'[NO]/PK.01-Und/1118/1/[TAHUN]',nomorLast:0,
+  gasUrl:'',urlUnd:'',urlAbs:'',urlRis:'',tplMode:'auto'
+};
+// Patch format lama yang masih pakai /5/
+if(settings.nomorFmt && settings.nomorFmt.includes('/5/') && !settings.nomorFmt.includes('[BULAN]')){
+  settings.nomorFmt = settings.nomorFmt.replace('/5/', '/1/');
+  localStorage.setItem('sirapat_settings', JSON.stringify(settings));
+}
+const AUTO_PATHS={und:'./templates/UND_template.docx',abs:'./templates/ABSEN_template.docx',ris:'./templates/RISALAH_template.docx'};
+const BULAN_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const HARI_ID=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const SH_ID=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+let tplMode=settings.tplMode||'auto';
+let calYearInline,calMonthInline;
+const today=new Date();
+let lastGenId=null;
+let uploadFiles={};
+// Simpan blob terakhir generate untuk keperluan arsip draft
+let lastGenBlobs=null;
+let lastGenPrefix=null;
+let currentModalId=null;
+
 // ════ HAMBURGER NAV ════
 function toggleDrawer(){
   const d=document.getElementById('nav-drawer');
@@ -902,39 +924,6 @@ document.addEventListener('click',function(e){
   }
   resize();window.addEventListener('resize',resize);draw();
 })();
-
-// ════ STATE ════
-const DEFAULT_PESERTA=[
-  {nama:'ISKANDAR, S.Sos.',jabatan:'Ketua'},
-  {nama:'DARKASYI ABDUL HAMID, S.Pd.',jabatan:'Anggota'},
-  {nama:'ABDULLAH, S.Sos.',jabatan:'Anggota'},
-  {nama:'MASRUR, MA.',jabatan:'Anggota'},
-  {nama:'HASMUNIR, SH.',jabatan:'Anggota'},
-  {nama:'ISWANDI, S.Sos.',jabatan:'Sekretaris'},
-  {nama:'DAHLAN, A.Md.',jabatan:'Kasubbag Keuangan, Umum, dan Logistik'},
-  {nama:'MASYKUR, S.Pd.I.',jabatan:'Kasubbag Perencanaan, Data dan Informasi'},
-  {nama:'MAHMUNIR, S.Kom.',jabatan:'Kasubbag Teknis Penyelenggaraan Pemilu, dan Hukum'},
-  {nama:'MAIMUN MAHMILUL, S.IP.',jabatan:'Kasubbag Keuangan, Umum dan Logistik'},
-  {nama:'ISNAINI, SE.',jabatan:'Analis Pengelola Keuangan APBN Ahli Muda'},
-  {nama:'NURHAYATI, A.Md.',jabatan:'Bendahara Pengeluaran'},
-  {nama:'FAZIL BASRI, S.Kom.',jabatan:'Notulen'},
-];
-let pesertaList=JSON.parse(localStorage.getItem('sirapat_peserta')||'null')||DEFAULT_PESERTA.map(p=>({...p}));
-let arsipList=JSON.parse(localStorage.getItem('sirapat_arsip')||'[]');
-let settings=JSON.parse(localStorage.getItem('sirapat_settings')||'null')||{
-  instansi:'KIP Kabupaten Pidie Jaya',kota:'Meureudu',ketua:'Iskandar',sekretaris:'Iswandi',
-  nomorFmt:'[NO]/PK.01-Und/1118/[BULAN]/[TAHUN]',nomorLast:0,
-  gasUrl:'',urlUnd:'',urlAbs:'',urlRis:'',tplMode:'auto'
-};
-const AUTO_PATHS={und:'./templates/UND_template.docx',abs:'./templates/ABSEN_template.docx',ris:'./templates/RISALAH_template.docx'};
-const BULAN_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const HARI_ID=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const SH_ID=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-let tplMode=settings.tplMode||'auto';
-let calYearInline,calMonthInline;
-const today=new Date();
-let lastGenId=null;
-let uploadFiles={};
 
 function getGasUrl(){return(settings.gasUrl||'').trim();}
 function buildNomor(no,tgl){return settings.nomorFmt.replace('[NO]',String(no)).replace('[BULAN]',tgl instanceof Date?tgl.getMonth()+1:no).replace('[TAHUN]',tgl instanceof Date?tgl.getFullYear():today.getFullYear());}
@@ -1148,7 +1137,7 @@ async function generateDokumen(){
   if(!urlUnd||!urlAbs||!urlRis){showToast('URL template belum lengkap!','error');return;}
   const pesertaHadir=getCheckedPeserta();
   if(!pesertaHadir.length){showToast('Pilih minimal 1 peserta!','error');return;}
-  document.getElementById('btn-awan').classList.remove('visible');lastGenId=null;
+  document.getElementById('btn-awan').classList.remove('visible');lastGenId=null;lastGenBlobs=null;lastGenPrefix=null;
   const tgl=new Date(tanggalVal+'T00:00:00');
   const hariStr=HARI_ID[tgl.getDay()];const tglStr=tglFull(tgl);const tglGen=tglGeneret();const jamFmt=jamVal+' WIB s/d Selesai';
   let nextNo=settings.nomorLast+1;
@@ -1159,7 +1148,6 @@ async function generateDokumen(){
   btn.disabled=true;sp.style.display='block';document.getElementById('progress-bar').style.display='flex';
   ['ps-fetch','ps-inject','ps-zip','ps-done'].forEach(id=>setPS(id,''));
 
-  // Helper: trigger download blob sebagai file
   function dlBlob(blob, filename){
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -1178,7 +1166,6 @@ async function generateDokumen(){
 
     setPS('ps-zip','active');tx.textContent='Mengunduh 3 dokumen...';
     const prefix=`Rapat_${tanggalVal.replace(/-/g,'')}`;
-    // Download 3 file terpisah dengan jeda kecil agar browser tidak blokir
     dlBlob(blobs[0],`${prefix}_Undangan.docx`);
     await new Promise(r=>setTimeout(r,300));
     dlBlob(blobs[1],`${prefix}_AbsenHadir.docx`);
@@ -1187,7 +1174,18 @@ async function generateDokumen(){
     setPS('ps-zip','done');
     setPS('ps-done','done');
 
+    // Simpan blob untuk draft arsip
+    lastGenBlobs=blobs;
+    lastGenPrefix=prefix;
+
     const arsipId=Date.now();
+    // Buat entry draft file di uploadFiles
+    uploadFiles[arsipId]=[
+      {file:null,name:`Draft_${prefix}_Undangan.docx`,size:blobs[0].size,status:'draft',url:null,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',_blobUrl:null,_showPreview:false,_blob:blobs[0],_isDraft:true},
+      {file:null,name:`Draft_${prefix}_AbsenHadir.docx`,size:blobs[1].size,status:'draft',url:null,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',_blobUrl:null,_showPreview:false,_blob:blobs[1],_isDraft:true},
+      {file:null,name:`Draft_${prefix}_Risalah.docx`,size:blobs[2].size,status:'draft',url:null,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',_blobUrl:null,_showPreview:false,_blob:blobs[2],_isDraft:true},
+    ];
+
     const newItem={id:arsipId,tanggal:tanggalVal,hari:hariStr,jam:jamVal,tempat,agenda,nomorSurat,tglGeneret:tglGen,peserta:pesertaHadir.map(p=>p.nama),uploadedFiles:[]};
     arsipList.unshift(newItem);saveLocal();settings.nomorLast=nextNo;localStorage.setItem('sirapat_settings',JSON.stringify(settings));
     if(getGasUrl()){gasPost({action:'simpanNomor',nomorUrut:nextNo,nomorSurat,tanggal:tglStr,agenda,tujuan:'',tglGeneret:tglGen,pesertaCount:pesertaHadir.length}).catch(()=>{});syncArsipToCloud(newItem);}
@@ -1215,6 +1213,7 @@ function renderArsip(){
     const d=new Date(r.tanggal);
     const files=uploadFiles[r.id]||[];
     const totalCloud=new Set([...files,...(r.uploadedFiles||[])].filter(f=>f&&f.status==='done').map(f=>f.name)).size;
+    const hasDraft=(uploadFiles[r.id]||[]).some(f=>f._isDraft);
     return `<div class="arsip-item" id="arsip-item-${r.id}" onclick="showArsipDetail(${r.id})">
       <div class="arsip-date-box"><div class="day">${d.getDate()}</div><div class="month">${SH_ID[d.getMonth()]}</div></div>
       <div class="arsip-info">
@@ -1224,6 +1223,7 @@ function renderArsip(){
           <span>🕐 ${r.jam} WIB</span>
           <span>👥 ${(r.peserta||[]).length}</span>
           ${totalCloud?`<span style="color:var(--blue)">☁ ${totalCloud}</span>`:''}
+          ${hasDraft?`<span style="color:var(--gold)">📝 draft</span>`:''}
           ${r.nomorSurat?`<span>${r.nomorSurat}</span>`:''}
         </div>
       </div>
@@ -1239,11 +1239,45 @@ function hapusArsip(id){
   renderArsip();renderCalInline();renderDashHome();updateHeroStats();showToast('Arsip dihapus','info');
 }
 
+// ════ PRINT DETAIL ════
+function printDetail(){
+  window.print();
+}
+
+// ════ SHARE FILES ════
+function shareFiles(){
+  if(!currentModalId) return;
+  const files=(uploadFiles[currentModalId]||[]).filter(f=>f.status==='done'&&f.url);
+  const r=arsipList.find(x=>x.id===currentModalId);
+  const cloudFiles=(r&&r.uploadedFiles||[]).filter(f=>f.status==='done'&&f.url);
+  // Gabung, deduplikasi berdasarkan nama
+  const allDone=[...files,...cloudFiles].reduce((acc,f)=>{if(!acc.find(x=>x.name===f.name)) acc.push(f);return acc;},[]);
+  if(!allDone.length){showToast('Belum ada file yang tersimpan di Drive untuk dibagikan.','info');return;}
+  // Buat teks ringkasan link
+  const lines=allDone.map(f=>`📄 ${f.name}\n${f.url}`).join('\n\n');
+  const shareText=`🗂 Dokumen Rapat — DocuMeet\n\n${lines}`;
+  if(navigator.share){
+    navigator.share({title:'Dokumen Rapat DocuMeet',text:shareText}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareText).then(()=>{
+      showToast('✓ Link file disalin ke clipboard!','success');
+    }).catch(()=>{
+      // fallback: buka prompt
+      prompt('Salin link berikut:',shareText);
+    });
+  }
+}
+
 function showArsipDetail(id){
+  currentModalId=id;
   const r=arsipList.find(x=>x.id===id);if(!r) return;
   const d=new Date(r.tanggal);
   const folderName=`${String(d.getDate()).padStart(2,'0')} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;
   if(r.uploadedFiles&&r.uploadedFiles.length&&!(uploadFiles[id]||[]).length) uploadFiles[id]=r.uploadedFiles.map(f=>({...f,file:null,type:f.type||'',_showPreview:false}));
+  // Update tombol share: tampilkan hanya jika ada file done
+  const hasDriveFiles=(uploadFiles[id]||[]).some(f=>f.status==='done'&&f.url)||(r.uploadedFiles||[]).some(f=>f.status==='done'&&f.url);
+  const shareBtn=document.getElementById('modal-share-btn');
+  if(shareBtn) shareBtn.style.display=hasDriveFiles?'':'none';
   document.getElementById('modal-title').textContent='Detail Rapat';
   document.getElementById('modal-body').innerHTML=`
     <div class="detail-row"><div class="detail-label">Tanggal</div><div class="detail-val">${r.hari}, ${tglFull(d)}</div></div>
@@ -1255,6 +1289,7 @@ function showArsipDetail(id){
     <div class="detail-row" style="border-bottom:none"><div class="detail-label">Peserta (${(r.peserta||[]).length})</div>
       <div class="detail-val">${(r.peserta||[]).map((n,i)=>`${i+1}. ${n}`).join('<br>')}</div>
     </div>
+    ${renderDraftSection(id)}
     <div class="upload-section">
       <div class="upload-section-title">☁ Upload Dokumen ke Drive <span class="folder-tag">📁 ${folderName}</span></div>
       ${!getGasUrl()?'<div class="no-gas-warning">⚠ URL Apps Script belum diisi di Pengaturan.</div>':''}
@@ -1270,58 +1305,78 @@ function showArsipDetail(id){
     </div>`;
   renderFileList(id);document.getElementById('modal-overlay').classList.add('open');
 }
+
+// Render section draft files (file yang sudah digenerate, belum diupload)
+function renderDraftSection(id){
+  const drafts=(uploadFiles[id]||[]).filter(f=>f._isDraft&&f._blob);
+  if(!drafts.length) return '';
+  return `<div class="draft-section">
+    <div class="draft-section-title">📝 Draft Dokumen Tergenerate</div>
+    <div class="draft-files">
+      ${drafts.map((f,i)=>`<div class="draft-file-item">
+        <div class="draft-file-icon">📝</div>
+        <div class="draft-file-name">${f.name}</div>
+        <span style="font-size:10px;color:var(--text-muted)">${fmtSize(f.size)}</span>
+        <button class="draft-file-dl" onclick="downloadDraft(${id},${(uploadFiles[id]||[]).indexOf(f)})">⬇ Unduh</button>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--text-muted);margin-top:6px">💡 File draft hanya tersedia selama sesi ini. Upload ke Drive agar tersimpan permanen.</div>
+  </div>`;
+}
+
+function downloadDraft(arsipId, fileIdx){
+  const f=(uploadFiles[arsipId]||[])[fileIdx];
+  if(!f||!f._blob) return;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(f._blob);
+  a.download=f.name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+}
+
 function renderFileList(id){
-  const files=uploadFiles[id]||[];const el=document.getElementById(`file-list-${id}`);if(!el) return;
+  // Filter: tampilkan hanya file non-draft (draft ditampilkan di section terpisah)
+  const files=(uploadFiles[id]||[]).filter(f=>!f._isDraft);
+  const el=document.getElementById(`file-list-${id}`);if(!el) return;
   const actEl=document.getElementById(`upload-actions-${id}`);if(actEl) actEl.style.display=files.length?'flex':'none';
   if(!files.length){el.innerHTML='';return;}
   el.innerHTML=files.map((f,i)=>{
+    // Cari index asli di uploadFiles (bisa ada draft di depan)
+    const realIdx=(uploadFiles[id]||[]).indexOf(f);
     const isDone=f.status==='done'&&f.url;
     const imgFile=isImage(f.name);
     const pdfFile=isPdf(f.name);
-    // Tombol aksi: buka link (jika done), preview inline (jika gambar/pdf done)
     let actionBtns='';
     if(isDone){
       actionBtns+=`<a class="file-link" href="${f.url}" target="_blank">Buka ↗</a>`;
     } else {
       actionBtns+=`<span class="file-status ${f.status}">${statusLbl(f.status)}</span>`;
     }
-    // Tombol preview: gambar bisa preview kapan saja (ada blobUrl), PDF hanya jika sudah done
     if((imgFile && (f._blobUrl||isDone)) || (pdfFile && isDone)){
-      actionBtns+=` <button class="file-preview-btn${f._showPreview?' active':''}" onclick="togglePreview(${id},${i})" title="${f._showPreview?'Tutup preview':'Lihat preview'}">👁</button>`;
+      actionBtns+=` <button class="file-preview-btn${f._showPreview?' active':''}" onclick="togglePreview(${id},${realIdx})" title="${f._showPreview?'Tutup preview':'Lihat preview'}">👁</button>`;
     }
-    // Preview area (collapse by default)
     let previewArea='';
     if(f._showPreview){
       if(imgFile){
-        // Prioritas: blob lokal (file baru dipilih), fallback thumbnail Drive
         let imgSrc='';
-        if(f._blobUrl){
-          imgSrc=f._blobUrl;
-        } else if(isDone && f.url){
-          const driveId=extractDriveId(f.url);
-          imgSrc=driveId
-            ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800`
-            : f.url;
-        }
-        if(imgSrc){
-          previewArea=`<div class="file-preview-area"><img src="${imgSrc}" alt="${f.name}" style="max-width:100%;max-height:360px;border-radius:8px;object-fit:contain;display:block;margin:0 auto" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;color:var(--text-muted);font-size:12px">Gagal memuat gambar — coba Buka ↗</span></div>`;
-        }
-      } else if(pdfFile && isDone){
+        if(f._blobUrl){imgSrc=f._blobUrl;}
+        else if(isDone&&f.url){const driveId=extractDriveId(f.url);imgSrc=driveId?`https://drive.google.com/thumbnail?id=${driveId}&sz=w800`:f.url;}
+        if(imgSrc){previewArea=`<div class="file-preview-area"><img src="${imgSrc}" alt="${f.name}" style="max-width:100%;max-height:360px;border-radius:8px;object-fit:contain;display:block;margin:0 auto" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;color:var(--text-muted);font-size:12px">Gagal memuat gambar</span></div>`;}
+      } else if(pdfFile&&isDone){
         const driveId=extractDriveId(f.url);
-        const pdfSrc=driveId
-          ? `https://drive.google.com/file/d/${driveId}/preview`
-          : f.url;
+        const pdfSrc=driveId?`https://drive.google.com/file/d/${driveId}/preview`:f.url;
         previewArea=`<div class="file-preview-area"><iframe src="${pdfSrc}" style="width:100%;height:440px;border:none;border-radius:8px" allowfullscreen loading="lazy"></iframe></div>`;
       }
     }
-    return `<div class="uploaded-file-item" id="fitem-${id}-${i}" style="flex-direction:column;align-items:stretch">
+    return `<div class="uploaded-file-item" id="fitem-${id}-${realIdx}" style="flex-direction:column;align-items:stretch">
       <div style="display:flex;align-items:center;gap:9px">
         <div class="file-icon">${getFileIcon(f.name)}</div>
         <div class="file-name">${f.name}</div>
         <div class="file-size">${fmtSize(f.size)}</div>
         <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:auto">
           ${actionBtns}
-          ${f.status!=='uploading'?`<button class="file-actions-del" onclick="hapusFile(${id},${i})" title="Hapus" style="background:none;border:none;cursor:pointer;font-size:12px;padding:2px 5px;border-radius:3px;color:var(--text-muted)">✕</button>`:''}
+          ${f.status!=='uploading'?`<button onclick="hapusFile(${id},${realIdx})" title="Hapus" style="background:none;border:none;cursor:pointer;font-size:12px;padding:2px 5px;border-radius:3px;color:var(--text-muted)">✕</button>`:''}
         </div>
       </div>
       ${previewArea}
@@ -1329,28 +1384,21 @@ function renderFileList(id){
   }).join('');
 }
 
-// Toggle preview area untuk item file
 function togglePreview(arsipId, fileIdx){
   const files=uploadFiles[arsipId];if(!files||!files[fileIdx]) return;
   files[fileIdx]._showPreview=!files[fileIdx]._showPreview;
   renderFileList(arsipId);
 }
-
-// Bebaskan blob URL saat file dihapus dari list
 function revokeBlobUrl(arsipId, fileIdx){
   const f=(uploadFiles[arsipId]||[])[fileIdx];
   if(f&&f._blobUrl) URL.revokeObjectURL(f._blobUrl);
 }
-
-// Ekstrak Drive file ID dari URL
-function extractDriveId(url){
-  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);return m?m[1]:'';
-}
+function extractDriveId(url){const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);return m?m[1]:'';}
 function getFileIcon(n){const e=(n||'').split('.').pop().toLowerCase();return{pdf:'📕',doc:'📝',docx:'📝',zip:'📦',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',webp:'🖼️',gif:'🖼️',bmp:'🖼️'}[e]||'📄';}
 function isImage(n){return/\.(jpe?g|png|webp|gif|bmp|svg)$/i.test(n||'');}
 function isPdf(n){return/\.pdf$/i.test(n||'');}
 function fmtSize(b){if(!b) return '';if(b<1024) return b+'B';if(b<1048576) return (b/1024).toFixed(1)+'KB';return (b/1048576).toFixed(1)+'MB';}
-function statusLbl(s){return{pending:'Menunggu',uploading:'Uploading...',done:'Tersimpan',err:'Gagal'}[s]||s;}
+function statusLbl(s){return{pending:'Menunggu',uploading:'Uploading...',done:'Tersimpan',draft:'Draft',err:'Gagal'}[s]||s;}
 function hapusFile(id,i){
   if(!uploadFiles[id]) return;revokeBlobUrl(id,i);uploadFiles[id].splice(i,1);renderFileList(id);
   const r=arsipList.find(x=>x.id===id);
@@ -1364,7 +1412,6 @@ function addFiles(id,files){
   files.forEach(f=>{
     const maxMB=f.type.startsWith('image/')?20:10;
     if(f.size>maxMB*1024*1024){showToast(`${f.name} terlalu besar (maks ${maxMB}MB)`,'error');return;}
-    // Buat blob URL lokal untuk preview gambar sebelum/sesudah upload
     const blobUrl=f.type.startsWith('image/')?URL.createObjectURL(f):null;
     uploadFiles[id].push({file:f,name:f.name,size:f.size,status:'pending',url:null,type:f.type||'',_blobUrl:blobUrl,_showPreview:false});
   });
@@ -1372,26 +1419,45 @@ function addFiles(id,files){
 }
 async function uploadSemuaFile(id,folderName){
   if(!getGasUrl()){showToast('URL Apps Script belum diisi!','error');return;}
-  const pending=(uploadFiles[id]||[]).filter(f=>f.status==='pending'||f.status==='err');
+  const allFiles=uploadFiles[id]||[];
+  // Upload draft blob jika ada (ubah status dari draft ke pending dulu)
+  allFiles.forEach(f=>{if(f._isDraft&&f._blob&&f.status==='draft'){f.file=f._blob;f.status='pending';}});
+  const pending=allFiles.filter(f=>f.status==='pending'||f.status==='err');
   if(!pending.length){showToast('Tidak ada file yang perlu diupload.','info');return;}
   const btn=document.getElementById(`upload-btn-${id}`);if(btn){btn.disabled=true;btn.textContent='⏳ Mengupload...';}
   let ok=0,fail=0;
-  for(let i=0;i<(uploadFiles[id]||[]).length;i++){
-    const f=uploadFiles[id][i];if(f.status!=='pending'&&f.status!=='err') continue;
-    if(!f.file){uploadFiles[id][i].status='err';fail++;renderFileList(id);continue;}
-    uploadFiles[id][i].status='uploading';renderFileList(id);
-    try{const b64=await toBase64(f.file);const res=await gasPost({action:'uploadFile',fileName:f.name,fileBase64:b64,mimeType:f.file.type||'application/octet-stream',folderName});if(!res.success) throw new Error(res.error||'Unknown');uploadFiles[id][i].status='done';uploadFiles[id][i].url=res.fileUrl;uploadFiles[id][i].type=uploadFiles[id][i].type||f.file?.type||'';ok++;}
-    catch(e){uploadFiles[id][i].status='err';fail++;console.error(e);}
+  for(let i=0;i<allFiles.length;i++){
+    const f=allFiles[i];if(f.status!=='pending'&&f.status!=='err') continue;
+    if(!f.file){allFiles[i].status='err';fail++;renderFileList(id);continue;}
+    allFiles[i].status='uploading';renderFileList(id);
+    try{
+      const b64=await toBase64(f.file);
+      const res=await gasPost({action:'uploadFile',fileName:f.name,fileBase64:b64,mimeType:f.file.type||'application/octet-stream',folderName});
+      if(!res.success) throw new Error(res.error||'Unknown');
+      allFiles[i].status='done';allFiles[i].url=res.fileUrl;allFiles[i].type=allFiles[i].type||f.file?.type||'';
+      allFiles[i]._isDraft=false;// sudah diupload, bukan draft lagi
+      ok++;
+    }
+    catch(e){allFiles[i].status='err';fail++;console.error(e);}
     renderFileList(id);
   }
   if(btn){btn.disabled=false;btn.textContent='☁ Upload ke Drive';}
   showToast(`Upload: ${ok} berhasil${fail?`, ${fail} gagal`:''}`,ok?'success':'error');
   const r=arsipList.find(x=>x.id===id);
-  if(r){r.uploadedFiles=uploadFiles[id].map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}));saveLocal();if(getGasUrl()) gasPost({action:'updateArsipFiles',id,uploadedFiles:r.uploadedFiles}).catch(()=>{});}
+  if(r){r.uploadedFiles=allFiles.map(f=>({name:f.name,size:f.size,status:f.status,url:f.url||null}));saveLocal();if(getGasUrl()) gasPost({action:'updateArsipFiles',id,uploadedFiles:r.uploadedFiles}).catch(()=>{});}
+  // Update tombol share jika ada file done
+  const hasDriveFiles=allFiles.some(f=>f.status==='done'&&f.url);
+  const shareBtn=document.getElementById('modal-share-btn');
+  if(shareBtn) shareBtn.style.display=hasDriveFiles?'':'none';
   renderArsip();
 }
 function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Baca gagal'));r.readAsDataURL(file);});}
-function closeModal(e){if(!e||e.target.id==='modal-overlay') document.getElementById('modal-overlay').classList.remove('open');}
+function closeModal(e){
+  if(!e||e.target.id==='modal-overlay'){
+    document.getElementById('modal-overlay').classList.remove('open');
+    currentModalId=null;
+  }
+}
 
 function renderPesertaManage(){
   document.getElementById('peserta-manage-list').innerHTML=pesertaList.map((p,i)=>`
@@ -1455,7 +1521,7 @@ function showToast(msg,type='info'){
   clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),4500);
 }
 
-// ════ INIT ════
+// INIT
 document.getElementById('inp-tanggal').value=today.toISOString().split('T')[0];
 initCalInline();renderCalInline();renderPesertaGen();renderDashHome();updateHeroStats();
 if(settings.tplMode==='manual'){tplMode='manual';document.querySelectorAll('.tpl-mode-tab')[1]?.click();}
