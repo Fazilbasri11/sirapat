@@ -218,6 +218,34 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .empty-state h3{font-size:15px;font-weight:500;margin-bottom:5px}
 
 /* PESERTA MANAGE */
+/* EFEK DRAG & DROP PESERTA */
+.peserta-row {
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.peserta-row.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+  border: 2px dashed var(--maroon-light);
+  background: var(--cream-dark);
+}
+.peserta-row.drop-target {
+  border-top: 4px solid var(--maroon); /* Indikator batas posisi drop */
+}
+.drag-handle {
+  cursor: grab;
+  color: #ccc;
+  font-size: 16px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+  
 .peserta-manage-list{display:flex;flex-direction:column;gap:7px}
 .peserta-row{background:var(--white);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(90,10,24,.06);border:1px solid rgba(122,16,32,.06);flex-wrap:wrap}
 .peserta-num{width:26px;height:26px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--maroon);flex-shrink:0}
@@ -1558,12 +1586,80 @@ function closeModal(e){
 
 function renderPesertaManage(){
   document.getElementById('peserta-manage-list').innerHTML=pesertaList.map((p,i)=>`
-    <div class="peserta-row">
+    <div class="peserta-row" draggable="true" 
+         ondragstart="pDragStart(event, ${i})" 
+         ondragover="pDragOver(event)" 
+         ondragenter="pDragEnter(event, ${i})" 
+         ondragleave="pDragLeave(event)" 
+         ondrop="pDrop(event, ${i})" 
+         ondragend="pDragEnd(event)">
+      <div class="drag-handle" title="Tahan dan geser untuk memindahkan urutan">⠿</div>
       <div class="peserta-num">${i+1}</div>
       <input type="text" value="${p.nama}" placeholder="Nama + gelar" id="pm-nama-${i}">
       <input type="text" value="${p.jabatan}" placeholder="Jabatan" id="pm-jab-${i}" style="max-width:260px">
       <button class="btn-icon" onclick="hapusPesertaRow(${i})">✕</button>
     </div>`).join('');
+}
+  // ════ LOGIKA DRAG & DROP PESERTA ════
+let pDragIdx = null;
+
+// Fungsi ini mengamankan teks yang sedang diketik (tapi belum disave) 
+// agar tidak hilang saat pengguna menggeser baris
+function syncPesertaDOM(){
+  pesertaList.forEach((_,i)=>{
+    const n = document.getElementById('pm-nama-'+i);
+    const j = document.getElementById('pm-jab-'+i);
+    if(n) pesertaList[i].nama = n.value;
+    if(j) pesertaList[i].jabatan = j.value;
+  });
+}
+
+function pDragStart(e, i){
+  syncPesertaDOM();
+  pDragIdx = i;
+  e.dataTransfer.effectAllowed = 'move';
+  // Delay sedikit agar elemen aslinya tidak langsung hilang saat diseret
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+
+function pDragOver(e){
+  e.preventDefault(); // Wajib agar drop diizinkan oleh browser
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function pDragEnter(e, i){
+  e.preventDefault();
+  if(i !== pDragIdx) e.currentTarget.classList.add('drop-target');
+}
+
+function pDragLeave(e){
+  e.currentTarget.classList.remove('drop-target');
+}
+
+function pDrop(e, i){
+  e.stopPropagation();
+  e.currentTarget.classList.remove('drop-target');
+  
+  // Jika dibatalkan atau dijatuhkan di posisi yang sama
+  if(pDragIdx === null || pDragIdx === i) return;
+  
+  // Memindahkan data di dalam array pesertaList
+  const movedItem = pesertaList.splice(pDragIdx, 1)[0];
+  pesertaList.splice(i, 0, movedItem);
+  
+  // Render ulang UI Manage agar angka urutan (1,2,3) berubah
+  renderPesertaManage();
+  
+  // Auto-Save agar urutan langsung berdampak ke halaman Generate
+  localStorage.setItem('sirapat_peserta', JSON.stringify(pesertaList));
+  renderPesertaGen(); 
+  if(getGasUrl()) gasPost({action:'simpanPeserta', peserta:pesertaList}).catch(()=>{});
+}
+
+function pDragEnd(e){
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.peserta-row').forEach(el => el.classList.remove('drop-target'));
+  pDragIdx = null;
 }
 function tambahPeserta(){pesertaList.push({nama:'',jabatan:''});renderPesertaManage();}
 function hapusPesertaRow(i){
