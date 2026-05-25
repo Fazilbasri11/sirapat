@@ -265,14 +265,36 @@ function renderCalInline(){
 }
 function calClickInline(ds){
   const events=arsipList.filter(r=>r.tanggal===ds);
-  if(events.length>=1){showArsipDetail(events[0].id);return;}
+  if(events.length>=1){
+    const agenda1=events[0].agenda.substring(0,50);
+    const pilih=confirm(
+      `📅 Tanggal ini sudah ada ${events.length} rapat terjadwal:\n"${agenda1}${events[0].agenda.length>50?'...':''}"`+
+      `\n\nOK  → Lihat detail arsip rapat\nBatal → Pilih tanggal ini untuk jadwal rapat BARU`
+    );
+    if(pilih){showArsipDetail(events[0].id);return;}
+    // User pilih "Batal" = ingin jadwal baru di tanggal ini
+  }
   document.getElementById('inp-tanggal').value=ds;
   renderCalInline();updateNomorPreview();checkBooking();
 }
 function checkBooking(){
-  const tgl=document.getElementById('inp-tanggal').value;const jam=document.getElementById('inp-jam').value;const tempat=document.getElementById('inp-tempat').value.trim();
+  const tgl=document.getElementById('inp-tanggal').value;
+  const jam=document.getElementById('inp-jam').value;
+  const tempat=document.getElementById('inp-tempat').value.trim();
   const conflict=arsipList.find(r=>r.tanggal===tgl&&r.jam===jam&&r.tempat===tempat);
-  document.getElementById('booking-warn').style.display=conflict?'block':'none';renderCalInline();
+  const warn=document.getElementById('booking-warn');
+  const btnGen=document.getElementById('btn-gen');
+  if(conflict){
+    warn.style.display='block';
+    warn.innerHTML=`⚠ Rapat sudah terjadwal pada tanggal & jam yang sama di ruangan ini!<br>
+      <small style="opacity:.8">Agenda terdaftar: <strong>${conflict.agenda.substring(0,60)}</strong></small><br>
+      <small style="opacity:.7">Ubah jam atau ruangan untuk melanjutkan.</small>`;
+    if(btnGen){btnGen.disabled=true;btnGen.style.opacity='0.5';btnGen.title='Ada konflik jadwal — ubah jam atau ruangan';}
+  } else {
+    warn.style.display='none';
+    if(btnGen){btnGen.disabled=false;btnGen.style.opacity='';btnGen.title='';}
+  }
+  renderCalInline();
 }
 
 function setPS(id,state){const el=document.getElementById(id);if(el) el.className='prog-step'+(state?' '+state:'');}
@@ -292,6 +314,13 @@ async function generateDokumen(){
   const agenda=document.getElementById('inp-agenda').value.trim();
   if(!tanggalVal){showToast('Pilih tanggal rapat!','error');return;}
   if(!agenda){showToast('Isi agenda rapat!','error');return;}
+  const _confGen=arsipList.find(r=>r.tanggal===tanggalVal&&r.jam===jamVal&&r.tempat===tempat);
+  if(_confGen){
+    showToast(`❌ Konflik! Rapat "${_confGen.agenda.substring(0,40)}..." sudah terjadwal di waktu & tempat yang sama.`,'error');
+    const w=document.getElementById('booking-warn');
+    if(w){w.style.display='block';w.scrollIntoView({behavior:'smooth',block:'center'});}
+    return;
+  }
   const urlUnd=getTemplateUrl('und'),urlAbs=getTemplateUrl('abs'),urlRis=getTemplateUrl('ris');
   if(!urlUnd||!urlAbs||!urlRis){showToast('URL template belum lengkap!','error');return;}
   const pesertaHadir=getCheckedPeserta();
@@ -1025,5 +1054,5 @@ if (settings.tplMode === 'manual') {
 Promise.all([
   getGasUrl()?fetchNomor():Promise.resolve(),
   loadArsipFromCloud()
-]).then(()=>{renderCalInline();renderDashHome();updateHeroStats();updateNomorPreview();});
+]).then(()=>{renderCalInline();renderDashHome();updateHeroStats();updateNomorPreview();checkBooking();});
 
