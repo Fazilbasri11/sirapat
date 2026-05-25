@@ -1,4 +1,4 @@
-<script>
+
 // ════ STATE ════
 const DEFAULT_PESERTA=[
   {nama:'ISKANDAR, S.Sos.',jabatan:'Ketua'},
@@ -1026,4 +1026,4 @@ Promise.all([
   getGasUrl()?fetchNomor():Promise.resolve(),
   loadArsipFromCloud()
 ]).then(()=>{renderCalInline();renderDashHome();updateHeroStats();updateNomorPreview();});
-</script>
+
