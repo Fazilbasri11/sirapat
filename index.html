@@ -997,7 +997,10 @@ document.addEventListener('click',function(e){
   resize();window.addEventListener('resize',resize);draw();
 })();
 
-function getGasUrl(){return(settings.gasUrl||'').trim();}
+function getGasUrl(){
+  // URL GAS sudah ditanam permanen di sini
+  return "https://script.google.com/macros/s/AKfycbxAagcb1qeGjdvP7JI9Vzpk14d_pC0EScGju-uEI-b0BZnysahASivCciaxTtb8OzY/exec";
+}
 function buildNomor(no,tgl){return settings.nomorFmt.replace('[NO]',String(no)).replace('[BULAN]',tgl instanceof Date?tgl.getMonth()+1:no).replace('[TAHUN]',tgl instanceof Date?tgl.getFullYear():today.getFullYear());}
 function tglGeneret(){return`${today.getDate()} ${BULAN_ID[today.getMonth()]} ${today.getFullYear()}`;}
 function tglFull(d){return`${d.getDate()} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;}
@@ -1834,12 +1837,14 @@ function printSingleFile(arsipId, fileIdx) {
   }
 }
 
-  // ════ SISTEM LOGIN DINAMIS (DARI GOOGLE SHEETS) ════
+ // ════ SISTEM LOGIN DINAMIS & AUTO SYNC ════
 window.addEventListener('DOMContentLoaded', () => {
-  // Mengecek apakah sebelumnya sudah login di tab/sesi ini
   if (sessionStorage.getItem('documeet_auth') === 'true') {
     const screen = document.getElementById('login-screen');
     if (screen) screen.style.display = 'none';
+    
+    // Web dibuka dan sudah login: Langsung Auto Sync!
+    mulaiAutoSync(); 
   }
 });
 
@@ -1850,20 +1855,6 @@ async function loginAdmin() {
   
   if (!inp) return;
 
-  const url = getGasUrl();
-  
-  // LOGIKA DARURAT: Jika URL GAS belum disetel di pengaturan
-  if (!url) {
-    if (inp === "KIP2026") {
-      berhasilLogin();
-      showToast('⚠️ Peringatan: Anda masuk dengan PIN Darurat. Segera isi URL GAS di Pengaturan.', 'info');
-    } else {
-      tampilError("❌ URL GAS belum diatur. Gunakan PIN darurat.");
-    }
-    return;
-  }
-
-  // Jika URL GAS sudah ada, cek PIN ke Google Sheets
   btn.textContent = 'Memeriksa PIN...';
   btn.disabled = true;
 
@@ -1872,19 +1863,18 @@ async function loginAdmin() {
     const realPin = String(data.pin);
 
     if (inp === realPin) {
-      berhasilLogin();
+      sessionStorage.setItem('documeet_auth', 'true');
+      document.getElementById('login-screen').style.display = 'none';
+      showToast('✓ Berhasil masuk sebagai Admin', 'success');
+      
+      // Baru pertama kali login: Langsung Auto Sync!
+      mulaiAutoSync();
     } else {
       tampilError("❌ PIN salah! Silakan coba lagi.");
     }
   } catch (e) {
     console.error(e);
-    tampilError("❌ Gagal mengecek PIN. Pastikan URL GAS sudah di-deploy dengan benar.");
-  }
-
-  function berhasilLogin() {
-    sessionStorage.setItem('documeet_auth', 'true');
-    document.getElementById('login-screen').style.display = 'none';
-    showToast('✓ Berhasil masuk sebagai Admin', 'success');
+    tampilError("❌ Gagal terhubung ke Google Sheets.");
   }
 
   function tampilError(pesan) {
@@ -1895,11 +1885,22 @@ async function loginAdmin() {
     btn.disabled = false;
   }
 }
+
+// Fungsi Pusat Pemicu Sinkronisasi
+function mulaiAutoSync() {
+  Promise.all([
+    fetchNomor(),
+    loadArsipFromCloud()
+  ]).then(() => {
+    // Refresh semua tampilan grafik dan dasbor setelah data masuk
+    renderCalInline();
+    renderDashHome();
+    updateHeroStats();
+    updateNomorPreview();
+  });
+}
   
 // INIT
-document.getElementById('inp-tanggal').value=today.toISOString().split('T')[0];
-initCalInline();renderCalInline();renderPesertaGen();renderDashHome();updateHeroStats();
-if(settings.tplMode==='manual'){tplMode='manual';document.querySelectorAll('.tpl-mode-tab')[1]?.click();}
 Promise.all([
   getGasUrl()?fetchNomor():Promise.resolve(),
   loadArsipFromCloud()
