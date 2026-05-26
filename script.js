@@ -230,6 +230,9 @@ function refreshStats() {
     `<div class="bar" style="height:${Math.round(n/max*80)}px"><div class="bar-inner" style="height:100%"></div></div>` +
     `<div class="bar-label">${SH_ID[i]}</div></div>`
   ).join('');
+  renderUpNext();
+  renderRisalahQuick();
+  renderHealthMeter();
 }
 const updateHeroStats = refreshStats;
 const renderDashHome  = refreshStats;
@@ -1123,7 +1126,10 @@ function showPage(id, btn) {
   if (id === 'peserta')    renderPesertaManage();
   if (id === 'beranda') {
     renderCalInline();
-    renderArsip(); // PENTING: Me-render ulang daftar arsip
+    renderArsip();
+    renderUpNext();        // ← tambah
+    renderRisalahQuick();  // ← tambah
+    renderHealthMeter();   // ← tambah
   }
   if (id === 'pengaturan') loadPengaturan();
 }
@@ -1183,6 +1189,151 @@ async function loadPesertaFromCloud() {
       localStorage.setItem('sirapat_peserta', JSON.stringify(pesertaList));
     }
   } catch (e) { console.error('Gagal memuat peserta dari cloud:', e); }
+}
+
+// ════ AGENDA TERDEKAT (UP NEXT) ══════════════════════════════
+function renderUpNext() {
+  const el = document.getElementById('upnext-list'); if (!el) return;
+  const todayMs  = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  const upcoming = arsipList
+    .filter(r => { const d = parseTanggal(r.tanggal); return d.getTime() >= todayMs; })
+    .sort((a, b) => parseTanggal(a.tanggal) - parseTanggal(b.tanggal))
+    .slice(0, 3);
+
+  if (!upcoming.length) {
+    el.innerHTML = '<div class="upnext-empty">📭 Tidak ada rapat mendatang.</div>';
+    return;
+  }
+  el.innerHTML = upcoming.map((r, i) => {
+    const d       = parseTanggal(r.tanggal);
+    const diffMs  = d.getTime() - todayMs;
+    const diffDay = Math.round(diffMs / 86400000);
+    const labelHari = diffDay === 0 ? 'Hari ini' : diffDay === 1 ? 'Besok' : diffDay + ' hari';
+    const isSoon  = diffDay <= 3;
+    const isFirst = i === 0;
+    return `<div class="upnext-item${isFirst ? ' next' : ''}" onclick="showArsipDetail(${r.id})">
+      <div class="upnext-datebox${isFirst ? '' : ' future'}">
+        <span class="ud">${String(d.getDate()).padStart(2,'0')}</span>
+        <span class="um">${SH_ID[d.getMonth()].toUpperCase()}</span>
+      </div>
+      <div class="upnext-info">
+        <div class="upnext-agenda">${r.agenda.substring(0,55)}${r.agenda.length>55?'...':''}</div>
+        <div class="upnext-meta">
+          <span>🕒 ${r.jam} WIB</span>
+          <span>📍 ${(r.tempat||'').substring(0,28)}</span>
+        </div>
+      </div>
+      <span class="upnext-badge ${isSoon ? 'soon' : 'far'}">${labelHari}</span>
+    </div>`;
+  }).join('');
+}
+
+// ════ RISALAH TERAKHIR QUICK ACCESS ══════════════════════════
+function renderRisalahQuick() {
+  const sub = document.getElementById('risalah-quick-sub');
+  const st  = document.getElementById('risalah-quick-status');
+  if (!sub || !st) return;
+  if (!arsipList.length) {
+    sub.textContent = 'Belum ada arsip rapat';
+    st.className = 'risalah-quick-status none'; st.textContent = '—'; return;
+  }
+  // Cari arsip terbaru (arsipList sudah urut descending)
+  const latest = arsipList[0];
+  const d      = parseTanggal(latest.tanggal);
+  sub.textContent = `${(latest.agenda||'').substring(0,45)}${(latest.agenda||'').length>45?'...':''} — ${d.getDate()} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Cek apakah risalah sudah ada di Drive
+  const allFiles = [...(uploadFiles[latest.id]||[]), ...(latest.uploadedFiles||[])];
+  const risalahFile = allFiles.find(f => f?.name && /risalah/i.test(f.name) && f.status === 'done');
+  if (risalahFile) {
+    st.className = 'risalah-quick-status ok'; st.textContent = '☁ Drive';
+  } else {
+    const hasDraft = (uploadFiles[latest.id]||[]).some(f => /risalah/i.test(f.name||''));
+    st.className = 'risalah-quick-status ' + (hasDraft ? 'pending' : 'none');
+    st.textContent = hasDraft ? '📝 Draft' : '—';
+  }
+}
+
+function bukaRisalahTerakhir() {
+  if (!arsipList.length) { showToast('Belum ada arsip rapat.','error'); return; }
+  showArsipDetail(arsipList[0].id);
+}
+
+// ════ HEALTH METER ════════════════════════════════════════════
+function renderHealthMeter() {
+  const rowsEl  = document.getElementById('health-rows');
+  const scoreEl = document.getElementById('health-score');
+  const footEl  = document.getElementById('health-footer-text');
+  if (!rowsEl) return;
+
+  const yr      = today.getFullYear();
+  // Gunakan arsip tahun ini saja agar relevan
+  const list    = arsipList.filter(r => parseTanggal(r.tanggal).getFullYear() === yr);
+  const total   = list.length;
+
+  if (!total) {
+    rowsEl.innerHTML = '<div style="font-size:11px;color:var(--text-muted);padding:6px 0">Belum ada arsip tahun ini.</div>';
+    if (scoreEl) { scoreEl.textContent = '—'; scoreEl.className = 'health-score'; }
+    if (footEl)  footEl.textContent = 'Tidak ada data';
+    return;
+  }
+
+  // Hitung dokumen yang sudah ada di Drive per kategori
+  const countDone = (keyword) => list.filter(r => {
+    const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
+    return allFiles.some(f => f?.name && new RegExp(keyword,'i').test(f.name) && f.status==='done');
+  }).length;
+
+  const undOk = countDone('undangan');
+  const absOk = countDone('absen');
+  const risOk = countDone('risalah');
+
+  const pct = u => Math.round(u / total * 100);
+  const pUnd = pct(undOk), pAbs = pct(absOk), pRis = pct(risOk);
+  const overall = Math.round((pUnd + pAbs + pRis) / 3);
+
+  const cls  = v => v >= 90 ? 'ok' : v >= 60 ? 'warn' : 'err';
+  const vcls = v => v >= 90 ? 'ok' : v >= 60 ? 'warn' : 'err';
+
+  rowsEl.innerHTML = [
+    {icon:'📨', label:'Undangan', ok:undOk, pct:pUnd},
+    {icon:'✅', label:'Absen Hadir', ok:absOk, pct:pAbs},
+    {icon:'📝', label:'Risalah', ok:risOk, pct:pRis},
+  ].map(row => `
+    <div class="health-row">
+      <div class="health-row-top">
+        <span class="health-row-label">${row.icon} ${row.label}</span>
+        <span class="health-row-val ${vcls(row.pct)}">${row.ok}/${total}</span>
+      </div>
+      <div class="health-bar-bg"><div class="health-bar-fill ${cls(row.pct)}" style="width:${row.pct}%"></div></div>
+    </div>`).join('');
+
+  if (scoreEl) {
+    scoreEl.textContent = overall + '%';
+    scoreEl.className = 'health-score ' + (overall >= 90 ? 'high' : overall >= 60 ? 'mid' : 'low');
+  }
+
+  const belum = list.filter(r => {
+    const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
+    const doneNames = allFiles.filter(f=>f?.status==='done').map(f=>(f.name||'').toLowerCase());
+    return !doneNames.some(n=>/undangan/.test(n)) || !doneNames.some(n=>/absen/.test(n)) || !doneNames.some(n=>/risalah/.test(n));
+  }).length;
+
+  if (footEl) footEl.textContent = belum > 0 ? `${belum} arsip belum lengkap dokumen Drive` : '✓ Semua arsip tahun ini lengkap';
+}
+
+function scrollToArsipBelum() {
+  const yr    = today.getFullYear();
+  const belum = arsipList.find(r => {
+    if (parseTanggal(r.tanggal).getFullYear() !== yr) return false;
+    const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
+    const doneNames = allFiles.filter(f=>f?.status==='done').map(f=>(f.name||'').toLowerCase());
+    return !doneNames.some(n=>/undangan/.test(n)) || !doneNames.some(n=>/absen/.test(n)) || !doneNames.some(n=>/risalah/.test(n));
+  });
+  if (!belum) { showToast('Semua arsip tahun ini sudah lengkap!','success'); return; }
+  const el = document.getElementById('arsip-item-' + belum.id);
+  if (el) { el.classList.add('highlight'); el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>el.classList.remove('highlight'),2500); }
+  showArsipDetail(belum.id);
 }
 
 // ════ INIT ════════════════════════════════════════════════════
