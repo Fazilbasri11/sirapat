@@ -3,6 +3,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DocuMeet — KIP Pidie Jaya</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7a1020">
+<link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="https://drive.google.com/thumbnail?id=1tXpzP80fM4Qha_iSosx5OdpoU_Onq1Oj&sz=w128">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/pizzip@3.1.4/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
@@ -664,8 +668,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 <nav>
   <div class="nav-brand">
     <div class="nav-logo">
-      <img src="https://drive.google.com/uc?export=view&id=1tXpzP80fM4Qha_iSosx5OdpoU_Onq1Oj"
-           alt="KIP" onerror="this.parentElement.innerHTML='<div class=nav-logo-fallback>KIP</div>'">
+      <img src="https://drive.google.com/thumbnail?id=1tXpzP80fM4Qha_iSosx5OdpoU_Onq1Oj&sz=w800" alt="KIP">
     </div>
     <div class="nav-title">
       <span>DocuMeet</span>
@@ -1031,5 +1034,14 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
 </div>
   <script src="script.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('DocuMeet PWA Aktif!', reg))
+        .catch(err => console.log('PWA Gagal:', err));
+    });
+  }
+</script>
 </body>
 </html>
