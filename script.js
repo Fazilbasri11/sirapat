@@ -52,6 +52,12 @@ let uploadFiles    = {};
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz2CWZbBPaBBfXL1jtSQDhd65FnUAWZogzA-yl51cjxIQMFznhmgneI2G71xN593w/exec';
 function getGasUrl() { return GAS_URL; }
 
+// Mengubah string jam "09:00" menjadi total menit (540 menit)
+function getMenitDariJam(jamStr) {
+  if (!jamStr || !jamStr.includes(':')) return 0;
+  const parts = jamStr.split(':');
+  return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+}
 function buildNomor(no, tgl) {
   return settings.nomorFmt
     .replace('[NO]',    String(no))
@@ -416,7 +422,9 @@ function renderCalInline() {
     const ds      = `${calYearInline}-${String(calMonthInline+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const events  = rapatMap[ds] || [];
     const hasEv   = events.length > 0;
-    const isBooked= hasEv && ds === selTgl && events.some(e => e.jam === selJam && e.tempat === selTempat);
+   const isBooked = hasEv && ds === selTgl && events.some(e => {
+        return e.tempat === selTempat && Math.abs(getMenitDariJam(selJam) - getMenitDariJam(e.jam)) < 60;
+    });
     
     let cls = 'cal-day';
     if (ds === todayStr) cls += ' today'; else if (ds === selTgl) cls += ' selected';
@@ -427,7 +435,9 @@ function renderCalInline() {
     // -- LOGIKA BADGE "X RAPAT" --
     let badgeHtml = '';
     if (hasEv) {
-      const isKonflik = (ds === selTgl && events.some(e => e.jam === selJam && e.tempat === selTempat));
+    const isKonflik = (ds === selTgl && events.some(e => {
+        return e.tempat === selTempat && Math.abs(getMenitDariJam(selJam) - getMenitDariJam(e.jam)) < 60;
+    }));
       badgeHtml = `<div class="cal-badge ${isKonflik ? 'konflik' : ''}">${events.length} Rapat</div>`;
     }
 
@@ -490,13 +500,23 @@ function checkBooking() {
   const tempat = document.getElementById('inp-tempat').value.trim();
   const warn   = document.getElementById('booking-warn');
   const btnGen = document.getElementById('btn-gen');
-  const c      = arsipList.find(r => r.tanggal === tgl && r.jam === jam && r.tempat === tempat);
-  if (c) {
+  
+  if (!jam) return;
+  const menitBaru = getMenitDariJam(jam);
+
+  // Cari rapat yang bentrok (tanggal & tempat sama, selisih waktu < 60 menit)
+  const konflik = arsipList.find(r => {
+    if (r.tanggal !== tgl || r.tempat !== tempat) return false;
+    const menitLama = getMenitDariJam(r.jam);
+    return Math.abs(menitBaru - menitLama) < 60; // Mengecek apakah selisih kurang dari 60 menit
+  });
+
+  if (konflik) {
     warn.style.display = 'block';
     warn.innerHTML =
-      `⚠ <strong>Konflik jadwal!</strong> Sudah ada rapat pada waktu & ruangan yang sama.<br>` +
-      `<span style="font-size:11px;opacity:.85">Agenda: <em>${c.agenda.substring(0,70)}${c.agenda.length>70?'...':''}</em></span><br>` +
-      `<span style="font-size:11px;opacity:.7">Silakan ubah jam atau ruangan untuk melanjutkan.</span>`;
+      `⚠ <strong>Konflik jadwal!</strong> Jarak antar rapat minimal 1 Jam.<br>` +
+      `<span style="font-size:11px;opacity:.85">Sudah ada rapat pukul <strong>${konflik.jam} WIB</strong> (<em>${konflik.agenda.substring(0,60)}${konflik.agenda.length>60?'...':''}</em>)</span><br>` +
+      `<span style="font-size:11px;opacity:.7">Silakan ubah jam (berikan jeda minimal 1 jam) atau ganti ruangan.</span>`;
     if (btnGen) { btnGen.disabled = true; btnGen.style.opacity = '0.45'; btnGen.title = 'Ada konflik jadwal'; }
   } else {
     warn.style.display = 'none'; warn.innerHTML = '';
@@ -525,7 +545,12 @@ async function generateDokumen() {
   if (!agenda)      { showToast('Isi agenda rapat!','error'); return; }
 
   // ★ OPTIMASI: satu kali cek konflik (duplikasi dihapus)
-  const konflik = arsipList.find(r => r.tanggal === tanggalVal && r.jam === jamVal && r.tempat === tempat);
+  const menitBaru = getMenitDariJam(jamVal);
+  const konflik = arsipList.find(r => {
+    if (r.tanggal !== tanggalVal || r.tempat !== tempat) return false;
+    const menitLama = getMenitDariJam(r.jam);
+    return Math.abs(menitBaru - menitLama) < 60;
+  });
   if (konflik) {
     showToast(`❌ Konflik jadwal! "${konflik.agenda.substring(0,45)}..." sudah terjadwal di waktu & tempat yang sama.`,'error');
     const w = document.getElementById('booking-warn');
