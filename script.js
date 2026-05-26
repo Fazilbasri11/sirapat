@@ -52,13 +52,13 @@ let uploadFiles    = {};
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz2CWZbBPaBBfXL1jtSQDhd65FnUAWZogzA-yl51cjxIQMFznhmgneI2G71xN593w/exec';
 function getGasUrl() { return GAS_URL; }
 
-// ★ FIX TIMEZONE: parse tanggal string "YYYY-MM-DD" sebagai local time, bukan UTC
+// ★ FIX TIMEZONE: parse tanggal string "YYYY-MM-DD" sebagai local time
 function parseTanggal(str) {
   if (!str) return new Date(NaN);
-  // Jika sudah ada suffix waktu, pakai langsung
   if (str.includes('T')) return new Date(str);
-  // Tambah T00:00:00 agar diparsing sebagai local time (bukan UTC midnight)
-  return new Date(str + 'T00:00:00');
+  // Ubah format "YYYY-MM-DD" menjadi "YYYY/MM/DD 00:00:00" 
+  // agar cross-browser selalu membacanya sebagai Waktu Lokal (WIB), bukan UTC.
+  return new Date(str.replace(/-/g, '/') + ' 00:00:00');
 }
 
 // Mengubah string jam "09:00" menjadi total menit (540 menit)
@@ -134,30 +134,55 @@ const gasGet  = (action)  => gasCall(action);
 const gasPost = (payload) => gasCall(payload.action, payload);
 
 // ════ SANITASI ARSIP ══════════════════════════════════════════
+// ════ SANITASI ARSIP ══════════════════════════════════════════
 function sanitasiField(val, type) {
   const s = String(val || '');
-  if (type === 'tanggal') return s.includes('T') ? s.split('T')[0] : s;
+  if (!s) return s;
+
+  if (type === 'tanggal') {
+    // Jika dari cloud formatnya ISO (ada huruf T), konversi ke Date lalu ambil tanggal LOKAL-nya
+    if (s.includes('T')) {
+      const d = new Date(s);
+      if (!isNaN(d)) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      }
+    }
+    return s;
+  }
+  
   if (type === 'jam') {
     let v = s;
+    // Jika dari cloud, ambil jam LOKAL (getHours/getMinutes), bukan getUTCHours
     if (v.includes('T')) {
-      try { const d = new Date(v); v = `${d.getUTCHours()}`.padStart(2,'0') + ':' + `${d.getUTCMinutes()}`.padStart(2,'0'); }
-      catch { v = '00:00'; }
+      try {
+        const d = new Date(v);
+        if (!isNaN(d)) {
+          return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+      } catch {}
     }
     if (v.length > 5 && v.includes(':')) v = v.substring(0, 5);
     if (v.includes(' ')) v = v.split(' ')[0];
-    // Pastikan format HH:MM (tambah leading zero jika perlu)
     if (/^\d:\d{2}$/.test(v)) v = '0' + v;
     return v;
   }
+  
   if (type === 'tglGeneret') {
+    // Sama seperti tanggal, ambil nilai menggunakan metode LOKAL
     if (s.includes('T')) {
-      try { const d = new Date(s); return `${d.getUTCDate()} ${BULAN_ID[d.getUTCMonth()]} ${d.getUTCFullYear()}`; } catch {}
+      try {
+        const d = new Date(s);
+        if (!isNaN(d)) {
+          return `${d.getDate()} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;
+        }
+      } catch {}
     }
     if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
       try { const p = s.split('-'); return `${parseInt(p[2])} ${BULAN_ID[parseInt(p[1])-1]} ${p[0]}`; } catch {}
     }
     return s;
   }
+  
   return s;
 }
 function sanitasiArsip(list) {
