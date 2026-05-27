@@ -1281,7 +1281,6 @@ function bukaRisalahTerakhir() {
   if (!arsipList.length) { showToast('Belum ada arsip rapat.','error'); return; }
   showArsipDetail(arsipList[0].id);
 }
-
 // ════ HEALTH METER ════════════════════════════════════════════
 function renderHealthMeter() {
   const rowsEl  = document.getElementById('health-rows');
@@ -1301,27 +1300,41 @@ function renderHealthMeter() {
     return;
   }
 
-  // Hitung dokumen yang sudah ada di Drive per kategori
-  const countDone = (keyword) => list.filter(r => {
+  // 1. Hitung dokumen dengan keyword tertentu yang berstatus 'done' DAN berformat .pdf
+  const countDonePdf = (keyword) => list.filter(r => {
     const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
-    return allFiles.some(f => f?.name && new RegExp(keyword,'i').test(f.name) && f.status==='done');
+    return allFiles.some(f => 
+      f?.name && 
+      new RegExp(keyword, 'i').test(f.name) && 
+      f.name.toLowerCase().endsWith('.pdf') && // Wajib PDF
+      f.status === 'done'
+    );
   }).length;
 
-  const undOk = countDone('undangan');
-  const absOk = countDone('absen');
-  const risOk = countDone('risalah');
+  const undOk = countDonePdf('undangan');
+  const absOk = countDonePdf('absen');
+  const risOk = countDonePdf('risalah');
 
+  // 2. Hitung arsip yang punya minimal 1 foto/gambar (menggunakan fungsi isImage bawaan kodemu)
+  const fotoOk = list.filter(r => {
+    const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
+    return allFiles.some(f => f?.name && isImage(f.name) && f.status === 'done');
+  }).length;
+
+  // Persentase sekarang dibagi 4 komponen
   const pct = u => Math.round(u / total * 100);
-  const pUnd = pct(undOk), pAbs = pct(absOk), pRis = pct(risOk);
-  const overall = Math.round((pUnd + pAbs + pRis) / 3);
+  const pUnd = pct(undOk), pAbs = pct(absOk), pRis = pct(risOk), pFoto = pct(fotoOk);
+  const overall = Math.round((pUnd + pAbs + pRis + pFoto) / 4);
 
   const cls  = v => v >= 90 ? 'ok' : v >= 60 ? 'warn' : 'err';
   const vcls = v => v >= 90 ? 'ok' : v >= 60 ? 'warn' : 'err';
 
+  // Render elemen baris
   rowsEl.innerHTML = [
-    {icon:'📨', label:'Undangan', ok:undOk, pct:pUnd},
-    {icon:'✅', label:'Absen Hadir', ok:absOk, pct:pAbs},
-    {icon:'📝', label:'Risalah', ok:risOk, pct:pRis},
+    {icon:'📨', label:'Undangan (PDF)', ok:undOk, pct:pUnd},
+    {icon:'✅', label:'Absen Hadir (PDF)', ok:absOk, pct:pAbs},
+    {icon:'📝', label:'Risalah (PDF)', ok:risOk, pct:pRis},
+    {icon:'📸', label:'Dokumentasi (Foto)', ok:fotoOk, pct:pFoto},
   ].map(row => `
     <div class="health-row">
       <div class="health-row-top">
@@ -1336,10 +1349,17 @@ function renderHealthMeter() {
     scoreEl.className = 'health-score ' + (overall >= 90 ? 'high' : overall >= 60 ? 'mid' : 'low');
   }
 
+  // Cek arsip mana saja yang BELUM LENGKAP ke-4 syaratnya
   const belum = list.filter(r => {
     const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
-    const doneNames = allFiles.filter(f=>f?.status==='done').map(f=>(f.name||'').toLowerCase());
-    return !doneNames.some(n=>/undangan/.test(n)) || !doneNames.some(n=>/absen/.test(n)) || !doneNames.some(n=>/risalah/.test(n));
+    const doneFiles = allFiles.filter(f => f?.status === 'done' && f?.name);
+    
+    const hasUnd  = doneFiles.some(f => /undangan/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasAbs  = doneFiles.some(f => /absen/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasRis  = doneFiles.some(f => /risalah/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasFoto = doneFiles.some(f => isImage(f.name));
+
+    return !(hasUnd && hasAbs && hasRis && hasFoto); // Jika salah satu tidak ada, berarti belum lengkap
   }).length;
 
   if (footEl) footEl.textContent = belum > 0 ? `${belum} arsip belum lengkap dokumen Drive` : '✓ Semua arsip tahun ini lengkap';
@@ -1349,13 +1369,27 @@ function scrollToArsipBelum() {
   const yr    = today.getFullYear();
   const belum = arsipList.find(r => {
     if (parseTanggal(r.tanggal).getFullYear() !== yr) return false;
+    
     const allFiles = [...(uploadFiles[r.id]||[]), ...(r.uploadedFiles||[])];
-    const doneNames = allFiles.filter(f=>f?.status==='done').map(f=>(f.name||'').toLowerCase());
-    return !doneNames.some(n=>/undangan/.test(n)) || !doneNames.some(n=>/absen/.test(n)) || !doneNames.some(n=>/risalah/.test(n));
+    const doneFiles = allFiles.filter(f => f?.status === 'done' && f?.name);
+    
+    const hasUnd  = doneFiles.some(f => /undangan/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasAbs  = doneFiles.some(f => /absen/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasRis  = doneFiles.some(f => /risalah/i.test(f.name) && f.name.toLowerCase().endsWith('.pdf'));
+    const hasFoto = doneFiles.some(f => isImage(f.name));
+
+    // Kembalikan true jika ada dokumen yang KURANG LENGKAP
+    return !(hasUnd && hasAbs && hasRis && hasFoto);
   });
+  
   if (!belum) { showToast('Semua arsip tahun ini sudah lengkap!','success'); return; }
+  
   const el = document.getElementById('arsip-item-' + belum.id);
-  if (el) { el.classList.add('highlight'); el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>el.classList.remove('highlight'),2500); }
+  if (el) { 
+    el.classList.add('highlight'); 
+    el.scrollIntoView({behavior:'smooth',block:'center'}); 
+    setTimeout(()=>el.classList.remove('highlight'),2500); 
+  }
   showArsipDetail(belum.id);
 }
 
