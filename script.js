@@ -1159,7 +1159,7 @@ async function loginAdmin() {
     if (inp === String(data.pin)) {
       sessionStorage.setItem('documeet_auth','true');
       document.getElementById('login-screen').style.display='none';
-      showToast('✓ Berhasil masuk sebagai Admin','success');
+      showToast('✓ Berhasil masuk','success');
       mulaiAutoSync();
     } else {
       tampilError('❌ PIN salah! Silakan coba lagi.');
