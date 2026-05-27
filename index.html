@@ -803,25 +803,41 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 <div id="page-beranda" class="page active">
   <div class="hero">
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-ring"></div><div class="hero-ring"></div><div class="hero-ring"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow"></div>
     <div class="hero-shimmer"></div>
+    
     <div class="hero-inner">
-      <div class="hero-badge">Sistem Rapat Digital · KIP Pidie Jaya</div>
+      <div class="hero-top-bar">
+        <div class="hero-badge">Sistem Rapat Digital · KIP Pidie Jaya</div>
+        <div class="hero-sync-badge">
+          <div class="hero-sync-dot" id="hero-sync-dot"></div>
+          <span id="hero-sync-text">Memuat data cloud...</span>
+        </div>
+      </div>
+      
       <div class="hero-brand-line">
         <div class="hero-brand-name">Docu<em>Meet</em></div>
-        <div class="hero-brand-dot"></div>
       </div>
+      
       <div class="hero-tagline">Rapat lebih rapi, dokumen siap dalam hitungan detik.</div>
+      <p>Kelola undangan, absen, dan risalah otomatis terintegrasi dengan Google Drive dan sistem pengarsipan cloud.</p>
+      
       <div class="hero-stats">
-        <div class="hero-stat"><div class="hero-stat-val" id="hs-total">0</div><div class="hero-stat-lbl">Total Rapat</div></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-total">0</div>
+          <div class="hero-stat-lbl">Total Rapat</div>
+        </div>
         <div class="hero-stat-sep"></div>
-        <div class="hero-stat"><div class="hero-stat-val" id="hs-tahun">0</div><div class="hero-stat-lbl">Tahun Ini</div></div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-tahun">0</div>
+          <div class="hero-stat-lbl">Tahun Ini</div>
+        </div>
         <div class="hero-stat-sep"></div>
-        <div class="hero-stat"><div class="hero-stat-val" id="hs-nomor">—</div><div class="hero-stat-lbl">Nomor Berikutnya</div></div>
-      </div>
-      <div class="hero-sync-badge">
-        <div class="hero-sync-dot" id="hero-sync-dot"></div>
-        <span id="hero-sync-text">Memuat data cloud...</span>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="hs-nomor">—</div>
+          <div class="hero-stat-lbl">Nomor Berikutnya</div>
+        </div>
       </div>
     </div>
   </div>
