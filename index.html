@@ -737,6 +737,48 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   .upnext-item { min-height: 44px; }
   .risalah-quick { min-height: 48px; }
 }
+
+  /* --- PINDAH STATS KE BAWAH KALENDER (DESKTOP ONLY) --- */
+@media (min-width: 901px) {
+  .home-panel {
+    /* Sesuaikan jarak vertikal antar card agar tetap rapi */
+    row-gap: 10px;
+    column-gap: 1.25rem;
+  }
+  
+  /* Hilangkan pembungkus panel kanan agar isi dalamnya (anak-anaknya) bisa dikontrol langsung oleh grid .home-panel */
+  .stats-panel {
+    display: contents; 
+  }
+
+  /* --- MENGATUR POSISI KOLOM KIRI --- */
+  .cal-wrapper {
+    grid-column: 1;
+    grid-row: 1 / span 3; /* Kalender membentang sepanjang 3 baris pertama di kiri */
+  }
+  .stat-row {
+    grid-column: 1;
+    grid-row: 4; /* Pindah ke kolom kiri, diletakkan persis di bawah kalender (baris ke-4) */
+  }
+
+  /* --- MENGATUR POSISI KOLOM KANAN --- */
+  .upnext-card {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .risalah-quick {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .health-card {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .chart-card {
+    grid-column: 2;
+    grid-row: 4; /* Letaknya akan sejajar di kanan dengan stat-row */
+  }
+}
 </style>
 </head>
 <body>
