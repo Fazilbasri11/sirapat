@@ -547,6 +547,14 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 .toast.error{border-left:4px solid #e53935}
 .toast.info{border-left:4px solid var(--gold)}
 
+  #offline-badge {
+  display: none; position: fixed; top: 68px; right: 12px;
+  background: #333; color: #fff; font-size: 11px; font-weight: 600;
+  padding: 5px 12px; border-radius: 20px; z-index: 98;
+  align-items: center; gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+#offline-pending-count { color: var(--gold-light); font-size: 10px; }
 /* PRINT STYLES */
 @media print{
   nav,.nav-drawer,.generate-area,.save-bar,.search-bar,.arsip-actions,.modal-header-actions,.upload-section,.draft-section,.toast,.sync-indicator{display:none!important}
@@ -774,7 +782,10 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleDrawer()">☰</button>
 </nav>
-
+<div id="offline-badge">
+  <span>📶 Offline</span>
+  <span id="offline-pending-count"></span>
+</div>
 <div class="nav-drawer" id="nav-drawer">
   <button class="nav-btn active" onclick="showPage('beranda',this);closeDrawer()">🏠 Beranda</button>
   <button class="nav-btn" onclick="showPage('generate',this);closeDrawer()">✦ Buat Rapat</button>
