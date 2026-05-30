@@ -855,8 +855,11 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
           <span style="font-size:14px">🕒</span>
           <span class="upnext-header-title">Agenda Terdekat</span>
         </div>
-        <button class="nomor-refresh-btn" style="font-size:10px;padding:3px 9px" onclick="showPage('beranda',document.querySelectorAll('.nav-btn')[0])">Lihat Semua</button>
-      </div>
+     <!-- GANTI baris ini di upnext-header: -->
+<button class="nomor-refresh-btn" style="font-size:10px;padding:3px 9px" 
+  onclick="document.querySelector('.content-section').scrollIntoView({behavior:'smooth',block:'start'})">
+  Lihat Semua
+</button>  </div>
       <div class="upnext-list" id="upnext-list">
         <div class="upnext-empty">Memuat jadwal...</div>
       </div>
