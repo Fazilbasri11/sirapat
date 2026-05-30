@@ -9,7 +9,7 @@ const DEFAULT_PESERTA = [
   {nama:'DAHLAN, A.Md.',           jabatan:'Kasubbag Keuangan, Umum, dan Logistik'},
   {nama:'MASYKUR, S.Pd.I.',        jabatan:'Kasubbag Perencanaan, Data dan Informasi'},
   {nama:'MAHMUNIR, S.Kom.',        jabatan:'Kasubbag Teknis Penyelenggaraan Pemilu, dan Hukum'},
-  {nama:'MAIMUN MAHMILUL, S.IP.',  jabatan:'Kasubbag Keuangan, Umum dan Logistik'},
+  {nama:'MAIMUN MAHMILUL, S.IP.',  jabatan:'Kasubbag Parmas dan SDM'},
   {nama:'ISNAINI, SE.',            jabatan:'Analis Pengelola Keuangan APBN Ahli Muda'},
   {nama:'NURHAYATI, A.Md.',        jabatan:'Bendahara Pengeluaran'},
   {nama:'FAZIL BASRI, S.Kom.',     jabatan:'Notulen'},
