@@ -615,13 +615,18 @@ async function generateDokumen() {
     kotaTanggal: `${settings.kota}, ${tglStr}`, tahun: String(tgl.getFullYear()),
     bulan: BULAN_ID[tgl.getMonth()], instansi: settings.instansi,
     jumlahPeserta: String(pesertaHadir.length), tgl_generet: tglGen,
-    peserta: pesertaHadir.map((p, i) => ({
+   peserta: pesertaHadir.map((p, i) => ({
   no: String(i+1),
   nama: p.nama,
+  namaRingkas: p.nama.split(',')[0]   // ambil sebelum koma
+    .trim()
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' '),                         // jadi Title Case
   jabatan: p.jabatan,
   ttd: '',
-  ttdNoKiri: (i % 2 === 0) ? String(i+1) : '',   // ganjil → kiri
-  ttdNoKanan: (i % 2 !== 0) ? String(i+1) : '',   // genap → kanan
+  ttdNoKiri: (i % 2 === 0) ? String(i+1) : '',
+  ttdNoKanan: (i % 2 !== 0) ? String(i+1) : '',
 }))
   };
 
