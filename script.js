@@ -625,8 +625,8 @@ async function generateDokumen() {
     .join(' '),                         // jadi Title Case
   jabatan: p.jabatan,
   ttd: '',
-  ttdNoKiri: (i % 2 === 0) ? String(i+1) : '',
-  ttdNoKanan: (i % 2 !== 0) ? String(i+1) : '',
+  ttdNoKiri: (i % 2 === 0) ? String(i+1) : ' ',   // ganjil → kiri
+ttdNoKanan: (i % 2 !== 0) ? String(i+1) : ' ',   // genap → tengah
 }))
   };
 
