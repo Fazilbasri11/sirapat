@@ -958,8 +958,17 @@ function addFiles(id, files) {
     const maxMB = f.type.startsWith('image/') ? 20 : 10;
     if (f.size > maxMB*1024*1024) { showToast(`${f.name} terlalu besar (maks ${maxMB}MB)`,'error'); return; }
     const blobUrl = f.type.startsWith('image/') ? URL.createObjectURL(f) : null;
-    uploadFiles[id].push({file:f, name:f.name, size:f.size, status:'pending', url:null, type:f.type||'', _blobUrl:blobUrl, _showPreview:false});
+    const entry = { file:f, name:f.name, size:f.size, status:'pending', url:null, type:f.type||'', _blobUrl:blobUrl, _showPreview:false };
+    uploadFiles[id].push(entry);
+
+    // ★ Simpan ke IDB jika offline
+    if (!navigator.onLine) {
+      const r = arsipList.find(x => x.id === id);
+      const folder = r ? getFolderName(r) : String(id);
+      idbSave(id, folder, entry).then(updateOfflinePendingCount);
+    }
   });
+  if (!navigator.onLine) showToast('📶 Offline — file disimpan, auto-upload saat online', 'info');
   renderFileList(id);
 }
 
@@ -1400,6 +1409,107 @@ function scrollToArsipBelum() {
   }
   showArsipDetail(belum.id);
 }
+
+// ════ OFFLINE MODE ════════════════════════════════════════════
+const IDB_NAME = 'documeet_offline_v1';
+let idb = null;
+
+async function initIDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('pending', { keyPath: 'uid', autoIncrement: true });
+    };
+    req.onsuccess = e => { idb = e.target.result; res(idb); };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+async function idbSave(arsipId, folderName, fileEntry) {
+  if (!idb || !fileEntry.file) return;
+  const b64 = await toBase64(fileEntry.file);
+  return new Promise((res, rej) => {
+    const tx = idb.transaction('pending', 'readwrite');
+    tx.objectStore('pending').add({ arsipId, folderName, name: fileEntry.name, size: fileEntry.size, type: fileEntry.type || '', b64 });
+    tx.oncomplete = res; tx.onerror = rej;
+  });
+}
+
+async function idbGetAll() {
+  if (!idb) return [];
+  return new Promise((res, rej) => {
+    const tx = idb.transaction('pending', 'readonly');
+    const req = tx.objectStore('pending').getAll();
+    req.onsuccess = () => res(req.result);
+    req.onerror = rej;
+  });
+}
+
+async function idbClear() {
+  if (!idb) return;
+  return new Promise((res, rej) => {
+    const tx = idb.transaction('pending', 'readwrite');
+    tx.objectStore('pending').clear();
+    tx.oncomplete = res; tx.onerror = rej;
+  });
+}
+
+function getFolderName(r) {
+  const d = parseTanggal(r.tanggal);
+  return `${String(d.getDate()).padStart(2,'0')} ${BULAN_ID[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+async function updateOfflinePendingCount() {
+  const items = await idbGetAll();
+  const el = document.getElementById('offline-pending-count');
+  if (el) el.textContent = items.length > 0 ? `• ${items.length} pending` : '';
+}
+
+function setOfflineUI(isOffline) {
+  const badge = document.getElementById('offline-badge');
+  if (badge) badge.style.display = isOffline ? 'flex' : 'none';
+}
+
+// Auto-upload saat kembali online
+window.addEventListener('online', async () => {
+  setOfflineUI(false);
+  const items = await idbGetAll();
+  if (!items.length) { showToast('🌐 Kembali online', 'success'); return; }
+  showToast(`🌐 Online — mengupload ${items.length} file pending...`, 'info');
+  let ok = 0;
+  for (const item of items) {
+    try {
+      const res = await gasCall('uploadFile', { fileName: item.name, fileBase64: item.b64, mimeType: item.type || 'application/octet-stream', folderName: item.folderName });
+      if (!res.success) throw new Error(res.error);
+      const files = uploadFiles[item.arsipId] || [];
+      const f = files.find(f => f.name === item.name);
+      if (f) { f.status = 'done'; f.url = res.fileUrl; }
+      const r = arsipList.find(x => x.id === item.arsipId);
+      if (r) {
+        r.uploadedFiles = files.filter(f => f.status === 'done').map(f => ({ name: f.name, size: f.size, status: 'done', url: f.url }));
+        saveLocal();
+        gasCall('updateArsipFiles', { id: item.arsipId, uploadedFiles: r.uploadedFiles }).catch(() => {});
+      }
+      renderFileList(item.arsipId);
+      ok++;
+    } catch {}
+  }
+  await idbClear();
+  renderArsip();
+  showToast(`✓ ${ok}/${items.length} file berhasil diupload`, 'success');
+});
+
+window.addEventListener('offline', () => {
+  setOfflineUI(true);
+  updateOfflinePendingCount();
+  showToast('📶 Offline — file akan auto-upload saat online', 'info');
+});
+
+// Init
+initIDB().then(() => {
+  setOfflineUI(!navigator.onLine);
+  updateOfflinePendingCount();
+});
 
 // ════ INIT ════════════════════════════════════════════════════
 document.getElementById('inp-tanggal').value = today.toISOString().split('T')[0];
