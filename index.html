@@ -775,7 +775,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
   </div>
   <div class="nav-menu">
     <button class="nav-btn active" onclick="showPage('beranda',this)">🏠 Beranda</button>
-    <button class="nav-btn" onclick="showPage('generate',this)">✦ Buat Rapat</button>
+    <button class="nav-btn" onclick="showPage('generate',this)">⚡ Buat Rapat</button>
     <button class="nav-btn" onclick="showPage('peserta',this)">👥 Peserta</button>
     <button class="nav-btn" onclick="showPage('pengaturan',this)">⚙ Pengaturan</button>
     <button class="nav-btn" onclick="showPage('tentang',this)">ℹ Tentang</button>
@@ -788,7 +788,7 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
 </div>
 <div class="nav-drawer" id="nav-drawer">
   <button class="nav-btn active" onclick="showPage('beranda',this);closeDrawer()">🏠 Beranda</button>
-  <button class="nav-btn" onclick="showPage('generate',this);closeDrawer()">✦ Buat Rapat</button>
+  <button class="nav-btn" onclick="showPage('generate',this);closeDrawer()">⚡ Buat Rapat</button>
   <button class="nav-btn" onclick="showPage('peserta',this);closeDrawer()">👥 Peserta</button>
   <button class="nav-btn" onclick="showPage('pengaturan',this);closeDrawer()">⚙ Pengaturan</button>
   <button class="nav-btn" onclick="showPage('tentang',this);closeDrawer()">ℹ Tentang</button>
@@ -1038,12 +1038,12 @@ nav{background:var(--maroon-deep);display:flex;align-items:center;justify-conten
               <span class="ph-chip">[[nomorSurat]]</span><span class="ph-chip">[[hari]]</span><span class="ph-chip">[[tanggal]]</span>
               <span class="ph-chip">[[tanggalHari]]</span><span class="ph-chip">[[jam]]</span><span class="ph-chip">[[tempat]]</span>
               <span class="ph-chip">[[agenda]]</span><span class="ph-chip">[[ketua]]</span><span class="ph-chip">[[sekretaris]]</span>
-              <span class="ph-chip">[[kota]]</span><span class="ph-chip">[[kotaTanggal]]</span><span class="ph-chip">[[tahun]]</span>
-              <span class="ph-chip">[[jumlahPeserta]]</span><span class="ph-chip new">[[tgl_generet]] ✦</span>
+              <span class="ph-chip">[[kota]]</span><span class="ph-chip">[[kotaTanggal]]</span><span class="ph-chip">[[no]].   [[namaRingkas]]</span><span class="ph-chip">[[tahun]]</span>
+              <span class="ph-chip">[[jumlahPeserta]]</span> <span class="ph-chip">[[ttdNo]]</span><span class="ph-chip new">[[tgl_generet]] ✦</span>
             </div>
             <div class="ph-section-label" style="margin-top:7px">Loop peserta:</div>
             <div class="placeholder-chips">
-              <span class="ph-chip ph-loop">{#peserta}</span><span class="ph-chip">[[no]]</span><span class="ph-chip">[[nama]]</span><span class="ph-chip">[[jabatan]]</span><span class="ph-chip ph-loop">{/peserta}</span>
+              <span class="ph-chip ph-loop">[#peserta]</span><span class="ph-chip">[[no]]</span><span class="ph-chip">[[nama]]</span><span class="ph-chip">[[jabatan]]</span><span class="ph-chip ph-loop">[/peserta]</span>
             </div>
           </div>
         </div>
