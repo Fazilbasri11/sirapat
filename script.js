@@ -636,7 +636,13 @@ async function generateDokumen() {
   try {
     setPS('ps-fetch','active'); tx.textContent = 'Mengambil template...';
     let blobs;
-    try { blobs = await Promise.all([fetchAndInject(urlUnd,data), fetchAndInject(urlAbs,data), fetchAndInject(urlRis,data)]); }
+    try { 
+     blobs = await Promise.all([
+  fetchAndInject(urlUnd, data, 'und'),
+  fetchAndInject(urlAbs, data, 'abs'),
+  fetchAndInject(urlRis, data, 'ris')
+]);
+    }
     catch (e) { setPS('ps-fetch','err'); throw e; }
     setPS('ps-fetch','done'); setPS('ps-inject','done');
 
@@ -1527,6 +1533,7 @@ function setOfflineUI(isOffline) {
 
 // Auto-upload saat kembali online
 window.addEventListener('online', async () => {
+  preloadTemplates();
   setOfflineUI(false);
   const items = await idbGetAll();
   if (!items.length) { showToast('🌐 Kembali online', 'success'); return; }
@@ -1554,6 +1561,105 @@ window.addEventListener('online', async () => {
   showToast(`✓ ${ok}/${items.length} file berhasil diupload`, 'success');
 });
 
+// ════ TEMPLATE CACHE (IndexedDB) ════════════════════════════
+const TPL_IDB_NAME = 'documeet_templates_v1';
+let tplIdb = null;
+
+async function initTplIDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(TPL_IDB_NAME, 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('templates', { keyPath: 'key' });
+    };
+    req.onsuccess = e => { tplIdb = e.target.result; res(tplIdb); };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+async function tplCacheSave(key, arrayBuffer) {
+  if (!tplIdb) return;
+  return new Promise((res, rej) => {
+    const tx = tplIdb.transaction('templates', 'readwrite');
+    tx.objectStore('templates').put({ key, data: arrayBuffer, ts: Date.now() });
+    tx.oncomplete = res;
+    tx.onerror = rej;
+  });
+}
+
+async function tplCacheGet(key) {
+  if (!tplIdb) return null;
+  return new Promise((res, rej) => {
+    const tx = tplIdb.transaction('templates', 'readonly');
+    const req = tx.objectStore('templates').get(key);
+    req.onsuccess = () => res(req.result ? req.result.data : null);
+    req.onerror = rej;
+  });
+}
+
+// Preload semua template ke cache (dipanggil saat online)
+async function preloadTemplates() {
+  if (!navigator.onLine) return;
+  try {
+    const keys = ['und', 'abs', 'ris'];
+    const urls = {
+      und: getTemplateUrl('und'),
+      abs: getTemplateUrl('abs'),
+      ris: getTemplateUrl('ris'),
+    };
+    let cached = 0;
+    for (const key of keys) {
+      const url = urls[key];
+      if (!url) continue;
+      try {
+        const r = await fetch(url);
+        if (!r.ok) continue;
+        const buf = await r.arrayBuffer();
+        await tplCacheSave(key, buf);
+        cached++;
+      } catch {}
+    }
+    if (cached > 0) console.log(`[DocuMeet] ${cached} template ter-cache offline.`);
+  } catch {}
+}
+
+// ════ FETCH & INJECT — dengan fallback cache ════════════════
+async function fetchAndInject(url, data, cacheKey) {
+  let arrayBuffer = null;
+
+  if (navigator.onLine) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      arrayBuffer = await r.arrayBuffer();
+      // Simpan ke cache setiap kali berhasil fetch online
+      if (cacheKey) await tplCacheSave(cacheKey, arrayBuffer);
+    } catch (e) {
+      // Fetch gagal walau online, coba cache
+      if (cacheKey) arrayBuffer = await tplCacheGet(cacheKey);
+      if (!arrayBuffer) throw new Error(`Gagal fetch "${url}": ${e.message}`);
+    }
+  } else {
+    // Offline — ambil dari cache
+    if (cacheKey) arrayBuffer = await tplCacheGet(cacheKey);
+    if (!arrayBuffer) throw new Error(
+      `Offline & template "${cacheKey}" belum ter-cache. Buka aplikasi dulu saat online.`
+    );
+  }
+
+  const zip = new PizZip(arrayBuffer);
+  const doc = new window.docxtemplater(zip, {
+    paragraphLoop: true, linebreaks: true,
+    delimiters: { start: '[[', end: ']]' },
+    nullGetter: () => ''
+  });
+  doc.render(data);
+  return doc.getZip().generate({
+    type: 'blob',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    compression: 'DEFLATE'
+  });
+}
+
 window.addEventListener('offline', () => {
   setOfflineUI(true);
   updateOfflinePendingCount();
@@ -1564,6 +1670,10 @@ window.addEventListener('offline', () => {
 initIDB().then(() => {
   setOfflineUI(!navigator.onLine);
   updateOfflinePendingCount();
+});
+initTplIDB().then(() => {
+  // Preload template saat pertama online
+  if (navigator.onLine) preloadTemplates();
 });
 
 // ════ INIT ════════════════════════════════════════════════════
