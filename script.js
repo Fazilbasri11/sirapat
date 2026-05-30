@@ -1329,7 +1329,29 @@ function renderRisalahQuick() {
 
 function bukaRisalahTerakhir() {
   if (!arsipList.length) { showToast('Belum ada arsip rapat.','error'); return; }
-  showArsipDetail(arsipList[0].id);
+  
+  const nowMs = new Date().getTime();
+  
+  // Cari arsip yang sudah lewat, urutkan descending, ambil yang paling baru
+  const sudahLewat = arsipList
+    .filter(r => {
+      const d = parseTanggal(r.tanggal);
+      if (r.jam) {
+        const parts = r.jam.split(':');
+        d.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+      }
+      return d.getTime() <= nowMs;
+    })
+    .sort((a, b) => {
+      const dA = parseTanggal(a.tanggal);
+      if (a.jam) dA.setHours(...a.jam.split(':').map(Number));
+      const dB = parseTanggal(b.tanggal);
+      if (b.jam) dB.setHours(...b.jam.split(':').map(Number));
+      return dB.getTime() - dA.getTime();
+    });
+
+  if (!sudahLewat.length) { showToast('Belum ada rapat yang sudah berlangsung.','error'); return; }
+  showArsipDetail(sudahLewat[0].id);
 }
 // ════ HEALTH METER ════════════════════════════════════════════
 function renderHealthMeter() {
